@@ -24,7 +24,7 @@ alias fetch="git fetch"
 alias pull="git pull"
 alias commit="git commit"
 alias status="git status"
-alias s="git status"
+alias st="git status"
 
 # Detect which `ls` flavor is in use
 if ls --color >/dev/null 2>&1; then # GNU `ls`
@@ -50,4 +50,4 @@ alias fgrep='fgrep --color=auto'
 alias egrep='egrep --color=auto'
 
 # Enable aliases to be sudo’ed
-alias sudo='sudo '
+alias sudo='sudo -E '
