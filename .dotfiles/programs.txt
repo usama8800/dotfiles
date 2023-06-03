@@ -1,0 +1,23 @@
+INSTALLED
+tmux (with tmux plugin manager)
+
+btop
+toilet
+shellcheck
+git bash-completion
+bat = cat
+exa = ls
+fd = find file
+zoxide (z) = cd
+broot = file explorer with ncdu
+nethogs
+bandwhich
+ripgrep = rg
+
+TRY
+zellij
+mprocs
+
+REMOVE
+duf = du
+ncdu = interactive du

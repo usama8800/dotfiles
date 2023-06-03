@@ -1,0 +1,27 @@
+if [[ -f "$HOME/.cargo/env" ]]; then
+  source "$HOME/.cargo/env"
+fi
+if [[ -f "$HOME/.config/broot/launcher/bash/br" ]]; then
+  source "$HOME/.config/broot/launcher/bash/br"
+fi
+if [[ -f "$HOME/.fzf.bash" ]]; then
+  source "$HOME/.fzf.bash"
+fi
+if [[ -f "$HOME/.fzf.bash" ]]; then
+  source "$HOME/.fzf.bash"
+fi
+if [[ $(which bat) ]]; then
+  alias cat='bat '
+fi
+if [[ $(which exa) ]]; then
+  alias ls='exa '
+  alias ll='exa -l '
+  alias la='exa -a '
+  alias lla='exa -la '
+fi
+if [[ $(which zoxide) ]]; then
+  eval "$(zoxide init bash)"
+fi
+# if [[ $(which atuin) ]]; then
+#   eval "$(atuin init bash)"
+# fi

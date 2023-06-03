@@ -1,0 +1,14 @@
+.vim/plugged/
+.vim/colors/
+.vim/x/
+*~*
+*.swp
+.vim/Sessions/*
+.vim/undo/
+.vim/plugin/
+.vim/bookmarks.txt
+.vim/tags
+.vim/.netrwbook
+.vim/.netrwhist
+.extra
+.vim/autoload/plug.vim

@@ -1,0 +1,7 @@
+[user]
+	email = usama8800@gmail.com
+	name = Usama Ahsan
+[pull]
+	rebase = false
+[init]
+	defaultBranch = master
