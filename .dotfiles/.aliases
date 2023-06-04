@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
-alias dotfiles="git --git-dir=$HOME/.dotfiles/git/ --work-tree=$HOME"
+alias dotfiles="git --git-dir=$HOME/.dotfiles/dotfiles.git/ --work-tree=$HOME "
+alias df="dotfiles"
 
 # Easier navigation: .., ..., ...., .....
 alias ..="cd .."

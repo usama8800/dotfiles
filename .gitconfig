@@ -5,3 +5,10 @@
 	rebase = false
 [init]
 	defaultBranch = master
+[alias]
+	st = status -s
+	last = log -1 HEAD
+	unstage = reset HEAD --
+	untracked = ls-files --other --exclude-standard -x */*
+	untracked-dotfiles = ls-files --other --exclude-standard -x dotfiles.git
+	add-modified = add --update
