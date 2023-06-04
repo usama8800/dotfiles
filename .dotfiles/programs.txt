@@ -1,6 +1,5 @@
 INSTALLED
 tmux (with tmux plugin manager)
-
 btop
 toilet
 shellcheck

@@ -400,16 +400,6 @@ inoremap jk <esc>
 inoremap kj <esc>
 cnoremap kj <esc>
 cnoremap jk <esc>
-inoremap <esc> <nop>
-noremap <Left> <nop>
-inoremap <Left> <nop>
-noremap <Right> <nop>
-inoremap <Right> <nop>
-noremap <Up> <nop>
-inoremap <Up> <nop>
-noremap <Down> <nop>
-inoremap <Down> <nop>
-set mouse=""
 " }}}
 
 

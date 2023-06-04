@@ -1,12 +1,3 @@
 let g:netrw_dirhistmax  =10
 let g:netrw_dirhistcnt =1
-let g:netrw_dirhist_1='/home/usama/.config/broot/launcher'
-let g:netrw_dirhist_0='/home/usama/Documents/SWAG/config/nginx/proxy-confs'
-let g:netrw_dirhist_9='/home/usama/Documents/SWAG/config/nginx'
-let g:netrw_dirhist_8='/home/usama/Documents/SWAG/config'
-let g:netrw_dirhist_7='/home/usama/Documents/SWAG'
-let g:netrw_dirhist_6='/home/usama/Documents'
-let g:netrw_dirhist_5='/home/usama'
-let g:netrw_dirhist_4='/home/usama/Documents'
-let g:netrw_dirhist_3='/home/usama/Documents/SWAG'
-let g:netrw_dirhist_2='/home/usama/Documents/soj/backend/src'
+let g:netrw_dirhist_1='/home/usama/.vim'

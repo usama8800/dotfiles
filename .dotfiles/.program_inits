@@ -22,6 +22,13 @@ fi
 if [[ $(which zoxide) ]]; then
   eval "$(zoxide init bash)"
 fi
-# if [[ $(which atuin) ]]; then
-#   eval "$(atuin init bash)"
-# fi
+if [[ $(which atuin) ]]; then
+  eval "$(atuin init bash --disable-up-arrow)"
+fi
+if [[ $(which zellij) ]]; then
+  # ./zellij.py
+  if [ -z "$ZELLIJ" ]; then
+    zellij attach -c
+  fi
+fi
+
