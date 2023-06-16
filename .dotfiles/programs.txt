@@ -1,5 +1,4 @@
 INSTALLED
-tmux (with tmux plugin manager)
 btop
 toilet
 shellcheck
@@ -12,11 +11,13 @@ broot = file explorer with ncdu
 nethogs
 bandwhich
 ripgrep = rg
+zellij = multiplexer
+atuin = shell history
 
 TRY
-zellij
 mprocs
 
 REMOVE
 duf = du
 ncdu = interactive du
+tmux (with tmux plugin manager)

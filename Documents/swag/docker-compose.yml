@@ -1,0 +1,168 @@
+version: "2.1"
+services:
+  swag:
+    image: lscr.io/linuxserver/swag:latest
+    container_name: swag
+    cap_add:
+      - NET_ADMIN
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Asia/Karachi
+      - URL=usama8800.net
+      - VALIDATION=dns
+      - SUBDOMAINS=wildcard #optional
+      - CERTPROVIDER= #optional
+      - DNSPLUGIN=cloudflare #optional
+      - PROPAGATION= #optional
+      - DUCKDNSTOKEN= #optional
+      - EMAIL= #optional
+      - ONLY_SUBDOMAINS=false #optional
+      - EXTRA_DOMAINS= #optional
+      - STAGING=false #optional
+    volumes:
+      - ./config:/config
+    ports:
+      - 443:443
+      - 80:80
+    restart: unless-stopped
+  authelia:
+    image: ghcr.io/authelia/authelia:latest
+    container_name: authelia
+    user: "1000:1000"
+    environment:
+      - TZ=Asia/Karachi
+    volumes:
+      - ./authelia:/config
+    restart: unless-stopped
+    depends_on:
+      - redis
+    command:
+      - "authelia"
+      - "--config=/config/configuration.yml"
+      - "--config=/config/local.configuration.yml"
+  redis:
+    image: redis:alpine
+    container_name: redis
+    restart: unless-stopped
+    volumes:
+      - ./redis:/data
+  adminer:
+    container_name: adminer
+    image: adminer
+    restart: always
+    ports:
+      - 8086:8080
+  mysql:
+    image: mysql:latest
+    container_name: mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+    volumes:
+      - ./mysql:/var/lib/mysql
+    restart: always
+  homeassistant:
+    image: lscr.io/linuxserver/homeassistant:latest
+    container_name: homeassistant
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Asia/Karachi
+    volumes:
+      - ./homeassistant:/config
+    restart: unless-stopped
+  monica:
+    image: monica:latest
+    container_name: monica
+    volumes:
+      - ./monica:/var/www/html/storage
+    restart: unless-stopped
+    environment:
+      - DB_PORT=3306
+      - DB_DATABASE=monica
+      - DB_USERNAME=monica
+      - DB_PASSWORD=${MONICA_DB_PASSWORD}
+      - DB_HOST=mysql
+      - APP_ENV=production
+  piserver:
+    build: ../PiServer/
+    container_name: piserver
+    volumes:
+    #   - ./../SaleOrders/:/SaleOrders/
+      - ../PiServer/data:/data
+    restart: unless-stopped
+  homer:
+    image: b4bz/homer:latest
+    container_name: homer
+    volumes:
+      - ./homer/:/www/assets
+  qbittorrent:
+    image: lscr.io/linuxserver/qbittorrent:latest
+    container_name: qbittorrent
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Asia/Karachi
+      - WEBUI_PORT=8080
+    volumes:
+      - ./qbittorrent/:/config
+      - /home/usama/:/data
+    restart: unless-stopped
+    ports:
+      - 8080:8080
+  jellyfin:
+    image: jellyfin/jellyfin:latest
+    container_name: jellyfin
+    volumes:
+      - ./jellyfin/config:/config
+      - ./jellyfin/cache:/cache
+      - ./../../Media/:/media
+    ports:
+      - 8096:8096
+  radarr:
+    image: lscr.io/linuxserver/radarr:latest
+    container_name: radarr
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Asia/Karachi
+    volumes:
+      - ./radarr:/config
+      - /home/usama/:/data
+    restart: unless-stopped
+  sonarr:
+    image: lscr.io/linuxserver/sonarr:latest
+    container_name: sonarr
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Asia/Karachi
+    volumes:
+      - ./sonarr:/config
+      - /home/usama/:/data
+    restart: unless-stopped
+  jackett:
+    image: lscr.io/linuxserver/jackett:latest
+    container_name: jackett
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Asia/Karachi
+      - AUTO_UPDATE=true #optional
+      # - RUN_OPTS=<run options here> #optional
+    volumes:
+      - ./jackett:/config/Jackett
+      - ./../../Downloads:/downloads
+    restart: unless-stopped
+  ombi:
+    image: lscr.io/linuxserver/ombi:latest
+    container_name: ombi
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Asia/Karachi
+    volumes:
+      - ./ombi:/config
+    ports:
+      - 3579:3579
+    restart: unless-stopped

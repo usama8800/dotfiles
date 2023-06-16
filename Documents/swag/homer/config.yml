@@ -1,0 +1,106 @@
+---
+# Homepage configuration
+# See https://fontawesome.com/v5/search for icons options
+
+title: "Home Dashboard"
+subtitle: "Homer"
+logo: "logo.png"
+
+header: false
+footer: false
+
+theme: dark
+colors:
+  light:
+    highlight-primary: "#3367d6"
+    highlight-secondary: "#4285f4"
+    highlight-hover: "#5a95f5"
+    background: "#f5f5f5"
+    card-background: "#ffffff"
+    text: "#363636"
+    text-header: "#ffffff"
+    text-title: "#303030"
+    text-subtitle: "#424242"
+    card-shadow: rgba(0, 0, 0, 0.1)
+    link: "#3273dc"
+    link-hover: "#363636"
+  dark:
+    highlight-primary: "#3367d6"
+    highlight-secondary: "#4285f4"
+    highlight-hover: "#5a95f5"
+    background: "#131313"
+    card-background: "#2b2b2b"
+    text: "#eaeaea"
+    text-header: "#ffffff"
+    text-title: "#fafafa"
+    text-subtitle: "#f5f5f5"
+    card-shadow: rgba(0, 0, 0, 0.4)
+    link: "#3273dc"
+    link-hover: "#ffdd57"
+
+links:
+  # - name: "Home"
+  #   icon: "fas fa-home"
+  #   url: "/#"
+  - name: "AC"
+    icon: "fas fa-thermometer-empty"
+    url: "javascript:fetch('https://homeassistant.usama8800.net/api/webhook/-ZThtJLgDmQ1lU7sEloReLbXD');"
+  - name: "PC On"
+    icon: ""
+    url: "javascript:fetch('https://usama8800.net/server/pc/on');"
+  - name: "PC Sleep"
+    icon: ""
+    url: "javascript:fetch('https://usama8800.net/server/pc/sleep');"
+
+services:
+  - name: "Applications"
+    icon: "fas fa-cloud"
+    items:
+      - name: "Home Assistant"
+        logo: "assets/tools/homeassistant.svg"
+        subtitle: "Home Assistant"
+        keywords: "home assistant iot"
+        url: "/homeassistant"
+      - name: "PiServer"
+        logo: "assets/tools/pc.png"
+        subtitle: "Custom ExpressJS server"
+        keywords: "pi self hosted server"
+        url: "/server"
+      - name: "qBittorrent"
+        logo: "assets/tools/qbittorrent.svg"
+        subtitle: "BitTorrent client"
+        keywords: "torrent bit"
+        url: "/qbittorrent"
+      - name: "Monica"
+        logo: "assets/tools/monica.svg"
+        subtitle: "Personal Relationship Manager"
+        keywords": "crm relationship manager"
+        url: "/monica"
+  - name: "Media"
+    icon: "fas fa-play"
+    items:
+      - name: "Jellyfin"
+        logo: "assets/tools/jellyfin.png"
+        subtitle: "Media Player"
+        keywords: "movie manager media video player image"
+        url: "/jellyfin"
+      - name: "Ombi"
+        logo: "assets/tools/ombi.png"
+        subtitle: "Request movies and shows"
+        keywords: "ombi request media manager video tv movie show"
+        url: "/ombi"
+      - name: "Radarr"
+        logo: "assets/tools/radarr.png"
+        subtitle: "Movie collection manager"
+        keywords: "movie manager media video"
+        url: "/radarr"
+      - name: "Sonarr"
+        logo: "assets/tools/sonarr.svg"
+        subtitle: "TV Show collection manager"
+        keywords: "show tv episode manager media video"
+        url: "/sonarr"
+      - name: "Jackett"
+        logo: "assets/tools/jackett.png"
+        subtitle: "Index Manager"
+        keywords: "bit torrent client index indexer tracker"
+        url: "/jackett"
