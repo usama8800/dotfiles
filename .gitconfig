@@ -12,3 +12,5 @@
 	untracked = ls-files --other --exclude-standard -x */*
 	untracked-dotfiles = ls-files --other --exclude-standard -x dotfiles.git
 	add-modified = add --update
+[safe]
+	directory = /home/usama/Documents/erp

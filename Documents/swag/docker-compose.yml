@@ -84,6 +84,14 @@ services:
       - DB_PASSWORD=${MONICA_DB_PASSWORD}
       - DB_HOST=mysql
       - APP_ENV=production
+      - MAIL_MAILER=smtp
+      - MAIL_HOST=smtp.gmail.com
+      - MAIL_PORT=465
+      - MAIL_USERNAME=${EMAIL}
+      - MAIL_PASSWORD=${GMAIL_PASSWORD}
+      - MAIL_ENCRYPTION=tls
+      - MAIL_FROM_ADDRESS=${EMAIL}
+      - MAIL_FROM_NAME=${NAME}
   piserver:
     build: ../PiServer/
     container_name: piserver
