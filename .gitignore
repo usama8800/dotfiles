@@ -1,0 +1,11 @@
+lib
+node_modules
+_cache
+cache
+.git
+.cargo
+.vscode-server
+.npm
+.rustup
+.nvm
+.pub-cache

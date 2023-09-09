@@ -14,3 +14,5 @@
 	add-modified = add --update
 [safe]
 	directory = /home/usama/Documents/erp
+[core]
+	excludesFile = /home/usama/.gitignore
