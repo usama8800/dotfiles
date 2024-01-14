@@ -6,7 +6,7 @@
 [init]
 	defaultBranch = master
 [alias]
-	st = status -s
+	st = status --short --untracked-files=no
 	last = log -1 HEAD
 	unstage = restore --staged
 	untracked = ls-files --other --exclude-standard -x */*

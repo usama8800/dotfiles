@@ -12,7 +12,7 @@ alias .....="cd ../../../.."
 # Shortcuts
 alias doc="cd ~/Documents;la"
 alias dot="cd ~/.dotfiles;la"
-
+alias clip="xclip -selection clipboard"
 alias sb="source ~/.bash_profile"
 alias cls="clear"
 alias :q="touch ~/.manual_exit; exit"

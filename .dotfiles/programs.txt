@@ -1,13 +1,15 @@
-INSTALLED
 btop
 toilet
 shellcheck
 git bash-completion
+xclip
+
+# CARGO APPS
 bat = cat
 exa = ls
-fd = find file
+fd-find (fd) = find file
 zoxide (z) = cd
-broot = file explorer with ncdu
+broot (br) = file explorer with ncdu
 nethogs
 bandwhich
 ripgrep = rg
@@ -16,8 +18,3 @@ atuin = shell history
 
 TRY
 mprocs
-
-REMOVE
-duf = du
-ncdu = interactive du
-tmux (with tmux plugin manager)
