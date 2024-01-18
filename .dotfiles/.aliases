@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+# shellcheck disable=SC2139
 
 alias dotfiles="git --git-dir=$HOME/.dotfiles/dotfiles.git/ --work-tree=$HOME "
 alias df="dotfiles"

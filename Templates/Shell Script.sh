@@ -6,8 +6,8 @@
 set -euo pipefail
 IFS=$'\n\t'
 
-readonly LOG_FILE
 LOG_FILE="/tmp/$(basename "$0").log"
+readonly LOG_FILE
 info()    { echo "[INFO]    $*" | tee -a "$LOG_FILE" >&2 ; }
 warning() { echo "[WARNING] $*" | tee -a "$LOG_FILE" >&2 ; }
 error()   { echo "[ERROR]   $*" | tee -a "$LOG_FILE" >&2 ; }
@@ -65,5 +65,4 @@ cleanup() {
 if [[ "${BASH_SOURCE[0]}" = "$0" ]]; then
     trap cleanup EXIT
     # Script goes here
-    # ...
 fi
