@@ -1,0 +1,12 @@
+#!/usr/bin/bash
+
+IFS='
+'
+
+opened=0
+for dir in $NEMO_SCRIPT_SELECTED_FILE_PATHS; do
+    code "$dir"
+    opened=1
+    break
+done
+[[ $opened -eq 0 ]] && code .
