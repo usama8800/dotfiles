@@ -3,6 +3,8 @@ toilet
 shellcheck
 git bash-completion
 xclip
+xdotool = x automation
+nemo = file explorer
 
 # CARGO APPS
 bat = cat
@@ -18,3 +20,4 @@ atuin = shell history
 
 TRY
 mprocs
+
