@@ -2,12 +2,13 @@
 
 import json
 import os
+import shutil
 import subprocess
 import sys
 
 from dotenv import load_dotenv
 
-load_dotenv()
+load_dotenv('.env.local')
 
 simulate = False
 test = False
@@ -30,7 +31,12 @@ playlists = {
 def remove(path):
     if not simulate:
         print('Removing ' + path)
-        os.remove(path)
+        if not os.path.exists(path):
+            return
+        if os.path.isdir(path):
+            shutil.rmtree(path)
+        else:
+            os.remove(path)
     else:
         print('Would remove ' + path)
 
@@ -48,8 +54,7 @@ def prepost():
         video_playlist_path = os.path.join(os.environ["VIDEO_PATH"], playlist)
         audio_playlist_path = os.path.join(os.environ["AUDIO_PATH"], playlist)
         if not os.path.isdir(video_playlist_path):
-            subprocess.run(["rm", "-rf", audio_playlist_path],
-                           stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+            remove(audio_playlist_path)
             continue
 
         video_files = os.listdir(video_playlist_path)
@@ -194,7 +199,7 @@ def main():
                 os.environ["AUDIO_PATH"], playlist_name, file[:-4] + '.mp3')
             if os.path.exists(output_filename):
                 continue
-            print(f"Converting {file} to {output_filename}")
+            print(f"Converting {file} to mp3")
             ffmpeg = subprocess.run([
                 "ffmpeg",
                 "-i",
