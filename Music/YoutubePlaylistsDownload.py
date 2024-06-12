@@ -46,11 +46,22 @@ start_end_times = {
     "ksRiOHOzG7Q": (0, "3:01"),
     "cmNEvSFWftc": (0, "14:43"),
     "hAFn2J6FEbI": (0, "2:38"),
-    # Rachmaninoff Concerto
     "I03Hs6dwj7E": (18, "28:34"),
     "zY4w4_W30aQ": (4, "50:44"),
     "lVfl4g8btAM": (4, "2:11"),
-    # Seong-Jin Cho – Chopin： Nocturnes, Op. 9： No. 2 in E Flat Major. Andante - QR10Od1cLaM
+    "QR10Od1cLaM": (0, "4:10"),
+    "J0w0t4Qn6LY": (24, "36:09"),
+    "6tqOMxaGgBU": (1, "3:12"),
+    "l6kqu2mk-Kw": (0, "13:21"),
+    "u7zbHlJsCQs": (6, "8:26"),
+    "xIY07cP7hQU": (6, "3:15"),
+    "gb2h24lTqho": (7, "9:04"),
+    "hNfpMRSCFPE": (3, "36:52"),
+    "LdH1hSWGFGU": (0, "9:34"),
+    "wwaSSQnceu8": (0, "2:49"),
+    "UWg5ugyMjIc": (0, "3:20"),
+    "1prweT95Mo0": (8, "2:36"),
+    "b_E51SV0Zus": (16, "4:05"),
 }
 
 
