@@ -26,6 +26,11 @@ playlists = {
         "url": "https://www.youtube.com/playlist?list=PLZY56D5QXJZ_WyaiL6BlA7dV2UiwZOzzn",
     },
 }
+start_end_times = {
+    "E_GT8CPcIkg": (5, "12:42"),
+    "3TiYGxOQDYw": (28, "38:17"),
+    "Y7JxLgf3wLM": (6, "4:14"),
+}
 
 
 def remove(path):
@@ -49,103 +54,93 @@ def move(from_path, to_path):
         print('Would move ' + from_path + ' to ' + to_path)
 
 
-def prepost():
-    for playlist in playlists:
-        video_playlist_path = os.path.join(os.environ["VIDEO_PATH"], playlist)
-        audio_playlist_path = os.path.join(os.environ["AUDIO_PATH"], playlist)
-        if not os.path.isdir(video_playlist_path):
-            remove(audio_playlist_path)
-            continue
+def id_from_filename(filename):
+    return filename.split('- ')[-1].split('.')[0].strip()
 
-        video_files = os.listdir(video_playlist_path)
-        try:
-            audio_files = os.listdir(audio_playlist_path)
-        except FileNotFoundError as e:
-            print(e)
-            audio_files = []
-        metadata = None  # list of updated playlist video ids
-        delete_from_archive = None  # list of previously downloaded video ids
+
+def remove_duplicate_id_files():
+    for playlist_name in playlists:
+        files = os.listdir(os.path.join(
+            os.environ["VIDEO_PATH"], playlist_name))
         encountered_ids = []
         double_ids = []
+        for file in files:
+            if file[0] == '.':
+                continue
+            if file.endswith('.temp.mp4'):
+                remove(os.path.join(
+                    os.environ["VIDEO_PATH"], playlist_name, file))
+                continue
+            id = id_from_filename(file)
+            if id not in encountered_ids:
+                encountered_ids.append(id)
+            else:
+                double_ids.append(id)
+        for file in files:
+            if file[0] == '.':
+                continue
+            id = id_from_filename(file)
+            if id in double_ids:
+                remove(os.path.join(
+                    os.environ["VIDEO_PATH"], playlist_name, file))
 
-        # load data
-        if '.metadata' in video_files:
-            with open(os.path.join(video_playlist_path, '.metadata'), 'r') as f:
+
+def remove_files_not_in_metadata():
+    for playlist_name in playlists:
+        files = os.listdir(os.path.join(
+            os.environ["VIDEO_PATH"], playlist_name))
+        metadata = None
+        if '.metadata' in files:
+            with open(os.path.join(os.environ["VIDEO_PATH"], playlist_name, '.metadata'), 'r') as f:
                 metadata = list(map(lambda x: x.strip(), f.readlines()))
-        else:
-            continue
-        if '.archive' in video_files:
-            with open(os.path.join(video_playlist_path, '.archive'), 'r') as f:
-                delete_from_archive = list(
-                    map(lambda x: x.strip(), f.readlines()))
-        else:
-            continue
         if metadata is None or len(metadata) == 0:
             continue
-
-        for file in video_files:
+        for file in files:
             if file[0] == '.':
                 continue
-            video_id = file.split('- ')[-1].split('.')[0].strip()
+            if id_from_filename(file) not in metadata:
+                remove(os.path.join(
+                    os.environ["VIDEO_PATH"], playlist_name, file))
 
-            # check for double ids
-            if video_id not in encountered_ids:
-                encountered_ids.append(video_id)
-            else:
-                print('Double id ' + video_id)
-                double_ids.append(video_id)
 
-            # delete video if not in playlist
-            deleted = False
-            if video_id not in metadata:
-                move(os.path.join(video_playlist_path, file),
-                     os.path.join(os.environ["VIDEO_PATH"], 'Removed', file))
-                deleted = True
-            if not deleted and 'youtube '+video_id in delete_from_archive:
-                delete_from_archive.remove('youtube '+video_id)
+def remove_audios_not_in_videos():
+    for playlist_name in playlists:
+        video_files = list(map(
+            lambda x: os.path.splitext(x)[0],
+            os.listdir(os.path.join(
+                os.environ["VIDEO_PATH"], playlist_name))))
+        audio_files = os.listdir(os.path.join(
+            os.environ["AUDIO_PATH"], playlist_name))
+        # print(video_files)
+        for audio_file in audio_files:
+            audio_file_name = os.path.splitext(audio_file)[0]
+            # print(audio_file, audio_file_name)
+            if audio_file_name not in video_files:
+                remove(os.path.join(
+                    os.environ["AUDIO_PATH"], playlist_name, audio_file))
 
-        # delete both videos from double ids and from archive
-        for file in video_files:
+
+def remove_archive_ids_for_deleted_files():
+    for playlist_name in playlists:
+        files = os.listdir(os.path.join(
+            os.environ["VIDEO_PATH"], playlist_name))
+        delete_from_archive = None
+        if '.archive' in files:
+            with open(os.path.join(os.environ["VIDEO_PATH"], playlist_name, '.archive'), 'r') as f:
+                delete_from_archive = list(
+                    map(lambda x: x.strip(), f.readlines()))
+        if delete_from_archive is None or len(delete_from_archive) == 0:
+            continue
+        for file in files:
             if file[0] == '.':
                 continue
-            video_id = file.split('- ')[-1].split('.')[0].strip()
-
-            if video_id in double_ids:
-                remove(os.path.join(video_playlist_path, file))
-                if 'youtube '+video_id not in delete_from_archive:
-                    delete_from_archive.append('youtube '+video_id)
-
-        encountered_ids = []
-        double_ids = []
-        for file in audio_files:
-            if file[0] == '.':
-                continue
-            audio_id = file.split('- ')[-1].split('.')[0].strip()
-
-            # ffmpeg stopped before finishing
-            if file.endswith('.temp.mp3'):
-                remove(os.path.join(audio_playlist_path, file))
-
-            # delete audio if not in playlist
-            if audio_id not in metadata:
-                remove(os.path.join(audio_playlist_path, file))
-
-        # delete both audios from double ids
-        for file in audio_files:
-            if file[0] == '.':
-                continue
-            audio_id = file.split('- ')[-1].split('.')[0].strip()
-
-            if audio_id in double_ids:
-                remove(os.path.join(audio_playlist_path, file))
-
-        # remove deleted videos from archive
+            if 'youtube '+id_from_filename(file) in delete_from_archive:
+                delete_from_archive.remove('youtube '+id_from_filename(file))
         if len(delete_from_archive):
-            archive = None
-            with open(os.path.join(video_playlist_path, '.archive'), 'r') as f:
+            with open(os.path.join(os.environ["VIDEO_PATH"], playlist_name, '.archive'), 'r') as f:
                 archive = list(filter(lambda x: x.strip()
                                       not in delete_from_archive, f.readlines()))
-            with open(os.path.join(video_playlist_path, '.archive'), 'w') as f:
+            with open(os.path.join(os.environ["VIDEO_PATH"], playlist_name, '.archive'), 'w') as f:
                 f.write(''.join(archive))
 
 
@@ -153,8 +148,10 @@ def main():
     os.makedirs(os.path.join(
         os.environ["VIDEO_PATH"], "Removed"), exist_ok=True)
     os.makedirs(os.environ["AUDIO_PATH"], exist_ok=True)
-    prepost()
+    remove_duplicate_id_files()
+    remove_archive_ids_for_deleted_files()
 
+    # Download Videos
     for playlist_name, playlist in playlists.items():
         output_format = playlist[
             "output_format"] if "output_format" in playlist else "%(title)s - %(id)s.%(ext)s"
@@ -185,8 +182,50 @@ def main():
         with open(os.path.join(os.environ["VIDEO_PATH"], playlist_name, ".metadata"), "w") as f:
             for entry in metadata["entries"]:
                 f.write(entry["id"] + "\n")
-    prepost()
+    remove_duplicate_id_files()
+    remove_files_not_in_metadata()
+    remove_archive_ids_for_deleted_files()
 
+    # Cut Videos
+    already_cut = []
+    if os.path.exists(os.path.join(os.environ["VIDEO_PATH"], ".cut_ids")):
+        with open(os.path.join(os.environ["VIDEO_PATH"], ".cut_ids"), 'r') as f:
+            already_cut = list(map(lambda x: x.strip(), f.readlines()))
+    for playlist_name in playlists:
+        files = os.listdir(os.path.join(
+            os.environ["VIDEO_PATH"], playlist_name))
+        for file in files:
+            if not file.endswith('.mp4') or file[0] == '.':
+                continue
+            id = id_from_filename(file)
+            if id not in start_end_times or id in already_cut:
+                continue
+            start, end = start_end_times[id]
+            print(f"Cutting {file} from {start} to {end}")
+            ffmpeg = subprocess.run([
+                "ffmpeg",
+                "-y",
+                "-i",
+                os.path.join(os.environ["VIDEO_PATH"], playlist_name, file),
+                "-ss", str(start),
+                "-to", str(end),
+                "-c:v", "libx264",
+                "-c:a", "aac",
+                os.path.join(os.environ["VIDEO_PATH"],
+                             playlist_name, file+'.temp.mp4')
+            ])
+            if ffmpeg.returncode != 0:
+                print(f"ffmpeg failed to cut {file}")
+                continue
+            remove(os.path.join(
+                os.environ["AUDIO_PATH"], playlist_name, os.path.splitext(file)[0]+'.mp3'))
+            os.replace(os.path.join(os.environ["VIDEO_PATH"], playlist_name, file+'.temp.mp4'),
+                       os.path.join(os.environ["VIDEO_PATH"], playlist_name, file))
+            already_cut.append(id)
+            with open(os.path.join(os.environ["VIDEO_PATH"], ".cut_ids"), "a") as f:
+                f.write(id + "\n")
+
+    # Convert Videos to Audios
     for playlist_name in playlists:
         os.makedirs(os.path.join(
             os.environ["AUDIO_PATH"], playlist_name), exist_ok=True)
@@ -202,6 +241,7 @@ def main():
             print(f"Converting {file} to mp3")
             ffmpeg = subprocess.run([
                 "ffmpeg",
+                "-y",
                 "-i",
                 os.path.join(os.environ["VIDEO_PATH"], playlist_name, file),
                 "-codec:a", "libmp3lame", "-qscale:a", "0",
@@ -211,6 +251,7 @@ def main():
                 print(f"ffmpeg failed to convert {file} to {output_filename}")
                 continue
             os.rename(output_filename + ".temp.mp3", output_filename)
+    remove_audios_not_in_videos()
 
 
 def set_test():
