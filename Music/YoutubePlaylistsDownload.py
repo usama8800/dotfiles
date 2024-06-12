@@ -30,6 +30,27 @@ start_end_times = {
     "E_GT8CPcIkg": (5, "12:42"),
     "3TiYGxOQDYw": (28, "38:17"),
     "Y7JxLgf3wLM": (6, "4:14"),
+    "VbEcIBW3ohI": (0, "7:39"),
+    "s_ST3hzMsVE": (0, "4:19"),
+    "sf9CtbLGzgw": (0, "2:03"),
+    "uOmaQSqnPfw": (17, "43:28"),
+    "_5h4Y66HnG0": (8, "5:43"),
+    "7VWHBHeNrg4": (0, "2:38"),
+    "DVWaIJsIzao": (0, "9:52"),
+    "dBwEXRz3A40": (12, "4:54"),
+    "wQDoN40-_C4": (23, "7:29"),
+    "9Wcgm-JLzM4": (11, "6:59"),
+    "ynCEvFaJCZg": (0, "2:38"),
+    "I3Nx3DjAx2s": (3, "37:28"),
+    "wSPbSZM1rUE": (0, "23:28"),
+    "ksRiOHOzG7Q": (0, "3:01"),
+    "cmNEvSFWftc": (0, "14:43"),
+    "hAFn2J6FEbI": (0, "2:38"),
+    # Rachmaninoff Concerto
+    "I03Hs6dwj7E": (18, "28:34"),
+    "zY4w4_W30aQ": (4, "50:44"),
+    "lVfl4g8btAM": (4, "2:11"),
+    # Seong-Jin Cho – Chopin： Nocturnes, Op. 9： No. 2 in E Flat Major. Andante - QR10Od1cLaM
 }
 
 
@@ -202,18 +223,21 @@ def main():
                 continue
             start, end = start_end_times[id]
             print(f"Cutting {file} from {start} to {end}")
-            ffmpeg = subprocess.run([
-                "ffmpeg",
-                "-y",
-                "-i",
-                os.path.join(os.environ["VIDEO_PATH"], playlist_name, file),
+            command = [
+                "ffmpeg", "-y",
+                "-i", os.path.join(os.environ["VIDEO_PATH"],
+                                   playlist_name, file),
                 "-ss", str(start),
                 "-to", str(end),
-                "-c:v", "libx264",
-                "-c:a", "aac",
-                os.path.join(os.environ["VIDEO_PATH"],
-                             playlist_name, file+'.temp.mp4')
-            ])
+            ]
+            # if start == 0:
+            #     command.extend(["-c", "copy"])
+            # else:
+            command.extend(["-c:v", "libx264"])
+            command.extend(["-c:a", "aac"])
+            command.append(os.path.join(os.environ["VIDEO_PATH"],
+                                        playlist_name, file+'.temp.mp4'))
+            ffmpeg = subprocess.run(command)
             if ffmpeg.returncode != 0:
                 print(f"ffmpeg failed to cut {file}")
                 continue
