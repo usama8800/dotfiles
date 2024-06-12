@@ -319,6 +319,13 @@ def tag_videos():
             if atomic_parsley.returncode != 0:
                 print(f"AtomicParsley failed to run for {file}")
                 continue
+            remove(
+                os.path.join(
+                    os.environ["AUDIO_PATH"],
+                    playlist_name,
+                    os.path.splitext(file)[0] + ".mp3",
+                )
+            )
             already_tagged.append(id)
             with open(os.path.join(os.environ["VIDEO_PATH"], ".tagged_ids"), "a") as f:
                 f.write(id + "\n")
@@ -440,7 +447,5 @@ if __name__ == "__main__":
                 clean()
             elif arg == "tag":
                 tag_videos()
-            # elif arg == "json":
-            #     jssooon()
             else:
                 raise ValueError(f"Unknown argument {arg}")
