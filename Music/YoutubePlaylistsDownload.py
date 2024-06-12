@@ -120,8 +120,8 @@ def remove_files_not_in_metadata():
             if file[0] == '.':
                 continue
             if id_from_filename(file) not in metadata:
-                remove(os.path.join(
-                    os.environ["VIDEO_PATH"], playlist_name, file))
+                move(os.path.join(
+                    os.environ["VIDEO_PATH"], playlist_name, file), os.path.join(os.environ["VIDEO_PATH"], "Removed", playlist_name+" - "+file))
 
 
 def remove_audios_not_in_videos():
@@ -165,14 +165,7 @@ def remove_archive_ids_for_deleted_files():
                 f.write(''.join(archive))
 
 
-def main():
-    os.makedirs(os.path.join(
-        os.environ["VIDEO_PATH"], "Removed"), exist_ok=True)
-    os.makedirs(os.environ["AUDIO_PATH"], exist_ok=True)
-    remove_duplicate_id_files()
-    remove_archive_ids_for_deleted_files()
-
-    # Download Videos
+def download_videos():
     for playlist_name, playlist in playlists.items():
         output_format = playlist[
             "output_format"] if "output_format" in playlist else "%(title)s - %(id)s.%(ext)s"
@@ -190,6 +183,11 @@ def main():
                 os.environ["VIDEO_PATH"], playlist_name, ".archive"),
             playlist["url"]
         ], check=True)
+
+
+def download_metadata():
+    for playlist_name, playlist in playlists.items():
+        items = playlist["items"] if "items" in playlist else ":"
         ytdlp = subprocess.run([
             "yt-dlp",
             "--playlist-items", items,
@@ -203,11 +201,9 @@ def main():
         with open(os.path.join(os.environ["VIDEO_PATH"], playlist_name, ".metadata"), "w") as f:
             for entry in metadata["entries"]:
                 f.write(entry["id"] + "\n")
-    remove_duplicate_id_files()
-    remove_files_not_in_metadata()
-    remove_archive_ids_for_deleted_files()
 
-    # Cut Videos
+
+def cut_videos():
     already_cut = []
     if os.path.exists(os.path.join(os.environ["VIDEO_PATH"], ".cut_ids")):
         with open(os.path.join(os.environ["VIDEO_PATH"], ".cut_ids"), 'r') as f:
@@ -249,7 +245,8 @@ def main():
             with open(os.path.join(os.environ["VIDEO_PATH"], ".cut_ids"), "a") as f:
                 f.write(id + "\n")
 
-    # Convert Videos to Audios
+
+def convert_to_mp3s():
     for playlist_name in playlists:
         os.makedirs(os.path.join(
             os.environ["AUDIO_PATH"], playlist_name), exist_ok=True)
@@ -275,6 +272,33 @@ def main():
                 print(f"ffmpeg failed to convert {file} to {output_filename}")
                 continue
             os.rename(output_filename + ".temp.mp3", output_filename)
+
+
+def clean():
+    remove_duplicate_id_files()
+    remove_files_not_in_metadata()
+    remove_archive_ids_for_deleted_files()
+    remove_audios_not_in_videos()
+
+
+def main():
+    os.makedirs(os.path.join(
+        os.environ["VIDEO_PATH"], "Removed"), exist_ok=True)
+    os.makedirs(os.environ["AUDIO_PATH"], exist_ok=True)
+
+    remove_duplicate_id_files()
+    remove_archive_ids_for_deleted_files()
+
+    download_videos()
+    download_metadata()
+
+    remove_duplicate_id_files()
+    remove_files_not_in_metadata()
+    remove_archive_ids_for_deleted_files()
+
+    cut_videos()
+    convert_to_mp3s()
+
     remove_audios_not_in_videos()
 
 
@@ -307,4 +331,19 @@ if __name__ == "__main__":
     if "AUDIO_PATH" not in os.environ:
         raise ValueError("Missing environment variable AUDIO_PATH")
 
-    main()
+    if len(sys.argv) == 1:
+        main()
+    else:
+        for arg in sys.argv[1:]:
+            if arg == 'download':
+                download_videos()
+            elif arg == 'metadata':
+                download_metadata()
+            elif arg == 'cut':
+                cut_videos()
+            elif arg == 'convert':
+                convert_to_mp3s()
+            elif arg == 'clean':
+                clean()
+            else:
+                raise ValueError(f"Unknown argument {arg}")
