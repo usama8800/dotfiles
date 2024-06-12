@@ -198,6 +198,7 @@ def download_videos():
 
 def download_metadata():
     for playlist_name, playlist in playlists.items():
+        print(f"Downloading metadata for '{playlist_name}'")
         items = playlist["items"] if "items" in playlist else ":"
         ytdlp = subprocess.run([
             "yt-dlp",
