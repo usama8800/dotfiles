@@ -320,3 +320,5 @@ if __name__ == "__main__":
                 convert_to_mp3s()
             elif arg == 'clean':
                 clean()
+            else:
+                raise ValueError(f"Unknown argument {arg}")
