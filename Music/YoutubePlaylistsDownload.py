@@ -99,8 +99,8 @@ def remove_files_not_in_metadata():
             if file[0] == '.':
                 continue
             if id_from_filename(file) not in metadata:
-                remove(os.path.join(
-                    os.environ["VIDEO_PATH"], playlist_name, file))
+                move(os.path.join(
+                    os.environ["VIDEO_PATH"], playlist_name, file), os.path.join(os.environ["VIDEO_PATH"], "Removed", playlist_name+" - "+file))
 
 
 def remove_audios_not_in_videos():
@@ -166,6 +166,7 @@ def download_videos():
 
 def download_metadata():
     for playlist_name, playlist in playlists.items():
+        items = playlist["items"] if "items" in playlist else ":"
         ytdlp = subprocess.run([
             "yt-dlp",
             "--playlist-items", items,
