@@ -13,6 +13,12 @@ import sys
 
 from dotenv import load_dotenv
 
+# External dependencies:
+# - yt-dlp
+# - ffmpeg
+# - AtomicParsley
+
+
 load_dotenv(".env.local")
 
 if not os.path.exists("playlists.json"):
@@ -21,6 +27,7 @@ with open("playlists.json", "r") as f:
     playlists = json.load(f)
 simulate = False
 test = False
+
 
 def remove(path):
     if not simulate:
@@ -49,16 +56,14 @@ def id_from_filename(filename):
 
 def remove_duplicate_id_files():
     for playlist_name in playlists:
-        files = os.listdir(os.path.join(
-            os.environ["VIDEO_PATH"], playlist_name))
+        files = os.listdir(os.path.join(os.environ["VIDEO_PATH"], playlist_name))
         encountered_ids = []
         double_ids = []
         for file in files:
             if file[0] == ".":
                 continue
             if file.endswith(".temp.mp4"):
-                remove(os.path.join(
-                    os.environ["VIDEO_PATH"], playlist_name, file))
+                remove(os.path.join(os.environ["VIDEO_PATH"], playlist_name, file))
                 continue
             id = id_from_filename(file)
             if id not in encountered_ids:
@@ -70,19 +75,23 @@ def remove_duplicate_id_files():
                 continue
             id = id_from_filename(file)
             if id in double_ids:
-                remove(os.path.join(
-                    os.environ["VIDEO_PATH"], playlist_name, file))
+                move(
+                    os.path.join(os.environ["VIDEO_PATH"], playlist_name, file),
+                    os.path.join(
+                        os.environ["VIDEO_PATH"],
+                        "Removed",
+                        playlist_name + " - " + file,
+                    ),
+                )
 
 
 def remove_files_not_in_metadata():
     for playlist_name in playlists:
-        files = os.listdir(os.path.join(
-            os.environ["VIDEO_PATH"], playlist_name))
+        files = os.listdir(os.path.join(os.environ["VIDEO_PATH"], playlist_name))
         metadata = None
         if ".metadata" in files:
             with open(
-                os.path.join(os.environ["VIDEO_PATH"],
-                             playlist_name, ".metadata"), "r"
+                os.path.join(os.environ["VIDEO_PATH"], playlist_name, ".metadata"), "r"
             ) as f:
                 metadata = list(map(lambda x: x.strip(), f.readlines()))
         if metadata is None or len(metadata) == 0:
@@ -92,8 +101,7 @@ def remove_files_not_in_metadata():
                 continue
             if id_from_filename(file) not in metadata:
                 move(
-                    os.path.join(os.environ["VIDEO_PATH"],
-                                 playlist_name, file),
+                    os.path.join(os.environ["VIDEO_PATH"], playlist_name, file),
                     os.path.join(
                         os.environ["VIDEO_PATH"],
                         "Removed",
@@ -107,35 +115,29 @@ def remove_audios_not_in_videos():
         video_files = list(
             map(
                 lambda x: os.path.splitext(x)[0],
-                os.listdir(os.path.join(
-                    os.environ["VIDEO_PATH"], playlist_name)),
+                os.listdir(os.path.join(os.environ["VIDEO_PATH"], playlist_name)),
             )
         )
-        audio_files = os.listdir(os.path.join(
-            os.environ["AUDIO_PATH"], playlist_name))
+        audio_files = os.listdir(os.path.join(os.environ["AUDIO_PATH"], playlist_name))
         # print(video_files)
         for audio_file in audio_files:
             audio_file_name = os.path.splitext(audio_file)[0]
             # print(audio_file, audio_file_name)
             if audio_file_name not in video_files:
                 remove(
-                    os.path.join(os.environ["AUDIO_PATH"],
-                                 playlist_name, audio_file)
+                    os.path.join(os.environ["AUDIO_PATH"], playlist_name, audio_file)
                 )
 
 
 def remove_archive_ids_for_deleted_files():
     for playlist_name in playlists:
-        files = os.listdir(os.path.join(
-            os.environ["VIDEO_PATH"], playlist_name))
+        files = os.listdir(os.path.join(os.environ["VIDEO_PATH"], playlist_name))
         delete_from_archive = None
         if ".archive" in files:
             with open(
-                os.path.join(os.environ["VIDEO_PATH"],
-                             playlist_name, ".archive"), "r"
+                os.path.join(os.environ["VIDEO_PATH"], playlist_name, ".archive"), "r"
             ) as f:
-                delete_from_archive = list(
-                    map(lambda x: x.strip(), f.readlines()))
+                delete_from_archive = list(map(lambda x: x.strip(), f.readlines()))
         if delete_from_archive is None or len(delete_from_archive) == 0:
             continue
         for file in files:
@@ -145,8 +147,7 @@ def remove_archive_ids_for_deleted_files():
                 delete_from_archive.remove("youtube " + id_from_filename(file))
         if len(delete_from_archive):
             with open(
-                os.path.join(os.environ["VIDEO_PATH"],
-                             playlist_name, ".archive"), "r"
+                os.path.join(os.environ["VIDEO_PATH"], playlist_name, ".archive"), "r"
             ) as f:
                 archive = list(
                     filter(
@@ -154,8 +155,7 @@ def remove_archive_ids_for_deleted_files():
                     )
                 )
             with open(
-                os.path.join(os.environ["VIDEO_PATH"],
-                             playlist_name, ".archive"), "w"
+                os.path.join(os.environ["VIDEO_PATH"], playlist_name, ".archive"), "w"
             ) as f:
                 f.write("".join(archive))
 
@@ -178,11 +178,9 @@ def download_videos():
                 "--playlist-items",
                 items,
                 "-o",
-                os.path.join(os.environ["VIDEO_PATH"],
-                             playlist_name, output_format),
+                os.path.join(os.environ["VIDEO_PATH"], playlist_name, output_format),
                 "--download-archive",
-                os.path.join(os.environ["VIDEO_PATH"],
-                             playlist_name, ".archive"),
+                os.path.join(os.environ["VIDEO_PATH"], playlist_name, ".archive"),
                 playlist["url"],
             ],
             check=True,
@@ -211,8 +209,7 @@ def download_metadata():
             continue
         metadata = json.loads(ytdlp.stdout)
         with open(
-            os.path.join(os.environ["VIDEO_PATH"],
-                         playlist_name, ".metadata"), "w"
+            os.path.join(os.environ["VIDEO_PATH"], playlist_name, ".metadata"), "w"
         ) as f:
             for entry in metadata["entries"]:
                 f.write(entry["id"] + "\n")
@@ -224,19 +221,18 @@ def cut_videos():
         with open(os.path.join(os.environ["VIDEO_PATH"], ".cut_ids"), "r") as f:
             already_cut = list(map(lambda x: x.strip(), f.readlines()))
     for playlist_name in playlists:
-        if 'track_info' not in playlists[playlist_name]:
+        if "track_info" not in playlists[playlist_name]:
             continue
-        track_info = playlists[playlist_name]['track_info']
-        files = os.listdir(os.path.join(
-            os.environ["VIDEO_PATH"], playlist_name))
+        track_info = playlists[playlist_name]["track_info"]
+        files = os.listdir(os.path.join(os.environ["VIDEO_PATH"], playlist_name))
         for file in files:
             if not file.endswith(".mp4") or file[0] == ".":
                 continue
             id = id_from_filename(file)
             if id in already_cut or id not in track_info:
                 continue
-            start = track_info[id]['start'] if 'start' in track_info[id] else 0
-            end = track_info[id]['end'] if 'end' in track_info[id] else None
+            start = track_info[id]["start"] if "start" in track_info[id] else 0
+            end = track_info[id]["end"] if "end" in track_info[id] else None
             if start == 0 and end is None:
                 continue
             print(f"Cutting {file} from {start} to {end}")
@@ -247,15 +243,19 @@ def cut_videos():
                 os.path.join(os.environ["VIDEO_PATH"], playlist_name, file),
             ]
             if start != 0:
-                command.extend([
-                "-ss",
-                str(start),
-                ])
+                command.extend(
+                    [
+                        "-ss",
+                        str(start),
+                    ]
+                )
             if end is not None:
-                command.extend([
-                "-to",
-                str(end),
-                ])
+                command.extend(
+                    [
+                        "-to",
+                        str(end),
+                    ]
+                )
             command.extend(["-c:v", "libx264"])
             command.extend(["-c:a", "aac"])
             command.append(
@@ -285,18 +285,16 @@ def cut_videos():
                 f.write(id + "\n")
 
 
-
 def tag_videos():
     already_tagged = []
     if os.path.exists(os.path.join(os.environ["VIDEO_PATH"], ".tagged_ids")):
         with open(os.path.join(os.environ["VIDEO_PATH"], ".tagged_ids"), "r") as f:
             already_tagged = list(map(lambda x: x.strip(), f.readlines()))
     for playlist_name in playlists:
-        if 'track_info' not in playlists[playlist_name]:
+        if "track_info" not in playlists[playlist_name]:
             continue
-        track_info = playlists[playlist_name]['track_info']
-        files = os.listdir(os.path.join(
-            os.environ["VIDEO_PATH"], playlist_name))
+        track_info = playlists[playlist_name]["track_info"]
+        files = os.listdir(os.path.join(os.environ["VIDEO_PATH"], playlist_name))
         for file in files:
             if not file.endswith(".mp4") or file[0] == ".":
                 continue
@@ -306,13 +304,17 @@ def tag_videos():
             print(f"Tagging {file}")
             # AtomicParsley --longhelp
             # AtomicParsley --genre-list
-            command = ["AtomicParsley", os.path.join(os.environ["VIDEO_PATH"], playlist_name, file), "--overWrite"]
-            if 'title' in track_info[id]:
-                command.extend(["--title", track_info[id]['title']])
-            if 'artist' in track_info[id]:
-                command.extend(["--artist", track_info[id]['artist']])
-            if 'genre' in track_info[id]:
-                command.extend(["--genre", track_info[id]['genre']])
+            command = [
+                "AtomicParsley",
+                os.path.join(os.environ["VIDEO_PATH"], playlist_name, file),
+                "--overWrite",
+            ]
+            if "title" in track_info[id]:
+                command.extend(["--title", track_info[id]["title"]])
+            if "artist" in track_info[id]:
+                command.extend(["--artist", track_info[id]["artist"]])
+            if "genre" in track_info[id]:
+                command.extend(["--genre", track_info[id]["genre"]])
             if len(command) == 3:
                 continue
             atomic_parsley = subprocess.run(command)
@@ -336,8 +338,7 @@ def convert_to_mp3s():
         os.makedirs(
             os.path.join(os.environ["AUDIO_PATH"], playlist_name), exist_ok=True
         )
-        files = os.listdir(os.path.join(
-            os.environ["VIDEO_PATH"], playlist_name))
+        files = os.listdir(os.path.join(os.environ["VIDEO_PATH"], playlist_name))
         for file in files:
             if not file.endswith(".mp4"):
                 continue
@@ -352,8 +353,7 @@ def convert_to_mp3s():
                     "ffmpeg",
                     "-y",
                     "-i",
-                    os.path.join(os.environ["VIDEO_PATH"],
-                                 playlist_name, file),
+                    os.path.join(os.environ["VIDEO_PATH"], playlist_name, file),
                     "-codec:a",
                     "libmp3lame",
                     "-qscale:a",
@@ -377,8 +377,7 @@ def clean():
 
 
 def main():
-    os.makedirs(os.path.join(
-        os.environ["VIDEO_PATH"], "Removed"), exist_ok=True)
+    os.makedirs(os.path.join(os.environ["VIDEO_PATH"], "Removed"), exist_ok=True)
     os.makedirs(os.environ["AUDIO_PATH"], exist_ok=True)
 
     remove_duplicate_id_files()
