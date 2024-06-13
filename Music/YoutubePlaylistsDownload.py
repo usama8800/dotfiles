@@ -7,6 +7,7 @@
 
 import json
 import os
+import re
 import shutil
 import subprocess
 import sys
@@ -286,12 +287,9 @@ def cut_videos():
 
 
 def tag_videos():
-    already_tagged = []
-    if os.path.exists(os.path.join(os.environ["VIDEO_PATH"], ".tagged_ids")):
-        with open(os.path.join(os.environ["VIDEO_PATH"], ".tagged_ids"), "r") as f:
-            already_tagged = list(map(lambda x: x.strip(), f.readlines()))
     for playlist_name in playlists:
         if "track_info" not in playlists[playlist_name]:
+            print(f"No track info for {playlist_name}")
             continue
         track_info = playlists[playlist_name]["track_info"]
         files = os.listdir(os.path.join(os.environ["VIDEO_PATH"], playlist_name))
@@ -299,9 +297,12 @@ def tag_videos():
             if not file.endswith(".mp4") or file[0] == ".":
                 continue
             id = id_from_filename(file)
-            if id in already_tagged:
+            if id not in track_info:
+                print(f'ID "{id}" not in track info for {playlist_name}')
                 continue
-            print(f"Tagging {file}")
+            old_title, old_artist, old_genre = get_atomic_parsley_data(
+                os.path.join(os.environ["VIDEO_PATH"], playlist_name, file)
+            )
             # AtomicParsley --longhelp
             # AtomicParsley --genre-list
             command = [
@@ -309,14 +310,21 @@ def tag_videos():
                 os.path.join(os.environ["VIDEO_PATH"], playlist_name, file),
                 "--overWrite",
             ]
-            if "title" in track_info[id]:
+            if "title" not in track_info[id]:
+                print(f"No title for id {id}")
+            elif old_title != track_info[id]["title"]:
                 command.extend(["--title", track_info[id]["title"]])
-            if "artist" in track_info[id]:
+            if "artist" not in track_info[id]:
+                print(f"No artist for id {id}")
+            elif old_artist != track_info[id]["artist"]:
                 command.extend(["--artist", track_info[id]["artist"]])
-            if "genre" in track_info[id]:
+            if "genre" not in track_info[id]:
+                print(f"No genre for id {id}")
+            elif old_genre != track_info[id]["genre"]:
                 command.extend(["--genre", track_info[id]["genre"]])
             if len(command) == 3:
                 continue
+            print(f"Tagging {file}")
             atomic_parsley = subprocess.run(command)
             if atomic_parsley.returncode != 0:
                 print(f"AtomicParsley failed to run for {file}")
@@ -414,6 +422,31 @@ def set_test():
         raise ValueError("Missing environment variable TEST_AUDIO_PATH")
     os.environ["VIDEO_PATH"] = os.environ["TEST_VIDEO_PATH"]
     os.environ["AUDIO_PATH"] = os.environ["TEST_AUDIO_PATH"]
+
+
+def get_atomic_parsley_data(file):
+    title = ""
+    artist = ""
+    genre = ""
+    command = [
+        "AtomicParsley",
+        file,
+        "-t",
+    ]
+    atomic_parsley = subprocess.run(command, stdout=subprocess.PIPE, text=True)
+    if atomic_parsley.returncode == 0:
+        output = atomic_parsley.stdout[1:].splitlines()
+        regex = re.compile(r"Atom \"(.+?)\" contains: (.*)")
+        for line in output:
+            match = regex.match(line)
+            if match:
+                if match.group(1)[1:] == "nam":
+                    title = match.group(2)
+                elif match.group(1)[1:] == "ART":
+                    artist = match.group(2)
+                elif match.group(1) == "gnre":
+                    genre = match.group(2)
+    return title, artist, genre
 
 
 if __name__ == "__main__":
