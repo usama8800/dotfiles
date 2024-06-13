@@ -336,9 +336,6 @@ def tag_videos():
                     os.path.splitext(file)[0] + ".mp3",
                 )
             )
-            already_tagged.append(id)
-            with open(os.path.join(os.environ["VIDEO_PATH"], ".tagged_ids"), "a") as f:
-                f.write(id + "\n")
 
 
 def convert_to_mp3s():
@@ -375,6 +372,31 @@ def convert_to_mp3s():
                 print(f"ffmpeg failed to convert {file} to {output_filename}")
                 continue
             os.rename(output_filename + ".temp.mp3", output_filename)
+
+
+def get_atomic_parsley_data(file):
+    title = ""
+    artist = ""
+    genre = ""
+    command = [
+        "AtomicParsley",
+        file,
+        "-t",
+    ]
+    atomic_parsley = subprocess.run(command, stdout=subprocess.PIPE, text=True)
+    if atomic_parsley.returncode == 0:
+        output = atomic_parsley.stdout.splitlines()
+        regex = re.compile(r"Atom \"(.+?)\" contains: (.*)")
+        for line in output:
+            match = regex.match(line)
+            if match:
+                if match.group(1).endswith("nam"):
+                    title = match.group(2)
+                elif match.group(1).endswith("ART"):
+                    artist = match.group(2)
+                elif match.group(1) == "gnre":
+                    genre = match.group(2)
+    return title, artist, genre
 
 
 def clean():
@@ -422,31 +444,6 @@ def set_test():
         raise ValueError("Missing environment variable TEST_AUDIO_PATH")
     os.environ["VIDEO_PATH"] = os.environ["TEST_VIDEO_PATH"]
     os.environ["AUDIO_PATH"] = os.environ["TEST_AUDIO_PATH"]
-
-
-def get_atomic_parsley_data(file):
-    title = ""
-    artist = ""
-    genre = ""
-    command = [
-        "AtomicParsley",
-        file,
-        "-t",
-    ]
-    atomic_parsley = subprocess.run(command, stdout=subprocess.PIPE, text=True)
-    if atomic_parsley.returncode == 0:
-        output = atomic_parsley.stdout[1:].splitlines()
-        regex = re.compile(r"Atom \"(.+?)\" contains: (.*)")
-        for line in output:
-            match = regex.match(line)
-            if match:
-                if match.group(1)[1:] == "nam":
-                    title = match.group(2)
-                elif match.group(1)[1:] == "ART":
-                    artist = match.group(2)
-                elif match.group(1) == "gnre":
-                    genre = match.group(2)
-    return title, artist, genre
 
 
 if __name__ == "__main__":
