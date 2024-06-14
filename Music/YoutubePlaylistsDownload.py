@@ -17,6 +17,7 @@ from dotenv import load_dotenv
 # External dependencies:
 # - yt-dlp
 # - ffmpeg
+# - ffprobe
 # - AtomicParsley
 
 
@@ -43,11 +44,15 @@ def remove(path):
         print("Would remove " + path)
 
 
-def move(from_path, to_path):
+def move(from_path, to_path, noprint=False):
     if not simulate:
-        print("Moving " + from_path + " to " + to_path)
-        os.rename(from_path, to_path)
-    else:
+        if not noprint:
+            print("Moving " + from_path + " to " + to_path)
+        if os.path.exists(to_path):
+            os.replace(from_path, to_path)
+        else:
+            os.rename(from_path, to_path)
+    elif not noprint:
         print("Would move " + from_path + " to " + to_path)
 
 
@@ -227,14 +232,34 @@ def cut_videos():
         track_info = playlists[playlist_name]["track_info"]
         files = os.listdir(os.path.join(os.environ["VIDEO_PATH"], playlist_name))
         for file in files:
-            if not file.endswith(".mp4") or file[0] == ".":
+            if not file.endswith(".mp4"):
                 continue
             id = id_from_filename(file)
-            if id in already_cut or id not in track_info:
+            # if id in already_cut or id not in track_info:
+            #     continue
+            if id not in track_info:
                 continue
             start = track_info[id]["start"] if "start" in track_info[id] else 0
             end = track_info[id]["end"] if "end" in track_info[id] else None
             if start == 0 and end is None:
+                continue
+            length = get_video_length(
+                os.path.join(os.environ["VIDEO_PATH"], playlist_name, file)
+            )
+            secs_start = hhmmToSecs(start)
+            secs_end = hhmmToSecs(end)
+            diff = length - (secs_end - secs_start)
+            if diff <= 1:
+                continue
+            if secs_end > length:
+                move(
+                    os.path.join(os.environ["VIDEO_PATH"], playlist_name, file),
+                    os.path.join(
+                        os.environ["VIDEO_PATH"],
+                        "Removed",
+                        playlist_name + " - " + file,
+                    ),
+                )
                 continue
             print(f"Cutting {file} from {start} to {end}")
             command = [
@@ -275,11 +300,12 @@ def cut_videos():
                     os.path.splitext(file)[0] + ".mp3",
                 )
             )
-            os.replace(
+            move(
                 os.path.join(
                     os.environ["VIDEO_PATH"], playlist_name, file + ".temp.mp4"
                 ),
                 os.path.join(os.environ["VIDEO_PATH"], playlist_name, file),
+                True,
             )
             already_cut.append(id)
             with open(os.path.join(os.environ["VIDEO_PATH"], ".cut_ids"), "a") as f:
@@ -399,6 +425,39 @@ def get_atomic_parsley_data(file):
     return title, artist, genre
 
 
+def get_video_length(file):
+    command = [
+        "ffprobe",
+        "-v",
+        "error",
+        "-show_streams",
+        "-select_streams",
+        "v:0",
+        "-of",
+        "json",
+        file,
+    ]
+    ffprobe = subprocess.run(command, stdout=subprocess.PIPE)
+    output = json.loads(ffprobe.stdout)
+    streams = output["streams"]
+    stream = streams[0]
+    duration = stream["duration"]
+    return int(float(duration))
+
+
+def hhmmToSecs(hhmmss):
+    try:
+        return int(hhmmss)
+    except:
+        parts = hhmmss.split(":")
+        secs = 0
+        if len(parts) == 3:
+            secs += int(parts[0]) * 60 * 60
+            parts = parts[1:]
+        secs += int(parts[0]) * 60 + int(parts[1])
+        return secs
+
+
 def clean():
     remove_duplicate_id_files()
     remove_files_not_in_metadata()
@@ -476,5 +535,7 @@ if __name__ == "__main__":
                 clean()
             elif arg == "tag":
                 tag_videos()
+            elif arg.startswith("s"):
+                hhmmToSecs(arg[1:])
             else:
                 raise ValueError(f"Unknown argument {arg}")
