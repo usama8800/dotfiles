@@ -33,9 +33,9 @@ test = False
 
 def remove(path):
     if not simulate:
-        print("Removing " + path)
         if not os.path.exists(path):
             return
+        print("Removing " + path)
         if os.path.isdir(path):
             shutil.rmtree(path)
         else:
@@ -222,10 +222,6 @@ def download_metadata():
 
 
 def cut_videos():
-    already_cut = []
-    if os.path.exists(os.path.join(os.environ["VIDEO_PATH"], ".cut_ids")):
-        with open(os.path.join(os.environ["VIDEO_PATH"], ".cut_ids"), "r") as f:
-            already_cut = list(map(lambda x: x.strip(), f.readlines()))
     for playlist_name in playlists:
         if "track_info" not in playlists[playlist_name]:
             continue
@@ -235,8 +231,6 @@ def cut_videos():
             if not file.endswith(".mp4"):
                 continue
             id = id_from_filename(file)
-            # if id in already_cut or id not in track_info:
-            #     continue
             if id not in track_info:
                 continue
             start = track_info[id]["start"] if "start" in track_info[id] else 0
@@ -307,9 +301,6 @@ def cut_videos():
                 os.path.join(os.environ["VIDEO_PATH"], playlist_name, file),
                 True,
             )
-            already_cut.append(id)
-            with open(os.path.join(os.environ["VIDEO_PATH"], ".cut_ids"), "a") as f:
-                f.write(id + "\n")
 
 
 def tag_videos():
