@@ -526,7 +526,20 @@ if __name__ == "__main__":
                 clean()
             elif arg == "tag":
                 tag_videos()
-            elif arg.startswith("s"):
-                hhmmToSecs(arg[1:])
+            elif arg == "help":
+                print(
+                    """
+Usage:
+    YoutubePlaylistsDownload.py <commands>
+
+Commands:
+    download
+    metadata
+    cut
+    convert
+    clean
+    tag
+    help"""
+                )
             else:
                 raise ValueError(f"Unknown argument {arg}")
