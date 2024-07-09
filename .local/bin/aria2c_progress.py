@@ -8,25 +8,37 @@ import time
 frag_file_pattern = re.compile("part-Frag\d+$")
 
 
-def progressbar(it, prefix="", size=60, out=sys.stdout):  # Python3.6+
+def progressbar(it, prefix="", given_size=0, out=sys.stdout, skipped=0):  # Python3.6+
     count = len(it)
     start = time.time()  # time estimate start
 
     def show(j):
-        x = int(size * j / count)
-        # time estimate calculation and string
-        remaining = ((time.time() - start) / j) * (count - j)
-        mins, sec = divmod(remaining, 60)  # limited to minutes
-        time_str = f"{int(mins):02}:{sec:03.1f}"
+        remaining = ((time.time() - start) / (j - skipped)) * (count - (j - skipped))
+        mins, sec = divmod(remaining, 60)
+        hrs, mins = divmod(mins, 60)
+        time_str = f"{int(mins):02}:{int(sec):02}"
+        if hrs > 0:
+            time_str = f"{int(hrs):02}:{time_str}"
+
+        replace_str = "progress_bar_goes_here"
+        msg = f"{prefix}[{replace_str}] {j}/{count} - ETA {time_str}"
+        size = (
+            given_size
+            if given_size > 0
+            else os.get_terminal_size().columns - (len(msg) - len(replace_str))
+        )
+        progress = int(size * j / count)
         print(
-            f"{prefix}[{u'█'*x}{('.'*(size-x))}] {j}/{count} Est wait {time_str}",
+            msg.replace(replace_str, f"{u'█' * progress}{('.' * (size - progress))}"),
             end="\r",
             file=out,
             flush=True,
         )
 
-    show(0.1)  # avoid div/0
+    show(skipped - 1 if skipped > 1 else 0.1)
     for i, item in enumerate(it):
+        if i < skipped:
+            continue
         yield item
         show(i + 1)
     print("\n", file=out, flush=True)
@@ -59,13 +71,7 @@ def get_urls_len():
 def main():
     urls_len = get_urls_len()
     frags_len = get_fragments_len()
-    width = os.get_terminal_size().columns
-    heading = ""
-    size = width - (
-        len(heading) + 2 + 1 + len(str(urls_len)) * 2 + 1 + 1 + len("Est wait 00:00.0")
-    )
-
-    for i in progressbar(range(urls_len), heading, size):
+    for i in progressbar(range(urls_len), skipped=frags_len):
         if i < frags_len:
             continue
         while True:
