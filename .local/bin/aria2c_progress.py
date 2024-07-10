@@ -11,25 +11,34 @@ frag_file_pattern = re.compile("part-Frag\d+$")
 def progressbar(it, prefix="", given_size=0, out=sys.stdout, skipped=0):  # Python3.6+
     count = len(it)
     start = time.time()  # time estimate start
+    skipped_percentage = skipped / count
 
     def show(j):
-        remaining = ((time.time() - start) / (j - skipped)) * (count - (j - skipped))
-        mins, sec = divmod(remaining, 60)
+        percentage = j / count
+        time_spent = time.time() - start
+        expected_total_time = time_spent / (percentage - skipped_percentage)
+        time_remaining = expected_total_time * (1 - percentage)
+        mins, sec = divmod(time_remaining, 60)
         hrs, mins = divmod(mins, 60)
         time_str = f"{int(mins):02}:{int(sec):02}"
-        if hrs > 0:
-            time_str = f"{int(hrs):02}:{time_str}"
+        if hrs > 99:
+            time_str = f"{int(hrs)}:{time_str}"
+        elif hrs > 0:
+            time_str = f"{int(hrs)}:{time_str}"
 
+        percentage_str = f"{percentage*100:.2f}%"
         replace_str = "progress_bar_goes_here"
-        msg = f"{prefix}[{replace_str}] {j}/{count} - ETA {time_str}"
+        msg = f"{prefix}[{replace_str}] {percentage_str} - ETA {time_str}"
         size = (
             given_size
             if given_size > 0
             else os.get_terminal_size().columns - (len(msg) - len(replace_str))
         )
-        progress = int(size * j / count)
+        progress_size = int(size * percentage)
         print(
-            msg.replace(replace_str, f"{u'█' * progress}{('.' * (size - progress))}"),
+            msg.replace(
+                replace_str, f"{u'█' * progress_size}{('.' * (size - progress_size))}"
+            ),
             end="\r",
             file=out,
             flush=True,
@@ -54,7 +63,7 @@ def get_urls_len():
     url_file = filter(lambda x: x.endswith(".frag.urls"), files)
     url_file = list(url_file)
     if len(url_file) == 0:
-        print("No urls found")
+        print("No urls file found")
         return
     url_file = url_file[0]
     with open(url_file) as f:
@@ -71,6 +80,10 @@ def get_urls_len():
 def main():
     urls_len = get_urls_len()
     frags_len = get_fragments_len()
+    if urls_len is None:
+        return
+    if frags_len is None:
+        frags_len = 0
     for i in progressbar(range(urls_len), skipped=frags_len):
         if i < frags_len:
             continue
