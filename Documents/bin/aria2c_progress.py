@@ -8,27 +8,57 @@ import time
 frag_file_pattern = re.compile("part-Frag\d+$")
 
 
-def progressbar(it, prefix="", given_size=0, out=sys.stdout, skipped=0):  # Python3.6+
+def progressbar(
+    it,
+    prefix="",
+    given_size=0,
+    out=sys.stdout,
+    skipped=0,
+    show_percentage=True,
+    show_count=False,
+):
     count = len(it)
-    start = time.time()  # time estimate start
+    start = time.time()
     skipped_percentage = skipped / count
+    time_remaining_ema = 0
+    prev_time_remaining = []
+    moving_avg_len = int(count * 0.01) + 1
+    time_remaining_ema = 0
+    ema_factor = 1 - (5 / 100)
 
     def show(j):
+        nonlocal time_remaining_ema, start
         percentage = j / count
         time_spent = time.time() - start
-        expected_total_time = time_spent / (percentage - skipped_percentage)
+        start = time.time()
+        expected_total_time = time_spent * count
         time_remaining = expected_total_time * (1 - percentage)
-        mins, sec = divmod(time_remaining, 60)
+        prev_time_remaining.append(time_remaining)
+        if len(prev_time_remaining) > moving_avg_len:
+            prev_time_remaining.pop(0)
+        time_remaining = sum(prev_time_remaining) / len(prev_time_remaining)
+        time_remaining_ema = (
+            ema_factor * time_remaining_ema + (1 - ema_factor) * time_remaining
+            if time_remaining_ema > 0
+            else time_remaining
+        )
+        mins, sec = divmod(time_remaining_ema, 60)
         hrs, mins = divmod(mins, 60)
         time_str = f"{int(mins):02}:{int(sec):02}"
         if hrs > 99:
             time_str = f"{int(hrs)}:{time_str}"
         elif hrs > 0:
-            time_str = f"{int(hrs)}:{time_str}"
+            time_str = f"{int(hrs):02}:{time_str}"
 
         percentage_str = f"{percentage*100:.2f}%"
         replace_str = "progress_bar_goes_here"
-        msg = f"{prefix}[{replace_str}] {percentage_str} - ETA {time_str}"
+        msg = f"{prefix}[{replace_str}]"
+        if show_percentage:
+            msg += f" {percentage_str}"
+        if show_count:
+            msg += f" ({j}/{count})"
+        if time_str != "00:00":
+            msg += f" - ETA {time_str}"
         size = (
             given_size
             if given_size > 0
