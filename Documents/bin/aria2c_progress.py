@@ -6,6 +6,7 @@ import sys
 import time
 
 frag_file_pattern = re.compile("part-Frag\d+$")
+count = False
 
 
 def progressbar(
@@ -114,7 +115,7 @@ def main():
         return
     if frags_len is None:
         frags_len = 0
-    for i in progressbar(range(urls_len), skipped=frags_len):
+    for i in progressbar(range(urls_len), skipped=frags_len, show_count=count):
         if i < frags_len:
             continue
         while True:
@@ -130,7 +131,9 @@ if __name__ == "__main__":
         main()
     else:
         for arg in sys.argv[1:]:
-            if arg == "help":
+            if arg == "c" or arg == "i":
+                count = True
+            elif arg == "help":
                 print()
             else:
                 raise ValueError(f"Unknown argument {arg}")
