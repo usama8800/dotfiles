@@ -68,7 +68,6 @@ def join_frags():
 def split_video(file, output):
     if not os.path.exists(file):
         raise ValueError(f"File not found: {file}")
-    # ffmpeg -i input.mp4 -c copy -f segment -segment_time seconds output-part-%d.mp4
     subprocess.run(
         [
             "ffmpeg",
@@ -97,6 +96,7 @@ def fix_videos(pattern):
                 file,
                 "-c",
                 "copy",
+                "-y",
                 "fixed.mp4",
             ]
         )
@@ -138,4 +138,3 @@ commands:
             )
         else:
             raise ValueError(f"Unknown argument {arg}")
-        i += 1
