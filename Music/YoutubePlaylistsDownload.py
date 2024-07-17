@@ -330,17 +330,14 @@ def tag_videos():
             if "title" not in track_info[id]:
                 print(f"No title for id {id}")
             elif old_title != track_info[id]["title"]:
-                print(old_title, track_info[id]["title"])
                 command.extend(["--title", track_info[id]["title"]])
             if "artist" not in track_info[id]:
                 print(f"No artist for id {id}")
             elif old_artist != track_info[id]["artist"]:
-                print(old_artist, track_info[id]["artist"])
                 command.extend(["--artist", track_info[id]["artist"]])
             if "genre" not in track_info[id]:
                 print(f"No genre for id {id}")
             elif old_genre != track_info[id]["genre"]:
-                print(old_genre, track_info[id]["genre"])
                 command.extend(["--genre", track_info[id]["genre"]])
             if len(command) == 3:
                 continue
