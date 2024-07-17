@@ -106,6 +106,12 @@ def fix_videos(pattern):
             os.remove("fixed.mp4")
 
 
+def download(url, file):
+    subprocess.run(
+        ["yt-dlp", "--downloader", "aria2c", "--fixup", "warn", url, "-o", file]
+    )
+
+
 if __name__ == "__main__":
     sys.argv.pop(0)
     while len(sys.argv):
@@ -125,6 +131,14 @@ if __name__ == "__main__":
                 raise ValueError("Missing argument: pattern")
             pattern = sys.argv.pop(0)
             fix_videos(pattern)
+        elif arg == "download":
+            if len(sys.argv) < 1:
+                raise ValueError("Missing argument: url")
+            url = sys.argv.pop(0)
+            if len(sys.argv) < 1:
+                raise ValueError("Missing argument: file")
+            file = sys.argv.pop(0)
+            download(url, file)
         elif arg == "help":
             print(
                 """twitch.py <command>
@@ -133,6 +147,7 @@ commands:
   join
   split <file> <output>
   fix <pattern>
+  download <url> <file>
   help
 """
             )
