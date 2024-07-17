@@ -330,14 +330,17 @@ def tag_videos():
             if "title" not in track_info[id]:
                 print(f"No title for id {id}")
             elif old_title != track_info[id]["title"]:
+                print(old_title, track_info[id]["title"])
                 command.extend(["--title", track_info[id]["title"]])
             if "artist" not in track_info[id]:
                 print(f"No artist for id {id}")
             elif old_artist != track_info[id]["artist"]:
+                print(old_artist, track_info[id]["artist"])
                 command.extend(["--artist", track_info[id]["artist"]])
             if "genre" not in track_info[id]:
                 print(f"No genre for id {id}")
             elif old_genre != track_info[id]["genre"]:
+                print(old_genre, track_info[id]["genre"])
                 command.extend(["--genre", track_info[id]["genre"]])
             if len(command) == 3:
                 continue
@@ -403,7 +406,7 @@ def get_atomic_parsley_data(file):
     atomic_parsley = subprocess.run(command, stdout=subprocess.PIPE, text=True)
     if atomic_parsley.returncode == 0:
         output = atomic_parsley.stdout.splitlines()
-        regex = re.compile(r"Atom \"(.+?)\" contains: (.*)")
+        regex = re.compile(r"^.?Atom \"(.+?)\" contains: (.*)$")
         for line in output:
             match = regex.match(line)
             if match:
