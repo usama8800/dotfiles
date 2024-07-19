@@ -71,32 +71,10 @@ services:
     volumes:
       - ./homeassistant:/config
     restart: unless-stopped
-  monica:
-    image: monica:latest
-    container_name: monica
-    volumes:
-      - ./monica:/var/www/html/storage
-    restart: unless-stopped
-    environment:
-      - DB_PORT=3306
-      - DB_DATABASE=monica
-      - DB_USERNAME=monica
-      - DB_PASSWORD=${MONICA_DB_PASSWORD}
-      - DB_HOST=mysql
-      - APP_ENV=production
-      - MAIL_MAILER=smtp
-      - MAIL_HOST=smtp.gmail.com
-      - MAIL_PORT=465
-      - MAIL_USERNAME=${EMAIL}
-      - MAIL_PASSWORD=${GMAIL_PASSWORD}
-      - MAIL_ENCRYPTION=tls
-      - MAIL_FROM_ADDRESS=${EMAIL}
-      - MAIL_FROM_NAME=${NAME}
   piserver:
     build: ../PiServer/
     container_name: piserver
     volumes:
-    #   - ./../SaleOrders/:/SaleOrders/
       - ../PiServer/data:/data
     restart: unless-stopped
   homer:

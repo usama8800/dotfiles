@@ -3,13 +3,13 @@
     "id": "sitelink",
     "type": "inputstring",
     "name": "Site Link",
-    "value": "https://kickasstorrents.to/"
+    "value": "https://badasstorrents.com/"
   },
   {
     "id": "cookieheader",
     "type": "hiddendata",
     "name": "CookieHeader",
-    "value": "PHPSESSID=ovk5v03t8ftdancqt6jdavkmd0"
+    "value": null
   },
   {
     "id": "lasterror",
@@ -18,14 +18,35 @@
     "value": null
   },
   {
+    "id": "downloadlink",
+    "type": "inputselect",
+    "name": "Download link",
+    "value": "magnet:?xt=",
+    "options": {
+      "/download/": ".torrent",
+      "magnet:?xt=": "magnet"
+    }
+  },
+  {
+    "id": "downloadlink(fallback)",
+    "type": "inputselect",
+    "name": "Download link (fallback)",
+    "value": "/download/",
+    "options": {
+      "/download/": ".torrent",
+      "magnet:?xt=": "magnet"
+    }
+  },
+  {
     "id": "sortrequestedfromsite",
     "type": "inputselect",
     "name": "Sort requested from site",
-    "value": "time",
+    "value": "seeds",
     "options": {
-      "time": "created",
-      "seeders": "seeders",
-      "size": "size"
+      "date": "created",
+      "seeds": "seeders",
+      "size": "size",
+      "title": "title"
     }
   },
   {

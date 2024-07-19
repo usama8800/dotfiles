@@ -6,10 +6,12 @@
   <UrlBase>/sonarr</UrlBase>
   <BindAddress>*</BindAddress>
   <ApiKey>040a883d21924be2b92430741500ca94</ApiKey>
-  <AuthenticationMethod>None</AuthenticationMethod>
+  <AuthenticationMethod>Forms</AuthenticationMethod>
   <UpdateMechanism>Docker</UpdateMechanism>
   <LaunchBrowser>True</LaunchBrowser>
   <Branch>main</Branch>
-  <SslCertHash></SslCertHash>
   <InstanceName>Sonarr</InstanceName>
+  <AuthenticationRequired>Enabled</AuthenticationRequired>
+  <SslCertPath></SslCertPath>
+  <SslCertPassword></SslCertPassword>
 </Config>

@@ -8,9 +8,10 @@
   <EnableSsl>False</EnableSsl>
   <LaunchBrowser>True</LaunchBrowser>
   <ApiKey>8b025524da3448a4be7771c72067406a</ApiKey>
-  <AuthenticationMethod>None</AuthenticationMethod>
+  <AuthenticationMethod>Forms</AuthenticationMethod>
   <Branch>master</Branch>
   <SslCertPath></SslCertPath>
   <SslCertPassword></SslCertPassword>
   <InstanceName>Radarr</InstanceName>
+  <AuthenticationRequired>Enabled</AuthenticationRequired>
 </Config>

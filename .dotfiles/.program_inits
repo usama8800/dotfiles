@@ -1,33 +1,37 @@
 if [[ -f "$HOME/.cargo/env" ]]; then
   source "$HOME/.cargo/env"
 fi
+
 if [[ -f "$HOME/.config/broot/launcher/bash/br" ]]; then
   source "$HOME/.config/broot/launcher/bash/br"
 fi
+
 if [[ -f "$HOME/.bash-preexec.sh" ]]; then
   source "$HOME/.bash-preexec.sh"
   if [[ $(which atuin) ]]; then
     eval "$(atuin init bash --disable-up-arrow)"
   fi
 fi
+
 if [[ -f "$HOME/.fzf.bash" ]]; then
   source "$HOME/.fzf.bash"
 fi
-if [[ -f "$HOME/.fzf.bash" ]]; then
-  source "$HOME/.fzf.bash"
-fi
+
 if [[ $(which bat) ]]; then
   alias cat='bat '
 fi
+
 if [[ $(which exa) ]]; then
   alias ls='exa '
   alias ll='exa -l '
   alias la='exa -a '
   alias lla='exa -la '
 fi
+
 if [[ $(which zoxide) ]]; then
   eval "$(zoxide init bash)"
 fi
+
 if [[ $(which zellij) ]]; then
   # ./zellij.py
   if [ -z "$ZELLIJ" ]; then
@@ -35,3 +39,6 @@ if [[ $(which zellij) ]]; then
   fi
 fi
 
+# bun
+export BUN_INSTALL="$HOME/.bun"
+export PATH=$BUN_INSTALL/bin:$PATH

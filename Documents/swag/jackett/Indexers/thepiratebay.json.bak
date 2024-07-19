@@ -3,13 +3,13 @@
     "id": "sitelink",
     "type": "inputstring",
     "name": "Site Link",
-    "value": "https://www.anirena.com/"
+    "value": "https://thepiratebay.org/"
   },
   {
     "id": "cookieheader",
     "type": "hiddendata",
     "name": "CookieHeader",
-    "value": "anirena_com_u=1; anirena_com_sid=7e48104ee28c1bf820ef00f7d90ef68f; __cflb=02DiuD8AhNjcPpJkAnGMbKZD2YdMYosRrWvmDvs5Dp77z"
+    "value": null
   },
   {
     "id": "lasterror",
