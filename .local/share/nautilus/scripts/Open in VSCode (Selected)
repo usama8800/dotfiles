@@ -1,0 +1,9 @@
+#!/usr/bin/bash
+
+IFS='
+'
+
+for dir in $NAUTILUS_SCRIPT_SELECTED_FILE_PATHS; do
+    code "$dir"
+    break
+done

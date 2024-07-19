@@ -1,0 +1,11 @@
+#!/usr/bin/bash
+
+IFS='
+'
+
+combined_dirs=()
+for dir in $NAUTILUS_SCRIPT_SELECTED_FILE_PATHS; do
+    [[ -f $dir ]] && dir=${dir%/*}
+    combined_dirs=("${combined_dirs[@]}" "$dir")
+done
+vlc --recursive expand "${combined_dirs[@]}"

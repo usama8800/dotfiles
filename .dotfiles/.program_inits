@@ -1,3 +1,5 @@
+#!/usr/bin/env bash
+
 if [[ -f "$HOME/.cargo/env" ]]; then
   source "$HOME/.cargo/env"
 fi
@@ -22,10 +24,10 @@ if [[ $(which bat) ]]; then
 fi
 
 if [[ $(which exa) ]]; then
-  alias ls='exa '
-  alias ll='exa -l '
-  alias la='exa -a '
-  alias lla='exa -la '
+  alias ls='exa --group-directories-first --across'
+  alias ll='exa --group-directories-first --across --long '
+  alias la='exa --group-directories-first --across --all '
+  alias lla='exa --group-directories-first --across --long --all '
 fi
 
 if [[ $(which zoxide) ]]; then

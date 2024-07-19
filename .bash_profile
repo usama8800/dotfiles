@@ -1,3 +1,5 @@
+#!/usr/bin/env bash
+
 # Add `~/bin` to the `$PATH`
 export PATH="$HOME/bin:$PATH"
 
@@ -36,7 +38,7 @@ fi
 
 # Add tab completion for SSH hostnames based on ~/.ssh/config, ignoring wildcards
 sshDir="$HOME/.ssh"
-[ -e "$sshDir/config" ] && complete -o "default" -o "nospace" -W "$(grep "^Host" $sshDir/config | grep -v "[?*]" | cut -d " " -f2- | tr ' ' '\n')" scp sftp ssh
+[ -e "$sshDir/config" ] && complete -o "default" -o "nospace" -W "$(grep "^Host" "$sshDir"/config | grep -v "[?*]" | cut -d " " -f2- | tr ' ' '\n')" scp sftp ssh
 
 # Attach to a `screen` session, or create one if it doesn’t exist if parent command is SSH
 # case "/$(ps -p $PPID -o comm=)" in

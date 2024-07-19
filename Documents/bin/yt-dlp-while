@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+
+first=0
+code=1
+while [[ "$code" -ne 0 ]]; do
+  echo "code: $code"
+  echo "first: $first"
+  if [[ "$first" -eq 0 ]]; then
+    first=1
+  else
+    sleep 10
+  fi
+  yt-dlp "$@"
+  code=$?
+done

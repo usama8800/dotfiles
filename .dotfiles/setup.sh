@@ -1,4 +1,3 @@
 #!/bin/bash
 
-source ~/.bashrc
-dotfiles config status.showUntrackedFiles no
+git --git-dir="$HOME"/.dotfiles/dotfiles.git/ config status.showUntrackedFiles no

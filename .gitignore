@@ -9,3 +9,5 @@ cache
 .rustup
 .nvm
 .pub-cache
+*.local
+!.local

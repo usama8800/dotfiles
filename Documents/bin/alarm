@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+
+cvlc -L /usr/share/sounds/gnome/default/alerts/glass.ogg
