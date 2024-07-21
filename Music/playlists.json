@@ -751,126 +751,119 @@
       }
     }
   },
-  "Down with the Atriarchy": {
-    "url": "https://www.youtube.com/playlist?list=PLnnmg4FEileQGTodcPMvqYo79LtTZVpDV",
-    "output_format": "%(playlist_index)02d - %(title)s - %(id)s.%(ext)s",
-    "items": "2-4,6-12,14-16,19-24,26,28,30",
+  "Atrioc": {
+    "url": "https://www.youtube.com/playlist?list=PLZY56D5QXJZ-facUOhMGlMn5tQGR86omz",
     "track_info": {
+      "De3TaHwgV60": {
+        "title": "Parody of Hey Ya",
+        "genre": "Pop",
+        "artist": "Akaherb"
+      },
+      "_YThst8LI94": {
+        "title": "Teen Titans",
+        "genre": "Pop",
+        "artist": "TheMrBigdog"
+      },
+      "xpgr4FeL4aI": {
+        "title": "Agent 47",
+        "genre": "Pop",
+        "artist": "Zoobadewoop"
+      },
+      "YHiaR9MrzQ8": {
+        "title": "Ride or Die",
+        "genre": "Pop",
+        "artist": "Good.Knight"
+      },
+      "_bzU4CPFGyw": {
+        "title": "D R I P",
+        "genre": "Pop",
+        "artist": "Maxim"
+      },
+      "DKBsXUVi1nM": {
+        "title": "Hitman in Paris",
+        "genre": "Pop",
+        "artist": "NegNeg, Aspecticor, Sykik"
+      },
+      "PfXO7EPwg8Y": {
+        "title": "Coffee Cow",
+        "genre": "Pop",
+        "artist": "Aspecticor"
+      },
+      "P_jH71D8Ibw": {
+        "title": "Guccigatana",
+        "genre": "Pop",
+        "artist": "Zoobadewoop"
+      },
+      "mUvJr-15CUY": {
+        "title": "Atrioc Anthem",
+        "genre": "Pop",
+        "artist": "AntibaterialHandwipe"
+      },
       "9ihSbZ7VTNo": {
-        "title": "02 - Down With The Atriarchy (feat. ask the storyteller, michael, dropspindle)",
-        "artist": "ACLU",
-        "genre": "Cult"
-      },
-      "AcdbbnNOJYk": {
-        "title": "03 - 16 Months (feat. coolbreeze02050)",
-        "artist": "ACLU",
-        "genre": "Cult"
-      },
-      "2y3PcNHSzLE": {
-        "title": "04 - AtriocLily (Beautiful Panda)",
-        "artist": "ACLU",
-        "genre": "Cult"
+        "title": "Down With The Atriarchy",
+        "genre": "Pop",
+        "artist": "The Atriarchy, Ask the Storyteller, Michael, Dropspindle, OwenCMYK"
       },
       "v8kVe-YLE7o": {
-        "title": "06 - VOD Frog (feat. FiN)",
-        "artist": "ACLU",
-        "genre": "Cult"
-      },
-      "MxWYOzuKdp4": {
-        "title": "07 - Guises (feat. BunnygirlBadass)",
-        "artist": "ACLU",
-        "genre": "Cult"
-      },
-      "stfT71Hj3pQ": {
-        "title": "08 - It's A Slop Stream (feat. coolbreeze02050)",
-        "artist": "ACLU",
-        "genre": "Cult"
-      },
-      "gp8RvFm5s3Q": {
-        "title": "09 - Streamer Knows I'm Miserable Now (feat. michael)",
-        "artist": "ACLU",
-        "genre": "Cult"
-      },
-      "TycYkq31-dQ": {
-        "title": "10 - Fueled by Copium (feat. ask the storyteller, MikesHardest, chillaxx)",
-        "artist": "ACLU",
-        "genre": "Cult"
-      },
-      "zGdVEKCmdjE": {
-        "title": "11 - Wish I Could Gift More (feat. anomaletix)",
-        "artist": "ACLU",
-        "genre": "Cult"
-      },
-      "PTfDkQu5ipo": {
-        "title": "12 - Good Day! (feat. RDCwest)",
-        "artist": "ACLU",
-        "genre": "Cult"
-      },
-      "vhcrG5FTvEY": {
-        "title": "14 - Gamba n' Beer (feat. dropspindle, aidan, froggman)",
-        "artist": "ACLU",
-        "genre": "Cult"
-      },
-      "1nuPocNEKMo": {
-        "title": "15 - every trade's embarrassing / still react to tweets (feat. chillaxx)",
-        "artist": "ACLU",
-        "genre": "Cult"
+        "title": "VOD Frog",
+        "genre": "Pop",
+        "artist": "The Atriarchy, FIN, OwenCMYK"
       },
       "ZiVAJlayq00": {
-        "title": "16 - My Favorite Streams (feat. dropspindle & Nate)",
-        "artist": "ACLU",
-        "genre": "Cult"
-      },
-      "eHBM4oobfYA": {
-        "title": "19 - ACLU's Primetime (feat. RDCwest, ask the storyteller, and FiN)",
-        "artist": "ACLU",
-        "genre": "Cult"
-      },
-      "djB1PmSot1A": {
-        "title": "20 - Off The Rails (feat. ask the storyteller & javid74)",
-        "artist": "ACLU",
-        "genre": "Cult"
-      },
-      "_aFo6rdnP8A": {
-        "title": "21 - No Strings (feat. MikesHardest, pey the musician, dropspindle, FiN, and ask the storyteller)",
-        "artist": "ACLU",
-        "genre": "Cult"
-      },
-      "I5GvUVBGcfs": {
-        "title": "22 - Coffee and Cocaine (feat. ask the storyteller, afromatt, chillaxx)",
-        "artist": "ACLU",
-        "genre": "Cult"
+        "title": "My Favorite Streams",
+        "genre": "Pop",
+        "artist": "Dropspindle, Nate"
       },
       "Ju6llYL3p4g": {
-        "title": "23 - Teardown (feat. dropspindle & froggman)",
-        "artist": "ACLU",
-        "genre": "Cult"
-      },
-      "Nfr6ZJ6vCJ4": {
-        "title": "24 - I Got Brainrot (feat. dropspindle & ask the storyteller)",
-        "artist": "ACLU",
-        "genre": "Cult"
+        "title": "Teardown",
+        "genre": "Pop",
+        "artist": "Dropspindle, Froggman, !carus, "
       },
       "z3xIJoTfJlo": {
-        "title": "26 - The Degens Sleep Tonight",
-        "artist": "ACLU",
-        "genre": "Cult"
+        "title": "The Degens Sleep Tonight",
+        "genre": "Pop",
+        "artist": "Nate, Uneasyflame, Coolbreeze02050, Dropspindle, Badger, Uokm, Javid74, Smefer"
       },
-      "VQl_NRe507o": {
-        "title": "28 - Believers Rise",
-        "artist": "ACLU",
-        "genre": "Cult"
+      "4Py96uJiYAw": {
+        "title": "Str3am3r Bo1",
+        "genre": "Pop",
+        "artist": "Confuzzled, Shasta"
       },
-      "RwuDVoWM65M": {
-        "title": "30 - Building Dreams (Outro Cypher)",
-        "artist": "ACLU",
-        "genre": "Cult"
+      "tz-SC3R5y-g": {
+        "title": "Ad Spam",
+        "genre": "Pop",
+        "artist": "Dropspindle, Jemini"
+      },
+      "jodApZ1Pt-U": {
+        "title": "Send It",
+        "genre": "Pop",
+        "artist": "Dropspindle, gRRiever"
+      },
+      "Fq3WQGBalnw": {
+        "title": "Stop Assuming That I'll Be Fine",
+        "genre": "Pop",
+        "artist": "Beautiful Panda, Forggman, AZ, JPecs"
+      },
+      "y31wvvKjHOk": {
+        "title": "3rd Place",
+        "genre": "Pop",
+        "artist": "JPecs, Javid74, ItsAZ, Froggman, Beautiful Panda"
+      },
+      "_WJ2VWkoz-A": {
+        "title": "God Gamer",
+        "genre": "Pop",
+        "artist": "gRRiever, StoneEars, SofiUH, Beautiful Panda"
       }
     }
   },
   "Random Music": {
     "url": "https://www.youtube.com/playlist?list=PLZY56D5QXJZ_WyaiL6BlA7dV2UiwZOzzn",
     "track_info": {
+      "Zi_XLOBDo_Y": {
+        "title": "Billie Jean",
+        "artist": "Michael Jackson",
+        "genre": "Pop"
+      },
       "075Z7tJC_-I": {
         "title": "Kasu Panam",
         "artist": "Anthony Daasan, Gana Bala",

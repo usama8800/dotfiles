@@ -116,25 +116,6 @@ def remove_files_not_in_metadata():
                 )
 
 
-def remove_audios_not_in_videos():
-    for playlist_name in playlists:
-        video_files = list(
-            map(
-                lambda x: os.path.splitext(x)[0],
-                os.listdir(os.path.join(os.environ["VIDEO_PATH"], playlist_name)),
-            )
-        )
-        audio_files = os.listdir(os.path.join(os.environ["AUDIO_PATH"], playlist_name))
-        # print(video_files)
-        for audio_file in audio_files:
-            audio_file_name = os.path.splitext(audio_file)[0]
-            # print(audio_file, audio_file_name)
-            if audio_file_name not in video_files:
-                remove(
-                    os.path.join(os.environ["AUDIO_PATH"], playlist_name, audio_file)
-                )
-
-
 def remove_archive_ids_for_deleted_files():
     for playlist_name in playlists:
         files = os.listdir(os.path.join(os.environ["VIDEO_PATH"], playlist_name))
@@ -164,6 +145,39 @@ def remove_archive_ids_for_deleted_files():
                 os.path.join(os.environ["VIDEO_PATH"], playlist_name, ".archive"), "w"
             ) as f:
                 f.write("".join(archive))
+
+
+def remove_audios_not_in_videos():
+    for playlist_name in playlists:
+        video_files = list(
+            map(
+                lambda x: os.path.splitext(x)[0],
+                os.listdir(os.path.join(os.environ["VIDEO_PATH"], playlist_name)),
+            )
+        )
+        audio_files = os.listdir(os.path.join(os.environ["AUDIO_PATH"], playlist_name))
+        # print(video_files)
+        for audio_file in audio_files:
+            audio_file_name = os.path.splitext(audio_file)[0]
+            # print(audio_file, audio_file_name)
+            if audio_file_name not in video_files:
+                remove(
+                    os.path.join(os.environ["AUDIO_PATH"], playlist_name, audio_file)
+                )
+
+
+def remove_extra_folders():
+    playlist_names = list(playlists.keys())
+    playlist_names.append("Removed")
+    for folder in os.listdir(os.environ["VIDEO_PATH"]):
+        if folder not in playlist_names:
+            move(
+                os.path.join(os.environ["VIDEO_PATH"], folder),
+                os.path.join(os.environ["VIDEO_PATH"], "Removed", folder),
+            )
+    for folder in os.listdir(os.environ["AUDIO_PATH"]):
+        if folder not in playlist_names:
+            remove(os.path.join(os.environ["AUDIO_PATH"], folder))
 
 
 def download_videos():
@@ -222,6 +236,7 @@ def download_metadata():
 
 
 def cut_videos():
+    print("Cutting videos")
     for playlist_name in playlists:
         if "track_info" not in playlists[playlist_name]:
             continue
@@ -304,6 +319,7 @@ def cut_videos():
 
 
 def tag_videos():
+    print("Tagging videos")
     for playlist_name in playlists:
         if "track_info" not in playlists[playlist_name]:
             print(f"No track info for {playlist_name}")
@@ -356,6 +372,7 @@ def tag_videos():
 
 
 def convert_to_mp3s():
+    print("Converting videos to mp3s")
     for playlist_name in playlists:
         os.makedirs(
             os.path.join(os.environ["AUDIO_PATH"], playlist_name), exist_ok=True
@@ -403,7 +420,7 @@ def get_atomic_parsley_data(file):
     atomic_parsley = subprocess.run(command, stdout=subprocess.PIPE, text=True)
     if atomic_parsley.returncode == 0:
         output = atomic_parsley.stdout.splitlines()
-        regex = re.compile(r"^.?Atom \"(.+?)\" contains: (.*)$")
+        regex = re.compile(r"^.*?Atom \"(.+?)\" contains: (.*)$")
         for line in output:
             match = regex.match(line)
             if match:
@@ -454,6 +471,7 @@ def clean():
     remove_files_not_in_metadata()
     remove_archive_ids_for_deleted_files()
     remove_audios_not_in_videos()
+    remove_extra_folders()
 
 
 def main():
@@ -475,6 +493,7 @@ def main():
     convert_to_mp3s()
 
     remove_audios_not_in_videos()
+    remove_extra_folders()
 
 
 def set_test():
@@ -509,6 +528,14 @@ if __name__ == "__main__":
         raise ValueError("Missing environment variable VIDEO_PATH")
     if "AUDIO_PATH" not in os.environ:
         raise ValueError("Missing environment variable AUDIO_PATH")
+
+    for playlist in playlists:
+        if not os.path.exists(os.path.join(os.environ["VIDEO_PATH"], playlist)):
+            os.makedirs(os.path.join(os.environ["VIDEO_PATH"], playlist))
+        if not os.path.exists(os.path.join(os.environ["AUDIO_PATH"], playlist)):
+            os.makedirs(os.path.join(os.environ["AUDIO_PATH"], playlist))
+    if not os.path.exists(os.path.join(os.environ["VIDEO_PATH"], "Removed")):
+        os.makedirs(os.path.join(os.environ["VIDEO_PATH"], "Removed"))
 
     if len(sys.argv) == 1:
         main()
