@@ -34,7 +34,8 @@ if [[ $(which zoxide) ]]; then
   eval "$(zoxide init bash)"
 fi
 
-if [[ $(which zellij) ]]; then
+zellij_hostnames=("usama8800-server")
+if [[ $(which zellij) ]] && [[ ${array[@]} =~ $(uname -n)  ]]; then
   # ./zellij.py
   if [ -z "$ZELLIJ" ]; then
     zellij attach -c
