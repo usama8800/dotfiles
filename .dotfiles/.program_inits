@@ -35,7 +35,7 @@ if [[ $(which zoxide) ]]; then
 fi
 
 zellij_hostnames=("usama8800-server")
-if [[ $(which zellij) ]] && [[ ${array[@]} =~ $(uname -n)  ]]; then
+if [[ $(which zellij) ]] && [[ ${zellij_hostnames[@]} =~ $(uname -n)  ]]; then
   # ./zellij.py
   if [ -z "$ZELLIJ" ]; then
     zellij attach -c
