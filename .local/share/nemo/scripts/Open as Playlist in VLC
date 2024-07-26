@@ -25,4 +25,4 @@ for dir in $NEMO_SCRIPT_SELECTED_FILE_PATHS; do
     combined_dirs=("${combined_dirs[@]}" "$dir")
 done
 [[ ${#combined_dirs[@]} -eq 0 ]] && combined_dirs=(".")
-vlc --recursive expand "${combined_dirs[@]}"
+vlc --recursive expand "${combined_dirs[@]}" --random
