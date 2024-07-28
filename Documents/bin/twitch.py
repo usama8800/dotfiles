@@ -107,9 +107,10 @@ def fix_videos(pattern):
 
 
 def download(url, file):
-    subprocess.run(
-        ["yt-dlp", "--downloader", "aria2c", "--fixup", "warn", url, "-o", file]
-    )
+    args = ["yt-dlp", "--downloader", "aria2c", "--fixup", "warn", url]
+    if file != "x":
+        args += ["-o", file]
+    subprocess.run(args)
 
 
 if __name__ == "__main__":
