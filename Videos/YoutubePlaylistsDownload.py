@@ -69,8 +69,12 @@ def download_metadata(force=False):
                         f"{month_name} {day} {year}", "%B %d %Y"
                     )
                 else:
-                    print("No date found in the description")
-                    print(entry["description"])
+                    if (
+                        entry["id"]
+                        not in playlists[playlist_name]["ids_desc_print_skip"]
+                    ):
+                        print(f"No date found in the description for {entry['id']}")
+                        print(entry["description"])
                     date_object = datetime.datetime.fromtimestamp(entry["timestamp"])
             else:
                 date_object = datetime.datetime.fromtimestamp(entry["timestamp"])
@@ -106,8 +110,7 @@ def download_videos():
 
             print(f"Checking space for {video['title']}")
             space_left = compare_free_space_with_video(video["url"])
-            gbs = space_left / 1024 / 1024 / 1024
-            if gbs < 2:
+            if space_left < 2:
                 break
             ytdlp = subprocess.run(
                 [
@@ -124,14 +127,18 @@ def download_videos():
             if ytdlp.returncode != 0:
                 print(ytdlp.stderr)
                 continue
-            clean_downloading_folder(video["id"])
+            clean_downloading_folder(video["id"], playlist_name)
 
 
-def clean_downloading_folder(id):
+def clean_downloading_folder(id, playlist_name):
     for filename in os.listdir(downloading_folder):
         if filename.find(f"[{id}]"):
-            if filename.endswith(".mp4"):
-                shutil.move(os.path.join("Downloading", filename), filename)
+            print(filename)
+            if filename.endswith(".mp4") or filename.endswith(".webm"):
+                shutil.move(
+                    os.path.join("Downloading", filename),
+                    os.path.join(playlist_name, filename),
+                )
             else:
                 os.remove(os.path.join("Downloading", filename))
 
@@ -147,7 +154,11 @@ def compare_free_space_with_video(video_url):
     if ytdlp.returncode != 0:
         print(ytdlp.stderr)
         return 0
-    return free_space - int(ytdlp.stdout)
+
+    free_gbs = free_space / 1024 / 1024 / 1024
+    video_gbs = int(ytdlp.stdout) / 1024 / 1024 / 1024
+    print(f"{video_gbs:.2f} / {free_gbs:.2f} GB")
+    return free_gbs - video_gbs
 
 
 def main():
