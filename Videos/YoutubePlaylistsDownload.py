@@ -13,9 +13,18 @@ if not os.path.exists("playlists.json"):
     raise FileNotFoundError("Missing playlists.json")
 with open("playlists.json", "r") as f:
     playlists = json.load(f)
+    playlists = dict(
+        filter(
+            lambda item: "disabled" not in item[1] or not item[1]["disabled"],
+            playlists.items(),
+        )
+    )
+
 dump_filename = ".dump.json"
 videos_filename = ".videos.json"
 downloading_folder = "Downloading"
+bytes_per_second = 450_000
+min_space_left = 2
 
 
 def download_metadata(force=False):
@@ -34,7 +43,7 @@ def download_metadata(force=False):
             time_difference = time.time() - modified_time
             days_difference = time_difference // (24 * 3600)
             if days_difference < 1:
-                return
+                continue
 
         print(f"Downloading metadata for {playlist_name}")
         with open(dump_filepath, "w") as f:
@@ -77,6 +86,9 @@ def download_metadata(force=False):
                         print(entry["description"])
                     date_object = datetime.datetime.fromtimestamp(entry["timestamp"])
             else:
+                # Private video
+                if entry["timestamp"] is None:
+                    continue
                 date_object = datetime.datetime.fromtimestamp(entry["timestamp"])
             videos.append(
                 {
@@ -103,14 +115,14 @@ def download_videos():
         videos.reverse()
         for video in videos:
             if (
-                video["date"] < playlists[playlist_name]["min_date"]
-                or f"youtube {video['id']}" in archive
-            ):
+                "min_date" in playlists[playlist_name]
+                and video["date"] < playlists[playlist_name]["min_date"]
+            ) or f"youtube {video['id']}" in archive:
                 continue
 
             print(f"Checking space for {video['title']}")
             space_left = compare_free_space_with_video(video["url"])
-            if space_left < 2:
+            if space_left < min_space_left:
                 break
             ytdlp = subprocess.run(
                 [
@@ -119,6 +131,8 @@ def download_videos():
                     "aria2c",
                     "--download-archive",
                     os.path.join("..", playlist_name, ".archive"),
+                    "-o",
+                    f"{video['date']} - %(title)s [%(id)s].%(ext)s",
                     video["url"],
                 ],
                 cwd=downloading_folder,
@@ -128,6 +142,7 @@ def download_videos():
                 print(ytdlp.stderr)
                 continue
             clean_downloading_folder(video["id"], playlist_name)
+    os.rmdir(downloading_folder)
 
 
 def clean_downloading_folder(id, playlist_name):
@@ -146,7 +161,7 @@ def clean_downloading_folder(id, playlist_name):
 def compare_free_space_with_video(video_url):
     free_space = shutil.disk_usage(".").free
     ytdlp = subprocess.run(
-        ["yt-dlp", "--print", "%(filesize,filesize_approx)s", video_url],
+        ["yt-dlp", "--print", "%(filesize)s,%(duration)s", video_url],
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
         text=True,
@@ -154,11 +169,43 @@ def compare_free_space_with_video(video_url):
     if ytdlp.returncode != 0:
         print(ytdlp.stderr)
         return 0
+    filesize, duration = ytdlp.stdout.split(",")
+    try:
+        filesize = int(filesize)
+    except ValueError:
+        filesize = int(duration) * bytes_per_second
 
-    free_gbs = free_space / 1024 / 1024 / 1024
-    video_gbs = int(ytdlp.stdout) / 1024 / 1024 / 1024
+    free_gbs = free_space / 1024.0 / 1024 / 1024
+    video_gbs = int(filesize) / 1024.0 / 1024 / 1024
     print(f"{video_gbs:.2f} / {free_gbs:.2f} GB")
     return free_gbs - video_gbs
+
+
+def find_bytes_per_second():
+    arr = []
+    for filename in os.listdir("Atrioc"):
+        if filename.startswith("."):
+            continue
+        probe = subprocess.run(
+            [
+                "ffprobe",
+                "-v",
+                "error",
+                "-show_entries",
+                "format=duration",
+                "-of",
+                "default=noprint_wrappers=1:nokey=1",
+                os.path.join("Atrioc", filename),
+            ],
+            text=True,
+            check=True,
+            stdout=subprocess.PIPE,
+        )
+        filesize = os.path.getsize(os.path.join("Atrioc", filename))
+        duration = float(probe.stdout)
+        arr.append(filesize / duration)
+    arr = sorted(arr)
+    print("\n".join(map(lambda x: str(int(x)), arr)))
 
 
 def main():
@@ -177,6 +224,8 @@ if __name__ == "__main__":
                 download_metadata()
             elif arg == "metadata-force":
                 download_metadata(True)
+            elif arg == "bps":
+                find_bytes_per_second()
             elif arg == "help":
                 print(
                     """
