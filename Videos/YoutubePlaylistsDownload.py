@@ -29,10 +29,15 @@ min_space_left = 2
 
 def download_metadata(force=False):
     for playlist_name in playlists:
-        if not os.path.exists(playlist_name):
-            os.mkdir(playlist_name)
-        dump_filepath = os.path.join(playlist_name, dump_filename)
-        videos_filepath = os.path.join(playlist_name, videos_filename)
+        path = (
+            playlist_name
+            if "path" not in playlists[playlist_name]
+            else playlists[playlist_name]["path"]
+        )
+        if not os.path.exists(path):
+            os.mkdir(path)
+        dump_filepath = os.path.join(path, dump_filename)
+        videos_filepath = os.path.join(path, videos_filename)
 
         if (
             not force
@@ -108,9 +113,18 @@ def download_videos():
         os.mkdir(downloading_folder)
     for playlist_name in playlists:
         print(f"Downloading videos for {playlist_name}")
-        with open(os.path.join(playlist_name, ".archive"), "r") as f:
-            archive = [line.strip() for line in f.readlines()]
-        with open(os.path.join(playlist_name, videos_filename), "r") as f:
+
+        path = (
+            playlist_name
+            if "path" not in playlists[playlist_name]
+            else playlists[playlist_name]["path"]
+        )
+        if os.path.exists(os.path.join(path, ".archive")):
+            with open(os.path.join(path, ".archive"), "r") as f:
+                archive = [line.strip() for line in f.readlines()]
+        else:
+            archive = []
+        with open(os.path.join(path, videos_filename), "r") as f:
             videos = json.loads(f.read())
         videos.reverse()
         for video in videos:
@@ -130,7 +144,11 @@ def download_videos():
                     "--downloader",
                     "aria2c",
                     "--download-archive",
-                    os.path.join("..", playlist_name, ".archive"),
+                    (
+                        os.path.join(path, ".archive")
+                        if os.path.isabs(path)
+                        else os.path.join("..", path, ".archive")
+                    ),
                     "-o",
                     f"{video['date']} - %(title)s [%(id)s].%(ext)s",
                     video["url"],
@@ -141,18 +159,18 @@ def download_videos():
             if ytdlp.returncode != 0:
                 print(ytdlp.stderr)
                 continue
-            clean_downloading_folder(video["id"], playlist_name)
+            clean_downloading_folder(video["id"], path)
     os.rmdir(downloading_folder)
 
 
-def clean_downloading_folder(id, playlist_name):
+def clean_downloading_folder(id, copy_to):
     for filename in os.listdir(downloading_folder):
         if filename.find(f"[{id}]"):
             print(filename)
             if filename.endswith(".mp4") or filename.endswith(".webm"):
                 shutil.move(
                     os.path.join("Downloading", filename),
-                    os.path.join(playlist_name, filename),
+                    os.path.join(copy_to, filename),
                 )
             else:
                 os.remove(os.path.join("Downloading", filename))
