@@ -47,6 +47,6 @@ alias egrep='egrep --color=auto'
 # Enable aliases to be sudo’ed
 alias sudo='sudo -E '
 
-alias dc='sudo docker compose '
+alias dc='docker compose '
 
 alias rsync='rsync --delete --archive --verbose --prune-empty-dirs --human-readable --progress --partial --append --relative '
