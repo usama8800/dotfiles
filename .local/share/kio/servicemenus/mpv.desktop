@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=Service
+MimeType=inode/directory;
+Actions=openInMPVPlaylist
+
+[Desktop Action openInMPVPlaylist]
+Name=Open in MPV Playlist
+Exec=bash "/home/usama/Documents/bin/mpvplaylist" "%U"

@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=Service
+MimeType=inode/directory;
+Actions=openInVLCPlaylist
+
+[Desktop Action openInVLCPlaylist]
+Name=Open in VLC Playlist
+Exec=bash "/home/usama/Documents/bin/vlcplaylist" "%U"

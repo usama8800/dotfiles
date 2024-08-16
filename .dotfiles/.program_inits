@@ -10,7 +10,7 @@ fi
 
 if [[ -f "$HOME/.bash-preexec.sh" ]]; then
   source "$HOME/.bash-preexec.sh"
-  if [[ $(which atuin) ]]; then
+  if [[ $(which atuin 2>/dev/null) ]]; then
     eval "$(atuin init bash --disable-up-arrow)"
   fi
 fi
@@ -19,23 +19,27 @@ if [[ -f "$HOME/.fzf.bash" ]]; then
   source "$HOME/.fzf.bash"
 fi
 
-if [[ $(which bat) ]]; then
+if [[ $(which bat 2>/dev/null) ]]; then
   alias cat='bat '
 fi
 
-if [[ $(which exa) ]]; then
+if [[ $(which exa 2>/dev/null) ]]; then
   alias ls='exa --group-directories-first --across'
   alias ll='exa --group-directories-first --across --long '
   alias la='exa --group-directories-first --across --all '
   alias lla='exa --group-directories-first --across --long --all '
 fi
 
-if [[ $(which zoxide) ]]; then
+if [[ $(which zoxide 2>/dev/null) ]]; then
   eval "$(zoxide init bash)"
 fi
 
+if [[ $(which fnm 2>/dev/null) ]];then
+  eval "$(fnm env --use-on-cd --shell bash)"
+fi
+
 zellij_hostnames=("usama8800-server")
-if [[ $(which zellij) ]] && [[ ${zellij_hostnames[@]} =~ $(uname -n)  ]]; then
+if [[ $(which zellij 2>/dev/null) ]] && [[ ${zellij_hostnames[@]} =~ $(uname -n)  ]]; then
   # ./zellij.py
   if [ -z "$ZELLIJ" ]; then
     zellij attach -c

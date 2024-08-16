@@ -1,0 +1,6 @@
+[Plugins]
+baloosearchEnabled=true
+browserhistoryEnabled=false
+
+[Plugins][Favorites]
+plugins=krunner_services,krunner_systemsettings

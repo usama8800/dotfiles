@@ -1,0 +1,15 @@
+[General]
+autoSaveImage=true
+clipboardGroup=PostScreenshotCopyImage
+launchAction=DoNotTakeScreenshot
+showMagnifier=ShowMagnifierAlways
+
+[GuiConfig]
+captureMode=4
+
+[ImageSave]
+lastImageSaveLocation=file:///home/usama/Pictures/Screenshots/Screenshot_20240816_115937.png
+translatedScreenshotsFolder=Screenshots
+
+[VideoSave]
+translatedScreencastsFolder=Screencasts
