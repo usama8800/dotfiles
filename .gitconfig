@@ -16,3 +16,13 @@
 	directory = /home/usama/Documents/erp
 [core]
 	excludesFile = /home/usama/.gitignore
+[commit]
+	gpgSign = false
+[gui]
+	pruneduringfetch = true
+[smartgit "submodule"]
+	fetchalways = false
+	update = true
+	initializenew = true
+[push]
+	recurseSubmodules = check

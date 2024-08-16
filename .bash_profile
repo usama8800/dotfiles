@@ -13,6 +13,8 @@ unset file
 
 # Append to the Bash history file, rather than overwriting it
 shopt -s histappend
+PROMPT_COMMAND="$PROMPT_COMMAND
+history -a"
 
 # Autocorrect typos in path names when using `cd`
 shopt -s cdspell

@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=Application
+Exec=/home/usama/Documents/xstart.sh
+Hidden=false
+NoDisplay=false
+X-GNOME-Autostart-enabled=true
+Name=My X Start Script
+Comment=
