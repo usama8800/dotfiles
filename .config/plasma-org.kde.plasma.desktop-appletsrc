@@ -6,6 +6,7 @@ RightButton;NoModifier=org.kde.contextmenu
 
 [Containments][1]
 ItemGeometries-1536x864=
+ItemGeometries-1745x982=
 ItemGeometriesHorizontal=
 activityId=713ff4fb-7565-43c2-9494-42d92b3d64cf
 formfactor=0
@@ -20,11 +21,11 @@ DialogHeight=540
 DialogWidth=720
 
 [Containments][1][General]
-positions={"1536x864":[]\\,"1920x1080":[""]}
+positions={"1536x864":[]\\,"1920x1080":[""]\\,"1745x982":[]}
 sortMode=-1
 
 [Containments][1][Wallpaper][org.kde.image][General]
-Image=file:///home/usama/.config/variety/wallpaper/wallpaper-clock-86c690a3b5203e860fbadb47b5102c12.jpg
+Image=file:///home/usama/.config/variety/wallpaper/wallpaper-zoomed-791bceb8bc15e34224f44f2823be085d.jpg
 SlidePaths=/usr/share/wallpapers/
 
 [Containments][2]
@@ -41,7 +42,7 @@ immutability=1
 plugin=org.kde.plasma.digitalclock
 
 [Containments][2][Applets][21][Configuration]
-PreloadWeight=75
+PreloadWeight=95
 popupHeight=450
 popupWidth=560
 
@@ -84,8 +85,14 @@ plugin=org.kde.plasma.pager
 immutability=1
 plugin=org.kde.plasma.icontasks
 
+[Containments][2][Applets][5][Configuration][ConfigDialog]
+DialogHeight=540
+DialogWidth=720
+
 [Containments][2][Applets][5][Configuration][General]
 launchers=preferred://filemanager,applications:org.kde.konsole.desktop,applications:code.desktop,preferred://browser
+minimizeActiveTaskOnClick=false
+wheelEnabled=false
 
 [Containments][2][Applets][6]
 immutability=1
@@ -96,7 +103,7 @@ immutability=1
 plugin=org.kde.plasma.systemtray
 
 [Containments][2][Applets][7][Configuration]
-PreloadWeight=70
+PreloadWeight=80
 SystrayContainmentId=8
 
 [Containments][2][General]
@@ -109,7 +116,7 @@ immutability=1
 lastScreen=0
 location=4
 plugin=org.kde.plasma.private.systemtray
-popupHeight=432
+popupHeight=433
 popupWidth=432
 wallpaperplugin=org.kde.image
 
@@ -139,14 +146,14 @@ immutability=1
 plugin=org.kde.plasma.clipboard
 
 [Containments][8][Applets][13][Configuration]
-PreloadWeight=85
+PreloadWeight=90
 
 [Containments][8][Applets][14]
 immutability=1
 plugin=org.kde.plasma.notifications
 
 [Containments][8][Applets][14][Configuration]
-PreloadWeight=85
+PreloadWeight=100
 
 [Containments][8][Applets][15]
 immutability=1
@@ -168,11 +175,14 @@ immutability=1
 plugin=org.kde.kscreen
 
 [Containments][8][Applets][18][Configuration]
-PreloadWeight=55
+PreloadWeight=60
 
 [Containments][8][Applets][19]
 immutability=1
 plugin=org.kde.plasma.printmanager
+
+[Containments][8][Applets][19][Configuration]
+PreloadWeight=55
 
 [Containments][8][Applets][20]
 immutability=1
@@ -183,7 +193,7 @@ immutability=1
 plugin=org.kde.plasma.brightness
 
 [Containments][8][Applets][23][Configuration]
-PreloadWeight=44
+PreloadWeight=9
 
 [Containments][8][Applets][23][Configuration][ConfigDialog]
 DialogHeight=540
@@ -194,7 +204,7 @@ immutability=1
 plugin=org.kde.plasma.battery
 
 [Containments][8][Applets][24][Configuration]
-PreloadWeight=100
+PreloadWeight=97
 
 [Containments][8][Applets][24][Configuration][General]
 showPercentage=true
@@ -204,21 +214,21 @@ immutability=1
 plugin=org.kde.plasma.networkmanagement
 
 [Containments][8][Applets][25][Configuration]
-PreloadWeight=80
+PreloadWeight=100
 
 [Containments][8][Applets][26]
 immutability=1
 plugin=org.kde.plasma.bluetooth
 
 [Containments][8][Applets][26][Configuration]
-PreloadWeight=65
+PreloadWeight=80
 
 [Containments][8][Applets][27]
 immutability=1
 plugin=org.kde.plasma.mediacontroller
 
 [Containments][8][Applets][27][Configuration]
-PreloadWeight=64
+PreloadWeight=65
 
 [Containments][8][Applets][28][Configuration]
 PreloadWeight=42
@@ -228,24 +238,30 @@ immutability=1
 plugin=com.gitlab.scias.plasmavantage
 
 [Containments][8][Applets][30][Configuration]
-PreloadWeight=85
+PreloadWeight=95
 
 [Containments][8][Applets][9]
 immutability=1
 plugin=org.kde.kdeconnect
 
 [Containments][8][Applets][9][Configuration]
-PreloadWeight=70
+PreloadWeight=90
 
 [Containments][8][ConfigDialog]
 DialogHeight=540
 DialogWidth=720
 
 [Containments][8][General]
-extraItems=org.kde.kdeconnect,org.kde.plasma.battery,org.kde.plasma.keyboardlayout,org.kde.plasma.bluetooth,org.kde.plasma.volume,org.kde.plasma.vault,org.kde.plasma.clipboard,org.kde.plasma.mediacontroller,org.kde.plasma.notifications,org.kde.plasma.brightness,org.kde.plasma.networkmanagement,org.kde.plasma.manage-inputmethod,org.kde.plasma.devicenotifier,org.kde.plasma.cameraindicator,org.kde.plasma.printmanager,org.kde.plasma.keyboardindicator,org.kde.kscreen,KMix,com.gitlab.scias.plasmavantage
+extraItems=org.kde.kdeconnect,org.kde.plasma.battery,org.kde.plasma.keyboardlayout,org.kde.plasma.bluetooth,org.kde.plasma.volume,org.kde.plasma.vault,org.kde.plasma.clipboard,org.kde.plasma.mediacontroller,org.kde.plasma.notifications,org.kde.plasma.brightness,org.kde.plasma.networkmanagement,org.kde.plasma.manage-inputmethod,org.kde.plasma.devicenotifier,org.kde.plasma.cameraindicator,org.kde.plasma.printmanager,org.kde.plasma.keyboardindicator,org.kde.kscreen,com.gitlab.scias.plasmavantage
 hiddenItems=org.kde.plasma.brightness,KMix
 knownItems=org.kde.kdeconnect,org.kde.plasma.battery,org.kde.plasma.keyboardlayout,org.kde.plasma.bluetooth,org.kde.plasma.volume,org.kde.plasma.vault,org.kde.plasma.clipboard,org.kde.plasma.mediacontroller,org.kde.plasma.notifications,org.kde.plasma.brightness,org.kde.plasma.networkmanagement,org.kde.plasma.manage-inputmethod,org.kde.plasma.devicenotifier,org.kde.plasma.cameraindicator,org.kde.kscreen,org.kde.plasma.printmanager,org.kde.plasma.keyboardindicator,com.gitlab.scias.plasmavantage
 shownItems=org.kde.plasma.battery,org.kde.plasma.networkmanagement,org.kde.plasma.clipboard,org.kde.plasma.bluetooth
+
+[Containments][99][Applets][115][Configuration]
+PreloadWeight=42
+
+[Containments][99][Applets][116][Configuration]
+PreloadWeight=42
 
 [ScreenMapping]
 itemsOnDisabledScreens=

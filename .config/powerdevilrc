@@ -1,6 +1,8 @@
 [AC][Display]
 DimDisplayIdleTimeoutSec=600
+DisplayBrightness=100
 TurnOffDisplayIdleTimeoutSec=900
+UseProfileSpecificDisplayBrightness=true
 
 [AC][SuspendAndShutdown]
 AutoSuspendAction=0
