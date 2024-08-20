@@ -27,6 +27,14 @@ bytes_per_second = 450_000
 min_space_left = 2
 
 
+def natural_sort(l, k=None):
+    convert = lambda text: int(text) if text.isdigit() else text.lower()
+    alphanum_key = lambda key: [
+        convert(c) for c in re.split("([0-9]+)", key[k] if k else key)
+    ]
+    return sorted(l, key=alphanum_key)
+
+
 def download_metadata(force=False):
     for playlist_name in playlists:
         path = (
@@ -103,7 +111,9 @@ def download_metadata(force=False):
                     "date": date_object.strftime("%Y-%m-%d"),
                 }
             )
-
+        videos = natural_sort(videos, "title")
+        videos = reversed(videos)
+        videos = sorted(videos, key=lambda x: x["date"], reverse=True)
         with open(videos_filepath, "w") as f:
             json.dump(videos, f, indent=4)
 
@@ -141,6 +151,8 @@ def download_videos():
             ytdlp = subprocess.run(
                 [
                     "yt-dlp",
+                    "-f",
+                    "bestvideo[height<=1080][ext=mp4]+bestaudio[ext=m4a]/best[ext=mp4]/best",
                     "--downloader",
                     "aria2c",
                     "--download-archive",
@@ -168,6 +180,9 @@ def clean_downloading_folder(id, copy_to):
         if filename.find(f"[{id}]"):
             print(filename)
             if filename.endswith(".mp4") or filename.endswith(".webm"):
+                bps = find_bytes_per_second(os.path.join("Downloading", filename))
+                if bps > bytes_per_second:
+                    print(f"NEW LARGEST BYTES PER SECOND: {bps}")
                 shutil.move(
                     os.path.join("Downloading", filename),
                     os.path.join(copy_to, filename),
@@ -199,29 +214,33 @@ def compare_free_space_with_video(video_url):
     return free_gbs - video_gbs
 
 
-def find_bytes_per_second():
+def find_bytes_per_second(filepath):
+    probe = subprocess.run(
+        [
+            "ffprobe",
+            "-v",
+            "error",
+            "-show_entries",
+            "format=duration",
+            "-of",
+            "default=noprint_wrappers=1:nokey=1",
+            filepath,
+        ],
+        text=True,
+        check=True,
+        stdout=subprocess.PIPE,
+    )
+    filesize = os.path.getsize(filepath)
+    duration = float(probe.stdout)
+    return filesize / duration
+
+
+def find_all_bytes_per_second():
     arr = []
     for filename in os.listdir("Atrioc"):
         if filename.startswith("."):
             continue
-        probe = subprocess.run(
-            [
-                "ffprobe",
-                "-v",
-                "error",
-                "-show_entries",
-                "format=duration",
-                "-of",
-                "default=noprint_wrappers=1:nokey=1",
-                os.path.join("Atrioc", filename),
-            ],
-            text=True,
-            check=True,
-            stdout=subprocess.PIPE,
-        )
-        filesize = os.path.getsize(os.path.join("Atrioc", filename))
-        duration = float(probe.stdout)
-        arr.append(filesize / duration)
+        arr.append(find_bytes_per_second(os.path.join("Atrioc", filename)))
     arr = sorted(arr)
     print("\n".join(map(lambda x: str(int(x)), arr)))
 
@@ -243,7 +262,7 @@ if __name__ == "__main__":
             elif arg == "metadata-force":
                 download_metadata(True)
             elif arg == "bps":
-                find_bytes_per_second()
+                find_all_bytes_per_second()
             elif arg == "help":
                 print(
                     """

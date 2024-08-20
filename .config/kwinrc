@@ -1,10 +1,12 @@
 [Desktops]
 Id_1=655b54ac-3b6a-4737-84ba-c2d3bddf28af
-Number=1
+Id_2=636f9593-efee-4a49-bc1d-68352e15aab9
+Number=2
 Rows=1
 
 [Plugins]
 dialogparentEnabled=false
+dynamic_workspacesEnabled=true
 magiclampEnabled=true
 squashEnabled=false
 wobblywindowsEnabled=true
@@ -16,7 +18,7 @@ HighlightWindows=false
 padding=4
 
 [Tiling][ab563584-1668-56fd-a1fb-160f4fd24cd5]
-tiles={"layoutDirection":"horizontal","tiles":[{"width":0.25},{"width":0.5},{"width":0.25}]}
+tiles={"layoutDirection":"horizontal","tiles":[]}
 
 [Windows]
 BorderSnapZone=15
@@ -24,3 +26,8 @@ WindowSnapZone=15
 
 [Xwayland]
 Scale=1.1
+
+[org.kde.kdecoration2]
+ButtonsOnLeft=M
+library=org.kde.breeze
+theme=Breeze

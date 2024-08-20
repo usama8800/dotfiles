@@ -7,6 +7,7 @@ BrowseThroughArchives=true
 FilterBar=true
 GlobalViewProps=false
 OpenNewTabAfterLastTab=true
+RememberOpenedTabs=false
 Version=202
 ViewPropsTimestamp=2024,8,15,22,41,29.888
 
@@ -18,7 +19,7 @@ Places Icons Static Size=22
 ToolBarsMovable=Disabled
 
 [PreviewSettings]
-Plugins=appimagethumbnail,audiothumbnail,blenderthumbnail,comicbookthumbnail,cursorthumbnail,djvuthumbnail,ebookthumbnail,exrthumbnail,directorythumbnail,fontthumbnail,pothumbnail,imagethumbnail,jpegthumbnail,kraorathumbnail,windowsexethumbnail,windowsimagethumbnail,mltpreview,mobithumbnail,opendocumentthumbnail,palathumbcreator,gsthumbnail,quithumbnail,rawthumbnail,svgthumbnail,itinerarythumbnail,ffmpegthumbs,webarchivethumbnail
+Plugins=appimagethumbnail,audiothumbnail,blenderthumbnail,comicbookthumbnail,cursorthumbnail,djvuthumbnail,ebookthumbnail,exrthumbnail,directorythumbnail,fontthumbnail,pothumbnail,imagethumbnail,jpegthumbnail,kraorathumbnail,windowsexethumbnail,windowsimagethumbnail,mltpreview,mobithumbnail,opendocumentthumbnail,gsthumbnail,quithumbnail,rawthumbnail,svgthumbnail,ffmpegthumbs
 
 [ViewPropertiesDialog]
 1536x864 screen: Height=464

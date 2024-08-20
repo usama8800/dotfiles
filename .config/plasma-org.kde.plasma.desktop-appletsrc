@@ -155,6 +155,9 @@ plugin=org.kde.plasma.notifications
 [Containments][8][Applets][14][Configuration]
 PreloadWeight=100
 
+[Containments][8][Applets][14][Shortcuts]
+global=Meta+A
+
 [Containments][8][Applets][15]
 immutability=1
 plugin=org.kde.plasma.manage-inputmethod
