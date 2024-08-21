@@ -3,7 +3,7 @@
 
 alias dotfiles="git --git-dir=$HOME/.dotfiles/dotfiles.git/ --work-tree=$HOME "
 alias df="dotfiles"
-alias df-edit="GIT_DIR=$HOME/.dotfiles/dotfiles.git/ code ~"
+alias dfe="GIT_DIR=$HOME/.dotfiles/dotfiles.git/ code ~"
 
 # Easier navigation: .., ..., ...., .....
 alias ..="cd .."

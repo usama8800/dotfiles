@@ -20,7 +20,7 @@ if [[ -f "$HOME/.fzf.bash" ]]; then
 fi
 
 if [[ $(which bat 2>/dev/null) ]]; then
-  alias cat='bat '
+  alias cat='bat --pager="less -rX" '
 fi
 
 if [[ $(which exa 2>/dev/null) ]]; then
@@ -36,6 +36,10 @@ fi
 
 if [[ $(which fnm 2>/dev/null) ]];then
   eval "$(fnm env --use-on-cd --shell bash)"
+fi
+
+if [[ $(which lazygit 2>/dev/null) ]];then
+  alias dfe="lazygit --git-dir=$HOME/.dotfiles/dotfiles.git/ --work-tree=$HOME "
 fi
 
 zellij_hostnames=("usama8800-server")
