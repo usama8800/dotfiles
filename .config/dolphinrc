@@ -1,6 +1,9 @@
 [$Version]
 update_info=dolphin_detailsmodesettings.upd:rename-leading-padding,dolphin_detailsmodesettings.upd:move-content-display,dolphin_directorysizemode.upd:convert-directorysizecount-to-directorysizemode
 
+[DetailsMode]
+PreviewSize=22
+
 [General]
 AutoExpandFolders=true
 BrowseThroughArchives=true
@@ -10,6 +13,9 @@ OpenNewTabAfterLastTab=true
 RememberOpenedTabs=false
 Version=202
 ViewPropsTimestamp=2024,8,15,22,41,29.888
+
+[IconsMode]
+PreviewSize=96
 
 [KFileDialog Settings]
 Places Icons Auto-resize=false
