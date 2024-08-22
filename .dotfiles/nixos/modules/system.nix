@@ -1,7 +1,19 @@
-{ lib, pkgs, pkgs-unstable, ... }:
+{ config, lib, pkgs, pkgs-unstable, self, ... }:
 {
   # Keep here for rebuild script
   # system.nixos.label = "REPLACE_ME";
+
+  system.autoUpgrade = {
+    enable = true;
+    flake = "${config.users.users.usama.home}/.dotfiles/nixos";
+    flags = [
+      "--update-input"
+      "nixpkgs"
+      "-L" # print build logs
+    ];
+    dates = "02:00";
+    randomizedDelaySec = "45min";
+  };
 
   boot.supportedFilesystems = [ "ntfs" ];
 
