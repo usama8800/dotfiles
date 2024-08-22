@@ -53,6 +53,9 @@ while [ "$1" != "$EOL" ]; do
   esac
 done; shift
 
+if [ $# -lt 2 ]; then
+  fatal "missing positional arguments"
+fi
 positional_arg1="${1:-default}"
 positional_arg2="${2:-default}"
 
