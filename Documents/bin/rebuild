@@ -3,56 +3,12 @@
 set -uo pipefail
 IFS=$'\n\t'
 
-LOG_FILE="/tmp/$(basename "$0").log"
-readonly LOG_FILE
-info()    { echo "[INFO]    $*" | tee -a "$LOG_FILE" >&2 ; }
-warning() { echo "[WARNING] $*" | tee -a "$LOG_FILE" >&2 ; }
-error()   { echo "[ERROR]   $*" | tee -a "$LOG_FILE" >&2 ; }
-fatal()   { echo "[FATAL]   $*" | tee -a "$LOG_FILE" >&2 ; exit 1 ; }
-
-# Argument Parsing
-USAGE="Usage: ${CMD:=${0##*/}} label"
-#/ Description: Rebuilds nixos configuration
-#/ Examples: rebuild added_pkgs
-#/ Options:
-#/   -h, --help: Display this help message
-help() {
-    echo "$USAGE"
-    grep '^#/' "$0" | cut -c4-
-    exit 0
-}
-exit2 () {
-    printf >&2 "%s:  %s: '%s'\n%s\n" "$CMD" "$1" "$2" "$USAGE"
-    exit 2
-}
-check () { # avoid infinite loop
-    { [ "$1" != "$EOL" ] && [ "$1" != '--' ]; } || exit2 "missing argument" "$2"
-}
-
-# parse command-line options
-set -- "$@" "${EOL:=$(printf '\1\3\3\7')}"  # end-of-list marker
-while [ "$1" != "$EOL" ]; do
-  opt="$1"; shift
-  case "$opt" in
-
-    #EDIT HERE: defined options
-    -h | --help    ) printf "%s\n" "$USAGE"; exit 0;;
-
-    # process special cases
-    --) while [ "$1" != "$EOL" ]; do set -- "$@" "$1"; shift; done;;   # parse remaining as positional
-    --[!=]*=*) set -- "${opt%%=*}" "${opt#*=}" "$@";;                  # "--opt=arg"  ->  "--opt" "arg"
-    -[A-Za-z0-9] | -*[!A-Za-z0-9]*) exit2 "invalid option" "$opt";;    # anything invalid like '-*'
-    -?*) other="${opt#-?}"; set -- "${opt%"$other"}" "-${other}" "$@";;  # "-abc"  ->  "-a" "-bc"
-    *) set -- "$@" "$opt";;                                            # positional, rotate to the end
-  esac
-done; shift
-
-if [ $# -gt 1 ]; then
-  fatal "label should be a single word"
-fi
-label="${1:-}"
-
 if [[ "${BASH_SOURCE[0]}" = "$0" ]]; then
+  if [ "$#" -gt 1 ]; then
+    echo "Label should be one word"
+    exit 1
+  fi
+
   # cd to the dotfiles root
   pushd "$HOME"/.dotfiles/ > /dev/null || exit 1
 
@@ -62,7 +18,7 @@ if [[ "${BASH_SOURCE[0]}" = "$0" ]]; then
   new_files=$(git --git-dir=dotfiles.git --work-tree="$HOME" ls-files --others nixos)
   if [ -z "$new_files" ] && [ "$diff" -eq "0" ]; then
     echo "Nothing to rebuild"
-    popd || exit 1
+    popd > /dev/null || exit 1
     exit 0
   fi
 
@@ -72,17 +28,24 @@ if [[ "${BASH_SOURCE[0]}" = "$0" ]]; then
   # show diff
   git --git-dir=dotfiles.git --work-tree="$HOME" diff nixos | bat --paging always
 
+  if [ "$#" -gt 0 ]; then
+    label="$1"
+  else
+    read -rp "Label: " label
+  fi
+
   # Copy, rebuild, output simplified errors, log trackebacks
-  sudo rsync --delete --archive --prune-empty-dirs --human-readable --itemize-changes \
-    --exclude=hardware-configuration.nix --exclude=flake.lock nixos /etc/
-  echo "NixOS Rebuilding..."
-  NIXOS_LABEL="$label" sudo nixos-rebuild switch 2>&1 | tee /tmp/nixos-switch.log
+  sudo rsync --delete --archive --prune-empty-dirs --human-readable --itemize-changes --exclude=flake.lock nixos /etc/
+  echo "NixOS Rebuilding as '$label' ..."
+
+  if [ -n "$label" ]; then
+    sudo sed -i "s/# system\.nixos\.label = \"REPLACE_ME\";/system.nixos.label = \"$label\";/" /etc/nixos/modules/system.nix
+  fi
+
+  sudo NIXOS_LABEL="$label" nixos-rebuild switch 2>&1 | tee /tmp/nixos-switch.log
   success=$?
   if [ "$success" -ne 0 ]; then
-    for _ in {1..29}; do
-      tput cuu1
-    done
-    tput ed
+    echo -e "\n\n"
     grep --only-matching -P 'error: .+' /tmp/nixos-switch.log | grep --color "error:"
     exit 1
   fi
@@ -92,6 +55,6 @@ if [[ "${BASH_SOURCE[0]}" = "$0" ]]; then
   git --git-dir=dotfiles.git --work-tree="$HOME" add nixos
   git --git-dir=dotfiles.git --work-tree="$HOME" commit -m "Rebuilt NixOS $current"
 
-  popd || exit 1
+  popd > /dev/null || exit 1
   notify-send -e "NixOS Rebuilt OK!" --icon=software-update-available
 fi

@@ -8,8 +8,8 @@ if [[ -f "$HOME/.config/broot/launcher/bash/br" ]]; then
   source "$HOME/.config/broot/launcher/bash/br"
 fi
 
-if [[ -f "$HOME/.bash-preexec.sh" ]]; then
-  source "$HOME/.bash-preexec.sh"
+if [[ -f "$HOME/.dotfiles/.bash-preexec.sh" ]]; then
+  source "$HOME/.dotfiles//.bash-preexec.sh"
   if [[ $(which atuin 2>/dev/null) ]]; then
     eval "$(atuin init bash --disable-up-arrow)"
   fi
@@ -39,11 +39,11 @@ if [[ $(which fnm 2>/dev/null) ]];then
 fi
 
 if [[ $(which lazygit 2>/dev/null) ]];then
-  alias dfe="lazygit --git-dir=$HOME/.dotfiles/dotfiles.git/ --work-tree=$HOME "
+  alias dfe='lazygit --git-dir=$HOME/.dotfiles/dotfiles.git/ --work-tree=$HOME '
 fi
 
 zellij_hostnames=("usama8800-server")
-if [[ $(which zellij 2>/dev/null) ]] && [[ ${zellij_hostnames[@]} =~ $(uname -n)  ]]; then
+if [[ $(which zellij 2>/dev/null) ]] && [[ ${zellij_hostnames[*]} =~ $(uname -n)  ]]; then
   # ./zellij.py
   if [ -z "$ZELLIJ" ]; then
     zellij attach -c

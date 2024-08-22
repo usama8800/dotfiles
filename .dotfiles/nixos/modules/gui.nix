@@ -51,4 +51,54 @@
     beeper
     vesktop
   ];
+  systemd.user.services.megasync = {
+    serviceConfig = {
+      PassEnvironment = "DISPLAY";
+      ExecStart = "${pkgs-unstable.megasync}/bin/megasync";
+      Restart = "on-failure";
+      RestartSec = 5;
+    };
+    wantedBy = [ "default.target" ];
+    after = [ "graphical.target" ];
+  };
+  systemd.user.services.variety = {
+    serviceConfig = {
+      PassEnvironment = "DISPLAY";
+      ExecStart = "${pkgs-unstable.variety}/bin/variety";
+      Restart = "on-failure";
+      RestartSec = 5;
+    };
+    wantedBy = [ "default.target" ];
+    after = [ "graphical.target" ];
+  };
+  systemd.user.services.vesktop = {
+    serviceConfig = {
+      PassEnvironment = "DISPLAY";
+      ExecStart = "${pkgs-unstable.vesktop}/bin/vesktop";
+      Restart = "on-failure";
+      RestartSec = 5;
+    };
+    wantedBy = [ "default.target" ];
+    after = [ "graphical.target" ];
+  };
+  systemd.user.services.beeper = {
+    serviceConfig = {
+      PassEnvironment = "DISPLAY";
+      ExecStart = "${pkgs-unstable.beeper}/bin/beeper";
+      Restart = "on-failure";
+      RestartSec = 5;
+    };
+    wantedBy = [ "default.target" ];
+    after = [ "graphical.target" ];
+  };
+  systemd.user.services.thunderbird-bin = {
+    serviceConfig = {
+      PassEnvironment = "DISPLAY";
+      ExecStart = "${pkgs-unstable.thunderbird-bin}/bin/thunderbird";
+      Restart = "on-failure";
+      RestartSec = 5;
+    };
+    wantedBy = [ "default.target" ];
+    after = [ "graphical.target" ];
+  };
 }

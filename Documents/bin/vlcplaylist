@@ -1,4 +1,4 @@
-#!/usr/bin/bash
+#!/usr/bin/env bash
 
 # When executed from a local folder, scripts will be passed
 # the selected file names. When executed from a remote folder
