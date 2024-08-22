@@ -1,4 +1,4 @@
-{ config, lib, pkgs, pkgs-unstable, self, ... }:
+{ config, lib, pkgs, pkgs-unstable, ... }:
 {
   # Keep here for rebuild script
   # system.nixos.label = "REPLACE_ME";
@@ -11,7 +11,7 @@
       "nixpkgs"
       "-L" # print build logs
     ];
-    dates = "02:00";
+    dates = "00:00";
     randomizedDelaySec = "45min";
   };
 
