@@ -1,4 +1,4 @@
-#!/usr/bin/python3
+#!/usr/bin/env python3
 
 # Tchaikovsky https://en.wikipedia.org/wiki/List_of_compositions_by_Pyotr_Ilyich_Tchaikovsky
 # Chopin https://en.wikipedia.org/wiki/List_of_compositions_by_Fr%C3%A9d%C3%A9ric_Chopin_by_opus_number
