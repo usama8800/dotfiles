@@ -74,7 +74,7 @@
   systemd.user.services.vesktop = {
     serviceConfig = {
       PassEnvironment = "DISPLAY";
-      ExecStart = "${pkgs-unstable.vesktop}/bin/vesktop";
+      ExecStart = "${pkgs-unstable.vesktop}/bin/vesktop --start-minimized";
       Restart = "on-failure";
       RestartSec = 5;
     };
@@ -84,7 +84,7 @@
   systemd.user.services.beeper = {
     serviceConfig = {
       PassEnvironment = "DISPLAY";
-      ExecStart = "${pkgs-unstable.beeper}/bin/beeper";
+      ExecStart = "${pkgs-unstable.beeper}/bin/beeper --hidden";
       Restart = "on-failure";
       RestartSec = 5;
     };
