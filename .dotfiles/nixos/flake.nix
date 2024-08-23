@@ -9,7 +9,13 @@
     nix-alien.inputs.nixpkgs.follows = "nixpkgs";
   };
 
-  outputs = { self, nixpkgs, nixpkgs-unstable, nix-alien, ... }: {
+  outputs = {
+    self,
+    nixpkgs,
+    nixpkgs-unstable,
+    nix-alien,
+    ...
+  }: {
     nixosConfigurations = {
       usama8800-desktop = nixpkgs.lib.nixosSystem rec {
         system = "x86_64-linux";
@@ -23,7 +29,11 @@
         modules = [
           ./modules/system.nix
           ./hosts/usama8800-desktop
-          ({ self, system, ... }: {
+          ({
+            self,
+            system,
+            ...
+          }: {
             nixpkgs.overlays = [
               self.inputs.nix-alien.overlays.default
             ];

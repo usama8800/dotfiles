@@ -1,5 +1,10 @@
-{ config, lib, pkgs, pkgs-unstable, ... }:
 {
+  config,
+  lib,
+  pkgs,
+  pkgs-unstable,
+  ...
+}: {
   # Keep here for rebuild script
   # system.nixos.label = "REPLACE_ME";
 
@@ -15,7 +20,7 @@
     randomizedDelaySec = "45min";
   };
 
-  boot.supportedFilesystems = [ "ntfs" ];
+  boot.supportedFilesystems = ["ntfs"];
 
   # Enable networking
   networking.networkmanager.enable = true;
@@ -31,7 +36,7 @@
   users.users.usama = {
     isNormalUser = true;
     description = "Usama Ahsan";
-    extraGroups = [ "networkmanager" "wheel" ];
+    extraGroups = ["networkmanager" "wheel"];
     openssh.authorizedKeys.keys = [
       "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIAH3VlNgMTY5pjrKWUDGu39WMcpCfiK0fwjWdwOkXDFT" # usama8800-desktop
       "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIE0JGch0tl4eyI947ysKtqsMIOuc7o5aiz9IqHS9ZuG6" # usama8800-office
@@ -39,32 +44,40 @@
       "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAINEo0SAQiP5h7xNUAIyPCBS8ty204K+glVQj614JujX0" # usama8800-server
     ];
   };
-  security.sudo.extraRules = [{
-    users = [ "usama" ];
-    commands = [{
-      command = "ALL";
-      options = [ "NOPASSWD" ];
-    }];
-  }];
+  security.sudo.extraRules = [
+    {
+      users = ["usama"];
+      commands = [
+        {
+          command = "ALL";
+          options = ["NOPASSWD"];
+        }
+      ];
+    }
+  ];
 
   # Set your time zone.
   time.timeZone = "Asia/Karachi";
-
   # Select internationalisation properties.
-  i18n.defaultLocale = "en_US.UTF-8";
+  i18n.defaultLocale = "en_GB.UTF-8";
   i18n.extraLocaleSettings = {
-    LC_ADDRESS = "ur_PK";
-    LC_IDENTIFICATION = "ur_PK";
-    LC_MEASUREMENT = "ur_PK";
-    LC_MONETARY = "ur_PK";
-    LC_NAME = "ur_PK";
-    LC_NUMERIC = "ur_PK";
-    LC_PAPER = "ur_PK";
-    LC_TELEPHONE = "ur_PK";
-    LC_TIME = "ur_PK";
+    LC_ADDRESS = "en_GB.UTF-8";
+    LC_IDENTIFICATION = "en_GB.UTF-8";
+    LC_MEASUREMENT = "en_GB.UTF-8";
+    LC_MONETARY = "en_GB.UTF-8";
+    LC_NAME = "en_GB.UTF-8";
+    LC_NUMERIC = "en_GB.UTF-8";
+    LC_PAPER = "en_GB.UTF-8";
+    LC_TELEPHONE = "en_GB.UTF-8";
+    LC_TIME = "en_GB.UTF-8";
   };
+  i18n.supportedLocales = [
+    "en_GB.UTF-8/UTF-8"
+    "en_US.UTF-8/UTF-8"
+    "ur_PK/UTF-8"
+  ];
 
-  fonts.packages = with pkgs; [ fira-code ];
+  fonts.packages = with pkgs; [fira-code];
 
   # Enable CUPS to print documents.
   services.printing.enable = true;
@@ -77,21 +90,22 @@
       PermitRootLogin = "no"; # disable root login
       PasswordAuthentication = false; # disable password login
     };
-    ports = [ 22 ];
+    ports = [22];
     openFirewall = true;
   };
 
   nixpkgs.config.allowUnfree = true;
-  nix.settings.experimental-features = [ "nix-command" "flakes" ];
+  nix.settings.experimental-features = ["nix-command" "flakes"];
 
   # List packages installed in system profile. To search, run:
   # $ nix search wget
   environment.systemPackages = with pkgs; [
     nix-index
     nil
-    nixpkgs-fmt
     nix-alien
+    alejandra
 
+    usbutils
     fzf
     ripgrep
     xclip

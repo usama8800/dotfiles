@@ -91,18 +91,18 @@ else
 	yellow="\e[1;33m";
 fi;
 
-export bold;
 export reset;
+export bold;
+export white;
 export black;
+export red;
+export orange;
+export yellow;
+export green;
 export blue;
 export cyan;
-export green;
-export orange;
-export purple;
-export red;
 export violet;
-export white;
-export yellow;
+export purple;
 
 # Highlight the user name when logged in as root.
 if [[ "${USER}" == "root" ]]; then

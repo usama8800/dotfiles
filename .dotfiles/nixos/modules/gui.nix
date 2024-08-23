@@ -1,18 +1,24 @@
-{ pkgs-unstable, ... }:
 {
+  pkgs,
+  pkgs-unstable,
+  ...
+}: {
   # Enable the X11 windowing system.
   services.xserver.enable = true;
   services.displayManager.sddm.enable = true;
-  systemd.services.display-manager.wants = [ "systemd-user-sessions.service" "multi-user.target" "network-online.target" ];
-  systemd.services.display-manager.after = [ "systemd-user-sessions.service" "multi-user.target" "network-online.target" ];
+  services.displayManager.sddm.wayland.enable = true;
+  services.displayManager.sddm.wayland.compositor = "kwin";
+  services.displayManager.sddm.autoNumlock = true;
   services.desktopManager.plasma6.enable = true;
+  # systemd.services.display-manager.wants = ["systemd-user-sessions.service" "multi-user.target" "network-online.target"];
+  # systemd.services.display-manager.after = ["systemd-user-sessions.service" "multi-user.target" "network-online.target"];
   # Configure keymap in X11
   services.xserver.xkb = {
     layout = "us";
     variant = "";
   };
   # Enable automatic login for the user.
-  services.displayManager.autoLogin.enable = true;
+  services.displayManager.autoLogin.enable = false;
   services.displayManager.autoLogin.user = "usama";
 
   # Enable sound with pipewire.
@@ -30,75 +36,83 @@
   # List packages installed in system profile. To search, run:
   # $ nix search wget
   environment.systemPackages = with pkgs-unstable; [
+    xorg.libxcvt
     unzip
+    clinfo
+    virtualglLib
+    vulkan-tools
+    wayland-utils
+    pciutils
+    aha
+    fwupd
     libnotify
+    kdocker
+
+    smartgithg
     kdePackages.kfind
     kdePackages.partitionmanager
     kdePackages.filelight
-    speedcrunch
-
     kdePackages.kate
+    speedcrunch
+    anydesk
     vscode
     obsidian
     beekeeper-studio
     onlyoffice-bin
 
+    pkgs.betterbird
     google-chrome
-    thunderbird-bin
     megasync
     variety
     mpv
     beeper
     vesktop
   ];
+
   systemd.user.services.megasync = {
     serviceConfig = {
-      PassEnvironment = "DISPLAY";
       ExecStart = "${pkgs-unstable.megasync}/bin/megasync";
       Restart = "on-failure";
       RestartSec = 5;
     };
-    wantedBy = [ "default.target" ];
-    after = [ "graphical.target" ];
-  };
-  systemd.user.services.variety = {
-    serviceConfig = {
-      PassEnvironment = "DISPLAY";
-      ExecStart = "${pkgs-unstable.variety}/bin/variety";
-      Restart = "on-failure";
-      RestartSec = 5;
-    };
-    wantedBy = [ "default.target" ];
-    after = [ "graphical.target" ];
+    wantedBy = ["default.target"];
+    after = ["graphical.target"];
   };
   systemd.user.services.vesktop = {
     serviceConfig = {
-      PassEnvironment = "DISPLAY";
       ExecStart = "${pkgs-unstable.vesktop}/bin/vesktop --start-minimized";
       Restart = "on-failure";
       RestartSec = 5;
     };
-    wantedBy = [ "default.target" ];
-    after = [ "graphical.target" ];
+    wantedBy = ["default.target"];
+    after = ["graphical.target"];
   };
   systemd.user.services.beeper = {
     serviceConfig = {
-      PassEnvironment = "DISPLAY";
       ExecStart = "${pkgs-unstable.beeper}/bin/beeper --hidden";
       Restart = "on-failure";
       RestartSec = 5;
     };
-    wantedBy = [ "default.target" ];
-    after = [ "graphical.target" ];
+    wantedBy = ["default.target"];
+    after = ["graphical.target"];
   };
-  systemd.user.services.thunderbird-bin = {
+  systemd.user.services.betterbird = {
     serviceConfig = {
-      PassEnvironment = "DISPLAY";
-      ExecStart = "${pkgs-unstable.thunderbird-bin}/bin/thunderbird";
+      ExecStart = "${pkgs.betterbird-unwrapped}/bin/betterbird";
       Restart = "on-failure";
       RestartSec = 5;
     };
-    wantedBy = [ "default.target" ];
-    after = [ "graphical.target" ];
+    wantedBy = ["default.target"];
+    after = ["graphical.target"];
+  };
+  # ${pkgs-unstable.kdocker} -d 60 -q -o -l COMMAND
+  systemd.services.bins = {
+    script = ''
+      /bin/sh -c '
+        rm -f /usr/bin/variety;
+        ln -s "${pkgs-unstable.variety}/bin/variety" /usr/bin/variety;
+      '
+    '';
+    wantedBy = ["multi-user.target"];
   };
 }

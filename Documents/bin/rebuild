@@ -23,7 +23,7 @@ if [[ "${BASH_SOURCE[0]}" = "$0" ]]; then
   fi
 
   # format files
-  nixpkgs-fmt nixos
+  alejandra --quiet nixos
 
   # show diff
   git --git-dir=dotfiles.git --work-tree="$HOME" diff nixos | bat --paging always
@@ -36,10 +36,12 @@ if [[ "${BASH_SOURCE[0]}" = "$0" ]]; then
 
   # Copy, rebuild, output simplified errors, log trackebacks
   sudo rsync --delete --archive --prune-empty-dirs --human-readable --itemize-changes --exclude=flake.lock nixos /etc/
-  echo "NixOS Rebuilding as '$label' ..."
 
   if [ -n "$label" ]; then
+    echo "NixOS Rebuilding as '$label' ..."
     sudo sed -i "s/# system\.nixos\.label = \"REPLACE_ME\";/system.nixos.label = \"$label\";/" /etc/nixos/modules/system.nix
+  else
+    echo "NixOS Rebuilding ..."
   fi
 
   sudo NIXOS_LABEL="$label" nixos-rebuild switch 2>&1 | tee /tmp/nixos-switch.log
@@ -51,7 +53,7 @@ if [[ "${BASH_SOURCE[0]}" = "$0" ]]; then
   fi
 
   current=$(nixos-rebuild list-generations | grep current | awk -F ' ' '{print $5}')
-  echo "NixOS Rebuilt! Current: $current"
+  echo "NixOS Rebuilt as $red$current$reset"
   git --git-dir=dotfiles.git --work-tree="$HOME" add nixos
   git --git-dir=dotfiles.git --work-tree="$HOME" commit -m "Rebuilt NixOS $current"
 

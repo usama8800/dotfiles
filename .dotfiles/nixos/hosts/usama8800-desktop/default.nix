@@ -1,20 +1,15 @@
-{ pkgs-unstable, ... }:
 {
+  config,
+  pkgs,
+  pkgs-unstable,
+  ...
+}: {
   networking.hostName = "usama8800-desktop"; # Define your hostname.
 
   imports = [
     ./hardware-configuration.nix
     ../../modules/gui.nix
   ];
-
-  fileSystems."/mnt/hdd/" = {
-    device = "/dev/disk/by-uuid/02ebd296-59ba-4846-bc02-cb43c8297a7e";
-    mountPoint = "/mnt/hdd";
-  };
-  fileSystems."/mnt/sdd/" = {
-    device = "/dev/disk/by-uuid/e22d955e-8dc8-4951-93c0-82427b3dbe88";
-    mountPoint = "/mnt/sdd";
-  };
 
   # Bootloader.
   boot.loader.grub.enable = true;
@@ -27,9 +22,31 @@
   programs.gamemode.enable = true;
   environment.systemPackages = with pkgs-unstable; [
     protonup
+    lutris
+    mangohud
   ];
   environment.sessionVariables = {
     STEAM_EXTRA_COMPAT_TOOLS_PATHS = "\${HOME}/.steam/root/compatibilitytools.d";
+  };
+  programs.nix-ld.libraries = with pkgs; [
+    libGL
+  ];
+
+  services.xserver.videoDrivers = ["nvidia"];
+  hardware.opengl.enable = true;
+  hardware.nvidia = {
+    modesetting.enable = true;
+    powerManagement.enable = false;
+    powerManagement.finegrained = false;
+    open = false;
+    nvidiaSettings = true;
+    # package = config.boot.kernelPackages.nvidiaPackages.stable;
+    # package = config.boot.kernelPackages.nvidiaPackages.beta;
+    package = config.boot.kernelPackages.nvidiaPackages.production; # (installs 550)
+    # package = config.boot.kernelPackages.nvidiaPackages.vulkan_beta;
+    # package = config.boot.kernelPackages.nvidiaPackages.legacy_470;
+    # package = config.boot.kernelPackages.nvidiaPackages.legacy_390;
+    # package = config.boot.kernelPackages.nvidiaPackages.legacy_340;
   };
 
   # This value determines the NixOS release from which the default
