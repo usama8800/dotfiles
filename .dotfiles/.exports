@@ -11,9 +11,6 @@ export PATH=$PATH:~/.local/bin
 
 # Make vim the default editor.
 export EDITOR='vim';
-if [[ $(which code 2>/dev/null) ]]; then
-  export EDITOR='code';
-fi
 
 # Make Python use UTF-8 encoding for output to stdin, stdout, and stderr.
 export PYTHONIOENCODING='UTF-8';
