@@ -53,6 +53,7 @@
     kdePackages.partitionmanager
     kdePackages.filelight
     kdePackages.kate
+    kdePackages.krdc
     speedcrunch
     anydesk
     vscode

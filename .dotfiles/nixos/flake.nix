@@ -54,7 +54,11 @@
         modules = [
           ./modules/system.nix
           ./hosts/usama8800-farooqsb
-          ({ self, system, ... }: {
+          ({
+            self,
+            system,
+            ...
+          }: {
             nixpkgs.overlays = [
               self.inputs.nix-alien.overlays.default
             ];
