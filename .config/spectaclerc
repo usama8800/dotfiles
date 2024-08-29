@@ -1,15 +1,24 @@
+[Annotations]
+annotationToolType=8
+
 [General]
 autoSaveImage=true
 clipboardGroup=PostScreenshotCopyImage
-launchAction=DoNotTakeScreenshot
+launchAction=UseLastUsedCapturemode
+printKeyRunningAction=FocusWindow
 showMagnifier=ShowMagnifierAlways
 
 [GuiConfig]
-captureMode=4
+captureMode=5
+captureOnClick=true
+quitAfterSaveCopyExport=true
 
 [ImageSave]
-lastImageSaveLocation=file:///home/usama/Pictures/Screenshots/Screenshot_20240816_115937.png
+imageFilenameTemplate=<yyyy>-<MM>-<dd>_<hh>-<mm>-<ss>
+lastImageSaveLocation=file:///home/usama/Pictures/Screenshots/2024-08-29_23-37-36.png
 translatedScreenshotsFolder=Screenshots
 
 [VideoSave]
+preferredVideoFormat=0
 translatedScreencastsFolder=Screencasts
+videoFilenameTemplate=<yyyy>-<MM>-<dd>_<hh>-<mm>-<ss>
