@@ -19,6 +19,19 @@ with open("playlists.json", "r") as f:
             playlists.items(),
         )
     )
+    for playlist_name in playlists:
+        if "url" not in playlists[playlist_name]:
+            raise ValueError(
+                f"Missing url for playlist {playlist_name} in playlists.json"
+            )
+        if "min_date" not in playlists[playlist_name]:
+            playlists[playlist_name]["min_date"] = "1970-01-01"
+        if "ids_desc_print_skip" not in playlists[playlist_name]:
+            playlists[playlist_name]["ids_desc_print_skip"] = []
+        if "ongoing" not in playlists[playlist_name]:
+            playlists[playlist_name]["ongoing"] = False
+        if "path" not in playlists[playlist_name]:
+            playlists[playlist_name]["path"] = playlist_name
 
 dump_filename = ".dump.json"
 videos_filename = ".videos.json"
@@ -37,11 +50,7 @@ def natural_sort(l, k=None):
 
 def download_metadata(force=False):
     for playlist_name in playlists:
-        path = (
-            playlist_name
-            if "path" not in playlists[playlist_name]
-            else playlists[playlist_name]["path"]
-        )
+        path = playlists[playlist_name]["path"]
         if not os.path.exists(path):
             os.mkdir(path)
         dump_filepath = os.path.join(path, dump_filename)
@@ -52,11 +61,19 @@ def download_metadata(force=False):
             and os.path.exists(dump_filepath)
             and os.path.exists(videos_filepath)
         ):
-            modified_time = os.path.getmtime(dump_filepath)
+            modified_time = os.path.getmtime(videos_filepath)
             time_difference = time.time() - modified_time
             days_difference = time_difference // (24 * 3600)
             if days_difference < 1:
                 continue
+
+        if (
+            not playlists[playlist_name]["ongoing"]
+            and os.path.exists(dump_filepath)
+            and os.path.exists(videos_filepath)
+            and not force
+        ):
+            continue
 
         print(f"Downloading metadata for {playlist_name}")
         with open(dump_filepath, "w") as f:
@@ -111,9 +128,8 @@ def download_metadata(force=False):
                     "date": date_object.strftime("%Y-%m-%d"),
                 }
             )
-        videos = natural_sort(videos, "title")
-        videos = reversed(videos)
-        videos = sorted(videos, key=lambda x: x["date"], reverse=True)
+        if playlists[playlist_name]["ongoing"]:
+            videos = sorted(videos, key=lambda x: x["date"], reverse=True)
         with open(videos_filepath, "w") as f:
             json.dump(videos, f, indent=4)
 
@@ -122,13 +138,8 @@ def download_videos():
     if not os.path.exists(downloading_folder):
         os.mkdir(downloading_folder)
     for playlist_name in playlists:
-        print(f"Downloading videos for {playlist_name}")
-
-        path = (
-            playlist_name
-            if "path" not in playlists[playlist_name]
-            else playlists[playlist_name]["path"]
-        )
+        printed_about_downloading_playlist = False
+        path = playlists[playlist_name]["path"]
         if os.path.exists(os.path.join(path, ".archive")):
             with open(os.path.join(path, ".archive"), "r") as f:
                 archive = [line.strip() for line in f.readlines()]
@@ -136,18 +147,26 @@ def download_videos():
             archive = []
         with open(os.path.join(path, videos_filename), "r") as f:
             videos = json.loads(f.read())
-        videos.reverse()
-        for video in videos:
+        for i, video in enumerate(videos):
             if (
-                "min_date" in playlists[playlist_name]
-                and video["date"] < playlists[playlist_name]["min_date"]
-            ) or f"youtube {video['id']}" in archive:
+                video["date"] < playlists[playlist_name]["min_date"]
+                or f"youtube {video['id']}" in archive
+            ):
                 continue
+
+            if not printed_about_downloading_playlist:
+                print(f"Downloading videos for {playlist_name}")
+                printed_about_downloading_playlist = True
 
             print(f"Checking space for {video['title']}")
             space_left = compare_free_space_with_video(video["url"])
             if space_left < min_space_left:
                 break
+            output_name = f"%(title)s [%(id)s].%(ext)s"
+            if playlists[playlist_name]["ongoing"]:
+                output_name = f"{video['date']} - {output_name}"
+            else:
+                output_name = f"{i+1:0{len(videos)//10-1}} - {output_name}"
             ytdlp = subprocess.run(
                 [
                     "yt-dlp",
@@ -162,7 +181,7 @@ def download_videos():
                         else os.path.join("..", path, ".archive")
                     ),
                     "-o",
-                    f"{video['date']} - %(title)s [%(id)s].%(ext)s",
+                    output_name,
                     video["url"],
                 ],
                 cwd=downloading_folder,

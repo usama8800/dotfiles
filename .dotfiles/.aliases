@@ -12,14 +12,10 @@ alias ....="cd ../../.."
 alias .....="cd ../../../.."
 
 # Shortcuts
-alias doc="cd ~/Documents;la"
-alias dot="cd ~/.dotfiles;la"
 alias clip="xclip -selection clipboard"
 alias sb="source ~/.bash_profile"
 alias cls="clear"
 alias :q="touch ~/.manual_exit; exit"
-alias untar="tar xvf"
-alias diff="git diff"
 
 # Detect which `ls` flavor is in use
 if ls --color >/dev/null 2>&1; then # GNU `ls`
@@ -40,13 +36,66 @@ alias ls="command ls ${colorflag}"
 
 # Always enable colored `grep` output
 # Note: `GREP_OPTIONS="--color=auto"` is deprecated, hence the alias usage.
-alias grep='grep --color=auto'
-alias fgrep='fgrep --color=auto'
-alias egrep='egrep --color=auto'
+alias grep='grep --color=auto '
+alias egrep='grep --color=auto -E '
 
 # Enable aliases to be sudo’ed
 alias sudo='sudo -E '
 
 alias dc='docker compose '
-
 alias rsync='rsync --delete --archive --verbose --prune-empty-dirs --human-readable --progress --partial --append --relative '
+alias dux='du -xh . | sort -rh | cat'
+
+alias myip='curl -s "ip.me"'
+alias speedtest="curl -s https://raw.githubusercontent.com/sivel/speedtest-cli/master/speedtest.py | python3 -"
+cheat() {
+	if [[ $(which bat 2>/dev/null) ]]; then
+		curl -s "cheat.sh/$1" | bat
+	else
+		curl -s "cheat.sh/$1" | cat
+	fi
+}
+weather() {
+    location="${1:-Lahore}"
+	curl -s "wttr.in/$location"
+}
+pastebin() {
+	__=""
+	_stdin=""
+	read -N1 -t1 __  && {
+		(( $? <= 128 ))  && {
+			IFS= read -rd '' _stdin
+			_stdin="$__$_stdin"
+		}
+	}
+	if [ $# -eq 1 ] && [ -z "$_stdin" ]; then
+		_stdin="$1"
+	fi
+	_stdin=$(sed -e 's/[ \n\r]*$//' <<<${_stdin})
+
+	if [ -z "$_stdin" ]; then
+		echo "Need some text"
+	else
+		echo "$_stdin" | curl -F 'clbin=<-' https://clbin.com
+	fi
+}
+qr() {
+	__=""
+	_stdin=""
+	read -N1 -t1 __  && {
+		(( $? <= 128 ))  && {
+			IFS= read -rd '' _stdin
+			_stdin="$__$_stdin"
+		}
+	}
+	if [ $# -eq 1 ] && [ -z "$_stdin" ]; then
+		_stdin="$1"
+	fi
+	_stdin=$(sed -e 's/[ \n\r]*$//' <<<${_stdin})
+
+	if [ -z "$_stdin" ]; then
+		echo "Need some text"
+	else
+		echo "$_stdin" | curl -F 'clbin=<-' https://qrenco.de
+	fi
+}
