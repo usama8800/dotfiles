@@ -140,9 +140,11 @@
   programs.nix-ld.libraries = with pkgs; [
     # Add any missing dynamic libraries for unpackaged programs
     # here, NOT in environment.systemPackages
-    # Use nix-alient-find-libs to find what to add
+    # Use nix-alien-find-libs to find what to add
+    # or nix-index then nix-locate --top-level libname.so
     stdenv.cc.cc.lib
     zlib
+    libpulseaudio
     # node
     glib
     # cypress

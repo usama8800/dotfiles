@@ -46,6 +46,7 @@
     aha
     fwupd
     libnotify
+    libsForQt5.kconfig
     kdocker
 
     smartgithg
