@@ -62,6 +62,7 @@
     onlyoffice-bin
 
     google-chrome
+    librewolf
     megasync
     variety
     mpv
