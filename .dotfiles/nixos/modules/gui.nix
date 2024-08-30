@@ -53,7 +53,7 @@
     kdePackages.partitionmanager
     kdePackages.filelight
     kdePackages.kate
-    kdePackages.krdc
+    remmina
     speedcrunch
     anydesk
     vscode
@@ -99,11 +99,10 @@
   # ${pkgs-unstable.kdocker} -d 60 -q -o -l COMMAND
   systemd.services.bins = {
     script = ''
-      /bin/sh -c '
-        echo =e "[Keyboard]\nNumlock=0" > /var/lib/sddm/.config/kcminputrc
-        rm -f /usr/bin/variety;
-        ln -s "${pkgs-unstable.variety}/bin/variety" /usr/bin/variety;
-      '
+      echo -e "[Keyboard]\nNumlock=0" > /var/lib/sddm/.config/kcminputrc;
+      rm -f /usr/bin/variety;
+      ln -s "${pkgs-unstable.variety}/bin/variety" /usr/bin/variety;
+      sed -E -i 's/Exec=.+/Exec=\/bin\/bash -c "sleep 20 \&\& \/usr\/bin\/variety --profile \/home\/usama\/.config\/variety\/"/' /home/usama/.config/autostart/variety.desktop;
     '';
     wantedBy = ["multi-user.target"];
   };

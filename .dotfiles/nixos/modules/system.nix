@@ -57,7 +57,7 @@
   ];
 
   # Set your time zone.
-  time.timeZone = "Asia/Karachi";
+  time.timeZone = lib.mkDefault "Asia/Karachi";
   # Select internationalisation properties.
   i18n.defaultLocale = "en_GB.UTF-8";
   i18n.extraLocaleSettings = {
