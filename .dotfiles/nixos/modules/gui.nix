@@ -61,7 +61,6 @@
     beekeeper-studio
     onlyoffice-bin
 
-    pkgs.betterbird
     google-chrome
     megasync
     variety
@@ -97,19 +96,11 @@
     wantedBy = ["default.target"];
     after = ["graphical.target"];
   };
-  systemd.user.services.betterbird = {
-    serviceConfig = {
-      ExecStart = "${pkgs.betterbird-unwrapped}/bin/betterbird";
-      Restart = "on-failure";
-      RestartSec = 5;
-    };
-    wantedBy = ["default.target"];
-    after = ["graphical.target"];
-  };
   # ${pkgs-unstable.kdocker} -d 60 -q -o -l COMMAND
   systemd.services.bins = {
     script = ''
       /bin/sh -c '
+        echo =e "[Keyboard]\nNumlock=0" > /var/lib/sddm/.config/kcminputrc
         rm -f /usr/bin/variety;
         ln -s "${pkgs-unstable.variety}/bin/variety" /usr/bin/variety;
       '
