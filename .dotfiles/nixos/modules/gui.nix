@@ -61,8 +61,7 @@
     beekeeper-studio
     onlyoffice-bin
 
-    google-chrome
-    librewolf
+    floorp
     megasync
     variety
     mpv

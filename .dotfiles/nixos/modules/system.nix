@@ -77,7 +77,7 @@
     "ur_PK/UTF-8"
   ];
 
-  fonts.packages = with pkgs; [fira-code];
+  fonts.packages = with pkgs; [fira-code jetbrains-mono];
 
   # Enable CUPS to print documents.
   services.printing.enable = true;
@@ -142,6 +142,7 @@
     # here, NOT in environment.systemPackages
     # Use nix-alient-find-libs to find what to add
     stdenv.cc.cc.lib
+    zlib
     # node
     glib
     # cypress

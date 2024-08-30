@@ -16,57 +16,36 @@
     nix-alien,
     ...
   }: {
-    nixosConfigurations = {
-      usama8800-desktop = nixpkgs.lib.nixosSystem rec {
-        system = "x86_64-linux";
-        specialArgs = {
-          inherit self system;
-          pkgs-unstable = import nixpkgs-unstable {
-            inherit system;
-            config.allowUnfree = true;
+    nixosConfigurations = let
+      define-host = hostname:
+        nixpkgs.lib.nixosSystem rec {
+          system = "x86_64-linux";
+          specialArgs = {
+            inherit self system;
+            pkgs-unstable = import nixpkgs-unstable {
+              inherit system;
+              config.allowUnfree = true;
+            };
           };
+          modules = [
+            ./modules/system.nix
+            ./hosts/${hostname}
+            ({
+              self,
+              system,
+              ...
+            }: {
+              nixpkgs.overlays = [
+                self.inputs.nix-alien.overlays.default
+              ];
+              # Optional, needed for `nix-alien-ld`
+              programs.nix-ld.enable = true;
+            })
+          ];
         };
-        modules = [
-          ./modules/system.nix
-          ./hosts/usama8800-desktop
-          ({
-            self,
-            system,
-            ...
-          }: {
-            nixpkgs.overlays = [
-              self.inputs.nix-alien.overlays.default
-            ];
-            # Optional, needed for `nix-alien-ld`
-            programs.nix-ld.enable = true;
-          })
-        ];
-      };
-      usama8800-farooqsb = nixpkgs.lib.nixosSystem rec {
-        system = "x86_64-linux";
-        specialArgs = {
-          inherit self system;
-          pkgs-unstable = import nixpkgs-unstable {
-            inherit system;
-            config.allowUnfree = true;
-          };
-        };
-        modules = [
-          ./modules/system.nix
-          ./hosts/usama8800-farooqsb
-          ({
-            self,
-            system,
-            ...
-          }: {
-            nixpkgs.overlays = [
-              self.inputs.nix-alien.overlays.default
-            ];
-            # Optional, needed for `nix-alien-ld`
-            programs.nix-ld.enable = true;
-          })
-        ];
-      };
+    in {
+      usama8800-desktop = define-host "usama8800-desktop";
+      usama8800-farooqsb = define-host "usama8800-farooqsb";
     };
   };
 }
