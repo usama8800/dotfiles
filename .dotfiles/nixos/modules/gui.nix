@@ -139,7 +139,6 @@
       defaultProfile = "Custom";
       profiles.Custom = {
         font.name = "JetBrains Mono";
-        font.size = 15;
       };
     };
   };
