@@ -8,6 +8,10 @@
 
   programs.plasma = {
     enable = true;
+    hotkeys.commands.test = {
+      command = "notify-send 123";
+      key = "Meta+`";
+    };
     workspace = {
       lookAndFeel = "org.kde.breezedark.desktop";
       cursor = {
