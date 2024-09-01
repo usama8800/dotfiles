@@ -173,4 +173,8 @@
     xorg.libXrandr
     xorg.libxcb
   ];
+
+  home-manager.useGlobalPkgs = true;
+  home-manager.useUserPackages = true;
+  # home-manager.users.usama = import ./home.nix;
 }
