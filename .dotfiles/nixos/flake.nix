@@ -40,6 +40,9 @@
             ./modules/system.nix
             ./hosts/${hostname}
             home-manager.nixosModules.home-manager
+            {
+              home-manager.sharedModules = [plasma-manager.homeManagerModules.plasma-manager];
+            }
 
             ({
               self,
@@ -57,15 +60,6 @@
     in {
       usama8800-desktop = define-host "usama8800-desktop";
       usama8800-farooqsb = define-host "usama8800-farooqsb";
-    };
-    homeConfigurations.usama = home-manager.lib.homeManagerConfiguration rec {
-      system = "x86_64-linux";
-      pkgs = import nixpkgs {inherit self system;};
-
-      modules = [
-        plasma-manager.homeManagerModules.plasma-manager
-        ./modules/home.nix
-      ];
     };
   };
 }
