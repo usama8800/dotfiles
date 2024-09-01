@@ -8,7 +8,6 @@
 
   programs.plasma = {
     enable = true;
-
     workspace = {
       lookAndFeel = "org.kde.breezedark.desktop";
       cursor = {
@@ -17,12 +16,6 @@
       };
       iconTheme = "breeze-dark";
     };
-
-    hotkeys.commands."launch-konsole" = {
-      name = "Launch Konsole";
-      key = "Meta+Alt+K";
-      command = "konsole";
-    };
   };
 
   programs.kate = {
@@ -30,6 +23,14 @@
     editor.font = {
       family = "JetBrains Mono";
       pointSize = 10;
+    };
+  };
+
+  programs.konsole = {
+    enable = true;
+    defaultProfile = "Custom";
+    profiles.Custom = {
+      font.name = "JetBrains Mono";
     };
   };
 
