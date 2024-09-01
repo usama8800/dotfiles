@@ -107,4 +107,40 @@
     '';
     wantedBy = ["multi-user.target"];
   };
+
+  home-manager.users.usama = {
+    programs.plasma = {
+      enable = true;
+      hotkeys.commands.test = {
+        command = "notify-send 123";
+        key = "Meta+`";
+      };
+      workspace = {
+        lookAndFeel = "org.kde.breezedark.desktop";
+        cursor = {
+          theme = "breeze_cursors";
+          size = 24;
+        };
+        iconTheme = "breeze-dark";
+      };
+      input.keyboard.numlockOnStartup = "on";
+    };
+
+    programs.kate = {
+      enable = true;
+      editor.font = {
+        family = "JetBrains Mono";
+        pointSize = 10;
+      };
+    };
+
+    programs.konsole = {
+      enable = true;
+      defaultProfile = "Custom";
+      profiles.Custom = {
+        font.name = "JetBrains Mono";
+        font.size = 15;
+      };
+    };
+  };
 }
