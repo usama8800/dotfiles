@@ -100,30 +100,32 @@
   # List packages installed in system profile. To search, run:
   # $ nix search wget
   environment.systemPackages = with pkgs; [
-    nix-index
-    nil
-    nix-alien
-    alejandra
+    nix-index # for nix-locate
+    nix-alien # for nix-alien-find-libs for nix-ld
+    nil # nix language server
+    alejandra # nix code formatter
 
     usbutils
-    fzf
-    ripgrep
-    xclip
-    neofetch
-    bat
-    atuin
-    zoxide
-    eza
-    broot
-    ncdu
+    fzf # fuzzy finder
+    ripgrep # better grep
+    xclip # pipe to clipboard
+    neofetch # styled system info
+    bat # better cat
+    atuin # shell history
+    zoxide # better cd
+    eza # better ls
+    broot # file manager
+    ncdu # disk usage analyzer
+
+    # for python scripts
     pkgs-unstable.yt-dlp
     pkgs-unstable.ffmpeg_7
     pkgs-unstable.atomicparsley
 
     git
-    lazygit
+    lazygit # git client
     vim
-    fnm
+    fnm # fast node manager
     python3
     python312Packages.pip
   ];

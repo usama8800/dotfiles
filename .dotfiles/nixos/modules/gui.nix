@@ -45,29 +45,29 @@
     pciutils
     aha
     fwupd
-    libnotify
-    libsForQt5.kconfig
-    kdocker
+    libnotify # notify-send
+    libsForQt5.kconfig # kde config cli
+    kdocker # put any app in the system tray
 
-    smartgithg
-    kdePackages.kfind
-    kdePackages.partitionmanager
-    kdePackages.filelight
-    kdePackages.kate
-    remmina
-    speedcrunch
-    anydesk
-    vscode
-    obsidian
-    beekeeper-studio
-    onlyoffice-bin
+    smartgithg # git client
+    kdePackages.kfind # file finder
+    kdePackages.partitionmanager # partition manager
+    kdePackages.filelight # disk usage analyzer
+    kdePackages.kate # text editor
+    remmina # rdp / vnc client
+    anydesk # remote server and cliet
+    speedcrunch # calculator
+    vscode # code editor
+    obsidian # markdown editor
+    beekeeper-studio # database browser
+    onlyoffice-bin # office suite
 
-    floorp
-    megasync
-    variety
-    mpv
-    beeper
-    vesktop
+    floorp # browser
+    megasync # cloud storage
+    variety # wallpapers
+    mpv # video player
+    beeper # messaging app
+    vesktop # discord
   ];
 
   systemd.user.services.megasync = {
