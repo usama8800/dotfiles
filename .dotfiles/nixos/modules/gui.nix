@@ -62,7 +62,7 @@
     beekeeper-studio # database browser
     onlyoffice-bin # office suite
 
-    floorp # browser
+    pkgs.floorp # browser
     megasync # cloud storage
     variety # wallpapers
     mpv # video player
@@ -103,7 +103,7 @@
       echo -e "[Keyboard]\nNumlock=0" > /var/lib/sddm/.config/kcminputrc;
       rm -f /usr/bin/variety;
       ln -s "${pkgs-unstable.variety}/bin/variety" /usr/bin/variety;
-      sed -E -i 's/Exec=.+/Exec=\/bin\/bash -c "sleep 20 \&\& \/usr\/bin\/variety --profile \/home\/usama\/.config\/variety\/"/' /home/usama/.config/autostart/variety.desktop;
+      sed -E -i 's/Exec=.+/Exec=\/bin\/sh -c "sleep 20 \&\& \/usr\/bin\/variety --profile \/home\/usama\/.config\/variety\/"/' /home/usama/.config/autostart/variety.desktop;
     '';
     wantedBy = ["multi-user.target"];
   };
@@ -113,21 +113,18 @@
       enable = true;
       overrideConfig = true;
       hotkeys.commands = {
-        # konsole = {
-        #   command = "konsole";
-        #   key = "Meta+t";
-        #   comment = "Open Konsole";
-        # };
+        konsole = {
+          command = "konsole";
+          key = "Meta+t";
+          comment = "Open Konsole";
+        };
       };
       shortcuts = {
         "systemsettings.desktop" = {
-          _launch = "Meta+i";
-        };
-        "plasma-manager-commands.desktop" = {
-          konsole = "Meta+t";
+          _launch = "Meta+I";
         };
         kwin = {
-          "Window Maximize" = "Meta+m";
+          "Window Maximize" = "Meta+M";
           "Switch One Desktop to the Right" = "Meta+Ctrl+Right";
           "Switch One Desktop to the Left" = "Meta+Ctrl+Left";
           "Window One Desktop to the Right" = "Meta+Ctrl+Shift+Right";
@@ -136,7 +133,16 @@
           "Window to Previous Screen" = "Meta+Shift+Left";
           Overview = "Meta+Tab";
         };
+        plasmashell = {
+          "activate widget 130" = "Meta+A";
+          "activate widget 164" = "Meta+K";
+        };
       };
+      spectacle.shortcuts.captureRectangularRegion = "Print";
+      spectacle.shortcuts.launch = "Shift+Print";
+      resetFiles = [
+        "/home/usama/.config/kglobalshortcutsrc"
+      ];
       input.keyboard.numlockOnStartup = "on";
       kscreenlocker = {
         autoLock = false;
@@ -163,7 +169,7 @@
         };
         nightLight.enable = false;
         scripts.polonium.enable = false;
-        titlebarButtons.left = ["more-window-actions" "shade"];
+        titlebarButtons.left = ["more-window-actions" "shade" "keep-above-windows"];
         titlebarButtons.right = ["help" "minimize" "maximize" "close"];
         virtualDesktops.rows = 1;
         virtualDesktops.number = 2;
@@ -220,8 +226,6 @@
           whenSleepingEnter = "standbyThenHibernate";
         };
       };
-      spectacle.shortcuts.captureRectangularRegion = "Print";
-      spectacle.shortcuts.launch = "Shift+Print";
       windows.allowWindowsToRememberPositions = true;
       workspace = {
         clickItemTo = "select";
