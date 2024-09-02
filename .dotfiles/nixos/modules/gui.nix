@@ -113,15 +113,28 @@
       enable = true;
       overrideConfig = true;
       hotkeys.commands = {
-        konsole = {
-          command = "konsole";
-          key = "Meta+t";
-          comment = "Open Konsole";
-        };
+        # konsole = {
+        #   command = "konsole";
+        #   key = "Meta+t";
+        #   comment = "Open Konsole";
+        # };
       };
       shortcuts = {
         "systemsettings.desktop" = {
-          "_launch" = "Meta+i";
+          _launch = "Meta+i";
+        };
+        "plasma-manager-commands.desktop" = {
+          konsole = "Meta+t";
+        };
+        kwin = {
+          "Window Maximize" = "Meta+m";
+          "Switch One Desktop to the Right" = "Meta+Ctrl+Right";
+          "Switch One Desktop to the Left" = "Meta+Ctrl+Left";
+          "Window One Desktop to the Right" = "Meta+Ctrl+Shift+Right";
+          "Window One Desktop to the Left" = "Meta+Ctrl+Shift+Left";
+          "Window to Next Screen" = "Meta+Shift+Right";
+          "Window to Previous Screen" = "Meta+Shift+Left";
+          Overview = "Meta+Tab";
         };
       };
       input.keyboard.numlockOnStartup = "on";
