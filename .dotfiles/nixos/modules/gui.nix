@@ -111,19 +111,115 @@
   home-manager.users.usama = {
     programs.plasma = {
       enable = true;
-      hotkeys.commands.test = {
-        command = "notify-send 123";
-        key = "Meta+`";
-      };
-      workspace = {
-        lookAndFeel = "org.kde.breezedark.desktop";
-        cursor = {
-          theme = "breeze_cursors";
-          size = 24;
+      overrideConfig = true;
+      hotkeys.commands = {
+        konsole = {
+          command = "konsole";
+          key = "Meta+t";
+          comment = "Open Konsole";
         };
-        iconTheme = "breeze-dark";
+      };
+      shortcuts = {
+        "systemsettings.desktop" = {
+          "_launch" = "Meta+i";
+        };
       };
       input.keyboard.numlockOnStartup = "on";
+      kscreenlocker = {
+        autoLock = false;
+        lockOnResume = false;
+        lockOnStartup = false;
+        passwordRequired = false;
+      };
+      kwin = {
+        borderlessMaximizedWindows = null;
+        cornerBarrier = true;
+        effects = {
+          blur.enable = false;
+          cube.enable = false;
+          desktopSwitching.animation = "slide";
+          dimAdminMode.enable = true;
+          dimInactive.enable = false;
+          fallApart.enable = false;
+          minimization.animation = "magiclamp";
+          shakeCursor.enable = true;
+          slideBack.enable = false;
+          translucency.enable = false;
+          windowOpenClose.animation = "scale";
+          wobblyWindows.enable = true;
+        };
+        nightLight.enable = false;
+        scripts.polonium.enable = false;
+        titlebarButtons.left = ["more-window-actions" "shade"];
+        titlebarButtons.right = ["help" "minimize" "maximize" "close"];
+        virtualDesktops.rows = 1;
+        virtualDesktops.number = 2;
+      };
+      panels = [
+        {
+          alignment = "left";
+          floating = false;
+          height = 44;
+          hiding = "none";
+          lengthMode = "fill";
+          location = "bottom";
+          screen = "all";
+          widgets = [
+            "org.kde.plasma.kickoff"
+            "org.kde.plasma.pager"
+            "org.kde.plasma.icontasks"
+            "org.kde.plasma.marginsseparator"
+            "org.kde.plasma.systemtray"
+            "org.kde.plasma.digitalclock"
+            "org.kde.plasma.showdesktop"
+          ];
+        }
+      ];
+      powerdevil = {
+        AC = {
+          autoSuspend.action = "nothing";
+          dimDisplay.enable = true;
+          dimDisplay.idleTimeOut = 300;
+          powerButtonAction = "sleep";
+          turnOffDisplay.idleTimeout = 600;
+          turnOffDisplay.idleTimeoutWhenLocked = 30;
+          whenLaptopLidClosed = "turnOffScreen";
+          whenSleepingEnter = "standbyThenHibernate";
+        };
+        battery = {
+          autoSuspend.action = "nothing";
+          dimDisplay.enable = true;
+          dimDisplay.idleTimeOut = 120;
+          powerButtonAction = "sleep";
+          turnOffDisplay.idleTimeout = 300;
+          turnOffDisplay.idleTimeoutWhenLocked = 30;
+          whenLaptopLidClosed = "turnOffScreen";
+          whenSleepingEnter = "standbyThenHibernate";
+        };
+        lowBattery = {
+          autoSuspend.action = "hibernate"; # or "sleep"?
+          dimDisplay.enable = true;
+          dimDisplay.idleTimeOut = 30;
+          powerButtonAction = "sleep";
+          turnOffDisplay.idleTimeout = 60;
+          turnOffDisplay.idleTimeoutWhenLocked = 30;
+          whenLaptopLidClosed = "sleep";
+          whenSleepingEnter = "standbyThenHibernate";
+        };
+      };
+      spectacle.shortcuts.captureRectangularRegion = "Print";
+      spectacle.shortcuts.launch = "Shift+Print";
+      windows.allowWindowsToRememberPositions = true;
+      workspace = {
+        clickItemTo = "select";
+        colorScheme = "BreezeDark";
+        cursor.theme = "breeze_cursors";
+        cursor.size = 24;
+        iconTheme = "breeze-dark";
+        lookAndFeel = "org.kde.breezedark.desktop";
+        soundTheme = "ocean";
+        theme = "breeze-dark";
+      };
     };
 
     programs.kate = {
