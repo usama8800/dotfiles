@@ -7,6 +7,13 @@
 
     nix-alien.url = "github:thiagokokada/nix-alien";
     nix-alien.inputs.nixpkgs.follows = "nixpkgs";
+
+    home-manager.url = "github:nix-community/home-manager/release-24.05";
+    home-manager.inputs.nixpkgs.follows = "nixpkgs";
+
+    plasma-manager.url = "github:nix-community/plasma-manager";
+    plasma-manager.inputs.nixpkgs.follows = "nixpkgs";
+    plasma-manager.inputs.home-manager.follows = "home-manager";
   };
 
   outputs = {
@@ -14,6 +21,8 @@
     nixpkgs,
     nixpkgs-unstable,
     nix-alien,
+    home-manager,
+    plasma-manager,
     ...
   }: {
     nixosConfigurations = let
@@ -30,6 +39,11 @@
           modules = [
             ./modules/system.nix
             ./hosts/${hostname}
+            home-manager.nixosModules.home-manager
+            {
+              home-manager.sharedModules = [plasma-manager.homeManagerModules.plasma-manager];
+            }
+
             ({
               self,
               system,

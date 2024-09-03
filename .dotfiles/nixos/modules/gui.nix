@@ -45,28 +45,29 @@
     pciutils
     aha
     fwupd
-    libnotify
-    kdocker
+    libnotify # notify-send
+    libsForQt5.kconfig # kde config cli
+    kdocker # put any app in the system tray
 
-    smartgithg
-    kdePackages.kfind
-    kdePackages.partitionmanager
-    kdePackages.filelight
-    kdePackages.kate
-    remmina
-    speedcrunch
-    anydesk
-    vscode
-    obsidian
-    beekeeper-studio
-    onlyoffice-bin
+    smartgithg # git client
+    kdePackages.kfind # file finder
+    kdePackages.partitionmanager # partition manager
+    kdePackages.filelight # disk usage analyzer
+    kdePackages.kate # text editor
+    remmina # rdp / vnc client
+    anydesk # remote server and cliet
+    speedcrunch # calculator
+    vscode # code editor
+    obsidian # markdown editor
+    beekeeper-studio # database browser
+    onlyoffice-bin # office suite
 
-    floorp
-    megasync
-    variety
-    mpv
-    beeper
-    vesktop
+    floorp # browser
+    megasync # cloud storage
+    variety # wallpapers
+    mpv # video player
+    beeper # messaging app
+    vesktop # discord
   ];
 
   systemd.user.services.megasync = {
@@ -105,5 +106,136 @@
       sed -E -i 's/Exec=.+/Exec=\/bin\/bash -c "sleep 20 \&\& \/usr\/bin\/variety --profile \/home\/usama\/.config\/variety\/"/' /home/usama/.config/autostart/variety.desktop;
     '';
     wantedBy = ["multi-user.target"];
+  };
+
+  home-manager.users.usama = {
+    programs.plasma = {
+      enable = true;
+      overrideConfig = true;
+      hotkeys.commands = {
+        konsole = {
+          command = "konsole";
+          key = "Meta+t";
+          comment = "Open Konsole";
+        };
+      };
+      shortcuts = {
+        "systemsettings.desktop" = {
+          "_launch" = "Meta+i";
+        };
+      };
+      input.keyboard.numlockOnStartup = "on";
+      kscreenlocker = {
+        autoLock = false;
+        lockOnResume = false;
+        lockOnStartup = false;
+        passwordRequired = false;
+      };
+      kwin = {
+        borderlessMaximizedWindows = null;
+        cornerBarrier = true;
+        effects = {
+          blur.enable = false;
+          cube.enable = false;
+          desktopSwitching.animation = "slide";
+          dimAdminMode.enable = true;
+          dimInactive.enable = false;
+          fallApart.enable = false;
+          minimization.animation = "magiclamp";
+          shakeCursor.enable = true;
+          slideBack.enable = false;
+          translucency.enable = false;
+          windowOpenClose.animation = "scale";
+          wobblyWindows.enable = true;
+        };
+        nightLight.enable = false;
+        scripts.polonium.enable = false;
+        titlebarButtons.left = ["more-window-actions" "shade"];
+        titlebarButtons.right = ["help" "minimize" "maximize" "close"];
+        virtualDesktops.rows = 1;
+        virtualDesktops.number = 2;
+      };
+      panels = [
+        {
+          alignment = "left";
+          floating = false;
+          height = 44;
+          hiding = "none";
+          lengthMode = "fill";
+          location = "bottom";
+          screen = "all";
+          widgets = [
+            "org.kde.plasma.kickoff"
+            "org.kde.plasma.pager"
+            "org.kde.plasma.icontasks"
+            "org.kde.plasma.marginsseparator"
+            "org.kde.plasma.systemtray"
+            "org.kde.plasma.digitalclock"
+            "org.kde.plasma.showdesktop"
+          ];
+        }
+      ];
+      powerdevil = {
+        AC = {
+          autoSuspend.action = "nothing";
+          dimDisplay.enable = true;
+          dimDisplay.idleTimeOut = 300;
+          powerButtonAction = "sleep";
+          turnOffDisplay.idleTimeout = 600;
+          turnOffDisplay.idleTimeoutWhenLocked = 30;
+          whenLaptopLidClosed = "turnOffScreen";
+          whenSleepingEnter = "standbyThenHibernate";
+        };
+        battery = {
+          autoSuspend.action = "nothing";
+          dimDisplay.enable = true;
+          dimDisplay.idleTimeOut = 120;
+          powerButtonAction = "sleep";
+          turnOffDisplay.idleTimeout = 300;
+          turnOffDisplay.idleTimeoutWhenLocked = 30;
+          whenLaptopLidClosed = "turnOffScreen";
+          whenSleepingEnter = "standbyThenHibernate";
+        };
+        lowBattery = {
+          autoSuspend.action = "hibernate"; # or "sleep"?
+          dimDisplay.enable = true;
+          dimDisplay.idleTimeOut = 30;
+          powerButtonAction = "sleep";
+          turnOffDisplay.idleTimeout = 60;
+          turnOffDisplay.idleTimeoutWhenLocked = 30;
+          whenLaptopLidClosed = "sleep";
+          whenSleepingEnter = "standbyThenHibernate";
+        };
+      };
+      spectacle.shortcuts.captureRectangularRegion = "Print";
+      spectacle.shortcuts.launch = "Shift+Print";
+      windows.allowWindowsToRememberPositions = true;
+      workspace = {
+        clickItemTo = "select";
+        colorScheme = "BreezeDark";
+        cursor.theme = "breeze_cursors";
+        cursor.size = 24;
+        iconTheme = "breeze-dark";
+        lookAndFeel = "org.kde.breezedark.desktop";
+        soundTheme = "ocean";
+        theme = "breeze-dark";
+      };
+    };
+
+    programs.kate = {
+      enable = true;
+      editor.font = {
+        family = "JetBrains Mono";
+        pointSize = 10;
+      };
+    };
+
+    programs.konsole = {
+      enable = true;
+      defaultProfile = "Custom";
+      profiles.Custom = {
+        font.name = "JetBrains Mono";
+      };
+    };
   };
 }

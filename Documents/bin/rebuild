@@ -4,6 +4,12 @@ set -uo pipefail
 IFS=$'\n\t'
 
 if [[ "${BASH_SOURCE[0]}" = "$0" ]]; then
+
+  force=0
+  if [ "$#" -gt 0 ] && [ "$1" = "-f" ]; then
+    force=1
+    shift
+  fi
   if [ "$#" -gt 1 ]; then
     echo "Label should be one word"
     exit 1
@@ -16,7 +22,7 @@ if [[ "${BASH_SOURCE[0]}" = "$0" ]]; then
   git --git-dir=dotfiles.git --work-tree="$HOME" diff --quiet nixos
   diff=$?
   new_files=$(git --git-dir=dotfiles.git --work-tree="$HOME" ls-files --others nixos)
-  if [ -z "$new_files" ] && [ "$diff" -eq "0" ]; then
+  if [ -z "$new_files" ] && [ "$diff" -eq "0" ] && [ "$force" -eq 0 ]; then
     echo "Nothing to rebuild"
     popd > /dev/null || exit 1
     exit 0

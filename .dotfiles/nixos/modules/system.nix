@@ -100,30 +100,32 @@
   # List packages installed in system profile. To search, run:
   # $ nix search wget
   environment.systemPackages = with pkgs; [
-    nix-index
-    nil
-    nix-alien
-    alejandra
+    nix-index # for nix-locate
+    nix-alien # for nix-alien-find-libs for nix-ld
+    nil # nix language server
+    alejandra # nix code formatter
 
     usbutils
-    fzf
-    ripgrep
-    xclip
-    neofetch
-    bat
-    atuin
-    zoxide
-    eza
-    broot
-    ncdu
+    fzf # fuzzy finder
+    ripgrep # better grep
+    xclip # pipe to clipboard
+    neofetch # styled system info
+    bat # better cat
+    atuin # shell history
+    zoxide # better cd
+    eza # better ls
+    broot # file manager
+    ncdu # disk usage analyzer
+
+    # for python scripts
     pkgs-unstable.yt-dlp
     pkgs-unstable.ffmpeg_7
     pkgs-unstable.atomicparsley
 
     git
-    lazygit
+    lazygit # git client
     vim
-    fnm
+    fnm # fast node manager
     python3
     python312Packages.pip
   ];
@@ -140,9 +142,11 @@
   programs.nix-ld.libraries = with pkgs; [
     # Add any missing dynamic libraries for unpackaged programs
     # here, NOT in environment.systemPackages
-    # Use nix-alient-find-libs to find what to add
+    # Use nix-alien-find-libs to find what to add
+    # or nix-index then nix-locate --top-level libname.so
     stdenv.cc.cc.lib
     zlib
+    libpulseaudio
     # node
     glib
     # cypress
@@ -169,4 +173,25 @@
     xorg.libXrandr
     xorg.libxcb
   ];
+
+  home-manager.useGlobalPkgs = true;
+  home-manager.useUserPackages = true;
+  home-manager.backupFileExtension = "hmbak";
+  home-manager.users.usama = {
+    home.username = "usama";
+    home.homeDirectory = "/home/usama";
+
+    # This value determines the Home Manager release that your
+    # configuration is compatible with. This helps avoid breakage
+    # when a new Home Manager release introduces backwards
+    # incompatible changes.
+    #
+    # You can update Home Manager without changing this value. See
+    # the Home Manager release notes for a list of state version
+    # changes in each release.
+    home.stateVersion = "24.05";
+
+    # Let Home Manager install and manage itself.
+    programs.home-manager.enable = true;
+  };
 }
