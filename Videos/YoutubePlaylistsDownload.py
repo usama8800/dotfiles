@@ -36,7 +36,7 @@ with open("playlists.json", "r") as f:
 dump_filename = ".dump.json"
 videos_filename = ".videos.json"
 downloading_folder = "Downloading"
-bytes_per_second = 450_000
+bytes_per_second = 463_000
 min_space_left = 2
 
 
@@ -63,8 +63,8 @@ def download_metadata(force=False):
         ):
             modified_time = os.path.getmtime(videos_filepath)
             time_difference = time.time() - modified_time
-            days_difference = time_difference // (24 * 3600)
-            if days_difference < 1:
+            hours_difference = time_difference / 3600
+            if hours_difference < 6:
                 continue
 
         if (
@@ -129,7 +129,7 @@ def download_metadata(force=False):
                 }
             )
         if playlists[playlist_name]["ongoing"]:
-            videos = sorted(videos, key=lambda x: x["date"], reverse=True)
+            videos = sorted(videos, key=lambda x: x["date"], reverse=False)
         with open(videos_filepath, "w") as f:
             json.dump(videos, f, indent=4)
 
@@ -166,7 +166,8 @@ def download_videos():
             if playlists[playlist_name]["ongoing"]:
                 output_name = f"{video['date']} - {output_name}"
             else:
-                output_name = f"{i+1:0{len(videos)//10-1}} - {output_name}"
+                output_name = f"{i+1:0{len(videos)//10+1}} - {output_name}"
+                print(i + 1, len(videos) // 10 + 1)
             ytdlp = subprocess.run(
                 [
                     "yt-dlp",
