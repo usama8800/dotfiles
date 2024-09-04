@@ -111,7 +111,7 @@
   home-manager.users.usama = {
     programs.plasma = {
       enable = true;
-      overrideConfig = true;
+      overrideConfig = false;
       hotkeys.commands = {
         konsole = {
           command = "konsole";
@@ -133,16 +133,9 @@
           "Window to Previous Screen" = "Meta+Shift+Left";
           Overview = "Meta+Tab";
         };
-        plasmashell = {
-          "activate widget 130" = "Meta+A";
-          "activate widget 164" = "Meta+K";
-        };
       };
       spectacle.shortcuts.captureRectangularRegion = "Print";
       spectacle.shortcuts.launch = "Shift+Print";
-      resetFiles = [
-        "/home/usama/.config/kglobalshortcutsrc"
-      ];
       input.keyboard.numlockOnStartup = "on";
       kscreenlocker = {
         autoLock = false;

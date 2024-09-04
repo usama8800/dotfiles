@@ -14,6 +14,9 @@
     plasma-manager.url = "github:nix-community/plasma-manager";
     plasma-manager.inputs.nixpkgs.follows = "nixpkgs";
     plasma-manager.inputs.home-manager.follows = "home-manager";
+
+    disko.url = "github:nix-community/disko";
+    disko.inputs.nixpkgs.follows = "nixpkgs";
   };
 
   outputs = {
@@ -23,6 +26,7 @@
     nix-alien,
     home-manager,
     plasma-manager,
+    disko,
     ...
   }: {
     nixosConfigurations = let
@@ -39,6 +43,7 @@
           modules = [
             ./modules/system.nix
             ./hosts/${hostname}
+            disko.nixosModules.disko
             home-manager.nixosModules.home-manager
             {
               home-manager.sharedModules = [plasma-manager.homeManagerModules.plasma-manager];
@@ -60,6 +65,7 @@
     in {
       usama8800-desktop = define-host "usama8800-desktop";
       usama8800-farooqsb = define-host "usama8800-farooqsb";
+      anywhere = define-host "anywhere";
     };
   };
 }

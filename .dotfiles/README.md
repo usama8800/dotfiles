@@ -7,10 +7,9 @@
 - `./setup`
 
 ## Manual things
-- Desktop environment settings
-  - https://github.com/shalva97/kde-configuration-files
-  - Theme
-  - Numlock
+- Plasma
+  - Time format
+  - Taskbar pins
 - Beeper login
 - Vesktop login
 - MEGA sync settings

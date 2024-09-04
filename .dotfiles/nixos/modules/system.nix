@@ -181,6 +181,22 @@
     home.username = "usama";
     home.homeDirectory = "/home/usama";
 
+    editorconfig.enable = true;
+    editorconfig.settings = {
+      "*" = {
+        charset = "utf-8";
+        end_of_line = "lf";
+        trim_trailing_whitespace = true;
+        insert_final_newline = true;
+        max_line_width = 100;
+        indent_style = "space";
+        indent_size = 2;
+      };
+      "md" = {
+        trim_trailing_whitespace = false;
+      };
+    };
+
     # This value determines the Home Manager release that your
     # configuration is compatible with. This helps avoid breakage
     # when a new Home Manager release introduces backwards
