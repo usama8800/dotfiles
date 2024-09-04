@@ -13,6 +13,8 @@
 - Kate
   - Session resume
   - Filesystem browser
+    - Show hidden files, sorted last
+  - Terminal follow
 - Dolphin
   - Interface
     - Home on startup
@@ -24,12 +26,11 @@
 - MEGA sync settings
 - Browser sync
   - Bitwarden
+    - Autolock never
   - Tampermonkey
   - Tab Sessions
 - VSCode sync
   - Codeium
   - Wakatime
-- MPV uosc
-  - `bash -c "$(curl -fsSL https://raw.githubusercontent.com/tomasklaen/uosc/HEAD/installers/unix.sh)"`
 - Python packages
   - python-dotenv
