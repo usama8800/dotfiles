@@ -32,5 +32,9 @@
 - VSCode sync
   - Codeium
   - Wakatime
+- Postgres
+  - `sudo su - postgres`
+  - `psql`
+  - `\password`
 - Python packages
   - python-dotenv
