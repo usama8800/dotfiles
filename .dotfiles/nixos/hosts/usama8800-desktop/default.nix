@@ -21,8 +21,6 @@
   programs.steam.gamescopeSession.enable = true;
   programs.gamemode.enable = true;
   virtualisation.vmware.host.enable = true;
-  virtualisation.libvirtd.enable = true;
-  programs.virt-manager.enable = true;
   environment.systemPackages = with pkgs-unstable; [
     protonup
     lutris

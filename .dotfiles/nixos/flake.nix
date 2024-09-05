@@ -65,7 +65,7 @@
     in {
       usama8800-desktop = define-host "usama8800-desktop";
       usama8800-farooqsb = define-host "usama8800-farooqsb";
-      anywhere = define-host "anywhere";
+      usama8800-vm = define-host "usama8800-vm";
     };
   };
 }
