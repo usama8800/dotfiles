@@ -8,8 +8,9 @@
 
 ## Manual things
 - Plasma
-  - Time format
-  - Taskbar pins
+  - All Screen Panels
+    - Time format
+    - Taskbar pins
 - Kate
   - Session resume
   - Filesystem browser
