@@ -25,6 +25,7 @@
 
   # Enable networking
   networking.networkmanager.enable = true;
+  networking.firewall.enable = false;
 
   # do garbage collection weekly to keep disk usage low
   nix.gc = {
@@ -108,7 +109,7 @@
     autoPrune.dates = "weekly";
   };
   # List packages installed in system profile. To search, run:
-  # $ nix search wget
+  # $ nix search nixpkgs wget
   environment.systemPackages = with pkgs; [
     nix-index # for nix-locate
     nix-alien # for nix-alien-find-libs for nix-ld
@@ -116,6 +117,8 @@
     alejandra # nix code formatter
 
     usbutils
+    unzip
+    parted # partition manager
     fzf # fuzzy finder
     ripgrep # better grep
     xclip # pipe to clipboard
@@ -126,6 +129,7 @@
     eza # better ls
     broot # file manager
     ncdu # disk usage analyzer
+    ventoy-full # bootable usb
 
     # for python scripts
     pkgs-unstable.yt-dlp
