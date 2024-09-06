@@ -17,6 +17,7 @@
     - Show hidden files, sorted last
   - Terminal follow
 - Dolphin
+  - Remove folders panel (F7)
   - Interface
     - Home on startup
     - Show filter bar

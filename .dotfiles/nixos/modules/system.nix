@@ -32,11 +32,12 @@
     options = lib.mkDefault "--delete-older-than 7d";
   };
 
-  # Define a user account. Don't forget to set a password with ‘passwd’.
+  # Define a user account. Don't forget to change password with ‘passwd’.
   users.users.usama = {
     isNormalUser = true;
     description = "Usama Ahsan";
     extraGroups = ["networkmanager" "wheel"];
+    initialPassword = "123";
     openssh.authorizedKeys.keys = [
       "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIAH3VlNgMTY5pjrKWUDGu39WMcpCfiK0fwjWdwOkXDFT" # usama8800-desktop
       "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIE0JGch0tl4eyI947ysKtqsMIOuc7o5aiz9IqHS9ZuG6" # usama8800-office
