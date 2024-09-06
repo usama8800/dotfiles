@@ -8,6 +8,7 @@
   # Keep here for rebuild script
   # system.nixos.label = "REPLACE_ME";
 
+  # manually: nix flake update; rebuild update
   system.autoUpgrade = {
     enable = true;
     flake = "${config.users.users.usama.home}/.dotfiles/nixos";
@@ -16,8 +17,8 @@
       "nixpkgs"
       "-L" # print build logs
     ];
-    dates = "00:00";
-    randomizedDelaySec = "45min";
+    dates = lib.mkDefault "00:00";
+    randomizedDelaySec = "15min";
   };
 
   boot.supportedFilesystems = ["ntfs"];
@@ -27,9 +28,9 @@
 
   # do garbage collection weekly to keep disk usage low
   nix.gc = {
-    automatic = lib.mkDefault true;
-    dates = lib.mkDefault "weekly";
-    options = lib.mkDefault "--delete-older-than 7d";
+    automatic = true;
+    dates = "weekly";
+    options = "--delete-older-than 7d";
   };
 
   # Define a user account. Don't forget to change password with ‘passwd’.

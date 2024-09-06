@@ -41,7 +41,7 @@ if [[ "${BASH_SOURCE[0]}" = "$0" ]]; then
   fi
 
   # Copy, rebuild, output simplified errors, log trackebacks
-  sudo rsync --delete --archive --prune-empty-dirs --human-readable --itemize-changes --exclude=flake.lock nixos /etc/
+  sudo rsync --delete --archive --prune-empty-dirs --human-readable --itemize-changes nixos /etc/
 
   if [ -n "$label" ]; then
     echo "NixOS Rebuilding as '$label' ..."
