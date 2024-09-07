@@ -19,6 +19,7 @@
   boot.loader.efi.canTouchEfiVariables = true;
 
   services.openssh.ports = [2222];
+  services.postgresql.ensureDatabases = ["nextcloud"];
 
   system.stateVersion = "24.05";
 }

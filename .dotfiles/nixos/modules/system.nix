@@ -38,7 +38,7 @@
   users.users.usama = {
     isNormalUser = true;
     description = "Usama Ahsan";
-    extraGroups = ["networkmanager" "wheel"];
+    extraGroups = ["networkmanager" "wheel" "docker"];
     initialPassword = "123";
     openssh.authorizedKeys.keys = [
       "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIAH3VlNgMTY5pjrKWUDGu39WMcpCfiK0fwjWdwOkXDFT" # usama8800-desktop
@@ -100,14 +100,6 @@
   nixpkgs.config.allowUnfree = true;
   nix.settings.experimental-features = ["nix-command" "flakes"];
 
-  virtualisation.docker = {
-    enable = true;
-    rootless.enable = true;
-    rootless.setSocketVariable = true;
-    autoPrune.enable = true;
-    autoPrune.flags = ["--all"];
-    autoPrune.dates = "weekly";
-  };
   # List packages installed in system profile. To search, run:
   # $ nix search nixpkgs wget
   environment.systemPackages = with pkgs; [
@@ -118,6 +110,12 @@
 
     usbutils
     unzip
+    git
+    python3
+    python312Packages.pip
+    rclone
+    util-linux # for cfdisk ( tui partition manager )
+    zellij # terminal multiplexer
     parted # partition manager
     fzf # fuzzy finder
     ripgrep # better grep
@@ -127,29 +125,42 @@
     atuin # shell history
     zoxide # better cd
     eza # better ls
-    broot # file manager
-    ncdu # disk usage analyzer
-    ventoy-full # bootable usb
+    fnm # fast node manager
 
     # for python scripts
     pkgs-unstable.yt-dlp
     pkgs-unstable.ffmpeg_7
     pkgs-unstable.atomicparsley
 
-    git
-    lazygit # git client
     vim
-    fnm # fast node manager
-    python3
-    python312Packages.pip
+    btop # system monitor
+    lazygit # git client
+    lazydocker # docker client
+    broot # file manager
+    ncdu # disk usage analyzer
+    ventoy-full # bootable usb
   ];
   programs.git.config = {
     user.name = "Usama Ahsan";
     user.email = "usama8800@gmail.com";
   };
-  services = {
-    postgresql.enable = true;
-    postgresql.package = pkgs.postgresql_15;
+  virtualisation.docker = {
+    enable = true;
+    autoPrune.enable = true;
+    autoPrune.flags = ["--all"];
+    autoPrune.dates = "weekly";
+  };
+  services.postgresql = {
+    enable = true;
+    package = pkgs.postgresql_15;
+    enableTCPIP = true;
+    authentication = pkgs.lib.mkOverride 10 ''
+      # type database DBuser origin-address auth-method
+      local  all      all                   trust
+      host   all      all    127.0.0.1/32   scram-sha-256
+      host   all      all    ::1/128        scram-sha-256
+      host   all      all    172.0.0.0/8    scram-sha-256
+    '';
   };
 
   programs.nix-ld.enable = true;

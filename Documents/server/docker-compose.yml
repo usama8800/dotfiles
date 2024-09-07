@@ -1,4 +1,3 @@
-version: "2.1"
 services:
   swag:
     image: lscr.io/linuxserver/swag:latest
@@ -21,7 +20,7 @@ services:
       - EXTRA_DOMAINS= #optional
       - STAGING=false #optional
     volumes:
-      - ./config:/config
+      - ./swag:/config
     ports:
       - 443:443
       - 80:80
@@ -47,30 +46,24 @@ services:
     restart: unless-stopped
     volumes:
       - ./redis:/data
-  adminer:
-    container_name: adminer
-    image: adminer
-    restart: always
-    ports:
-      - 8086:8080
-  mysql:
-    image: mysql:latest
-    container_name: mysql
-    environment:
-      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
-    volumes:
-      - ./mysql:/var/lib/mysql
-    restart: always
-  homeassistant:
-    image: lscr.io/linuxserver/homeassistant:latest
-    container_name: homeassistant
-    environment:
-      - PUID=1000
-      - PGID=1000
-      - TZ=Asia/Karachi
-    volumes:
-      - ./homeassistant:/config
-    restart: unless-stopped
+  # mysql:
+  #   image: mysql:latest
+  #   container_name: mysql
+  #   environment:
+  #     - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+  #   volumes:
+  #     - ./mysql:/var/lib/mysql
+  #   restart: always
+  # homeassistant:
+  #   image: lscr.io/linuxserver/homeassistant:latest
+  #   container_name: homeassistant
+  #   environment:
+  #     - PUID=1000
+  #     - PGID=1000
+  #     - TZ=Asia/Karachi
+  #   volumes:
+  #     - ./homeassistant:/config
+  #   restart: unless-stopped
   piserver:
     build: ../PiServer/
     container_name: piserver
@@ -92,7 +85,7 @@ services:
       - WEBUI_PORT=8080
     volumes:
       - ./qbittorrent/:/config
-      - /home/usama/:/data
+      - /mnt/hdd:/data
     restart: unless-stopped
     ports:
       - 8080:8080
@@ -103,7 +96,7 @@ services:
     volumes:
       - ./jellyfin/config:/config
       - ./jellyfin/cache:/cache
-      - ./../../Media/:/media
+      - /mnt/hdd/Media:/media
     ports:
       - 8096:8096
   radarr:
@@ -115,7 +108,7 @@ services:
       - TZ=Asia/Karachi
     volumes:
       - ./radarr:/config
-      - /home/usama/:/data
+      - /mnt/hdd:/data
     restart: unless-stopped
   sonarr:
     image: lscr.io/linuxserver/sonarr:latest
@@ -126,7 +119,7 @@ services:
       - TZ=Asia/Karachi
     volumes:
       - ./sonarr:/config
-      - /home/usama/:/data
+      - /mnt/hdd:/data
     restart: unless-stopped
   jackett:
     image: lscr.io/linuxserver/jackett:latest
@@ -139,17 +132,30 @@ services:
       # - RUN_OPTS=<run options here> #optional
     volumes:
       - ./jackett:/config/Jackett
-      - ./../../Downloads:/downloads
+      - /mnt/hdd/Downloads:/downloads
     restart: unless-stopped
-  ombi:
-    image: lscr.io/linuxserver/ombi:latest
-    container_name: ombi
+  # ombi:
+  #   image: lscr.io/linuxserver/ombi:latest
+  #   container_name: ombi
+  #   environment:
+  #     - PUID=1000
+  #     - PGID=1000
+  #     - TZ=Asia/Karachi
+  #   volumes:
+  #     - ./ombi:/config
+  #   ports:
+  #     - 3579:3579
+  #   restart: unless-stopped
+  #   - 3579:3579
+  #   restart: unless-stopped
+  nextcloud:
+    image: linuxserver/nextcloud:29.0.6
+    container_name: nextcloud
     environment:
       - PUID=1000
       - PGID=1000
-      - TZ=Asia/Karachi
+      - TZ=Etc/UTC
     volumes:
-      - ./ombi:/config
-    ports:
-      - 3579:3579
+      - /mnt/hdd/NextCloud/config:/config
+      - /mnt/hdd/NextCloud/data:/data
     restart: unless-stopped

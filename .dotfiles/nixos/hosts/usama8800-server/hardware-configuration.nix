@@ -17,15 +17,20 @@
   boot.kernelModules = ["kvm-intel"];
   boot.extraModulePackages = [];
 
+  fileSystems."/boot" = {
+    device = "/dev/disk/by-label/BOOT";
+    fsType = "vfat";
+    options = ["fmask=0077" "dmask=0077"];
+  };
+
   fileSystems."/" = {
     device = "/dev/disk/by-label/nixos";
     fsType = "ext4";
   };
 
-  fileSystems."/boot" = {
-    device = "/dev/disk/by-label/BOOT";
-    fsType = "vfat";
-    options = ["fmask=0077" "dmask=0077"];
+  fileSystems."/mnt/hdd" = {
+    device = "/dev/disk/by-label/hdd";
+    fsType = "ext4";
   };
 
   swapDevices = [];
