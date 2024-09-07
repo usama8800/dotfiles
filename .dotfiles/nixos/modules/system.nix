@@ -92,7 +92,7 @@
       PermitRootLogin = "no"; # disable root login
       PasswordAuthentication = false; # disable password login
     };
-    ports = [22];
+    ports = lib.mkDefault [22];
     openFirewall = true;
   };
 
