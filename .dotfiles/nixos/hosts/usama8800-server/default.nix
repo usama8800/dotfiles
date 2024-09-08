@@ -21,5 +21,21 @@
   services.openssh.ports = [2222];
   services.postgresql.ensureDatabases = ["nextcloud"];
 
+  systemd.timers."erp-backup" = {
+    wantedBy = ["timers.target"];
+    timerConfig = {
+      OnCalendar = "*-*-* 06:00:00";
+      Persistent = true;
+      Unit = "erp-backup.service";
+    };
+  };
+  systemd.services."erp-backup" = {
+    serviceConfig = {
+      Type = "oneshot";
+      User = "usama";
+      ExecStart = "/home/usama/Documents/erp/backups/cron.sh";
+    };
+  };
+
   system.stateVersion = "24.05";
 }
