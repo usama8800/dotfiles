@@ -115,6 +115,7 @@
     python312Packages.pip
     rclone
     wakeonlan
+    fly # concourse ci cli
     util-linux # for cfdisk ( tui partition manager )
     zellij # terminal multiplexer
     parted # partition manager
@@ -175,6 +176,8 @@
     libpulseaudio
     # node
     glib
+    # mpv mpris
+    ffmpeg_4.lib
     # cypress
     libgcc
     alsa-lib
