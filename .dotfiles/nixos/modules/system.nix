@@ -174,6 +174,8 @@
     libpulseaudio
     # node
     glib
+    # mpv mpris
+    ffmpeg_4.lib
     # cypress
     libgcc
     alsa-lib

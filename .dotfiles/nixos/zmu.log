@@ -1,0 +1,2 @@
+09/09/24 20:23:58.876911 zmu[208221].ERR-zm_db.cpp/64 [Can't connect to server: Can't connect to local server through socket '/run/mysqld/mysqld.sock' (2)]
+09/09/24 20:23:58.877011 zmu[208221].FAT-zm_config.cpp/65 [Not connected to the database. Can't continue.]
