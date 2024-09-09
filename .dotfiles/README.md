@@ -8,19 +8,31 @@
 
 ## Manual things
 - Plasma
-  - Time format
-  - Taskbar pins
+  - Mouse acceleration off
+  - All Screen Panels
+    - Time format
+    - Taskbar pins
 - Kate
   - Session resume
   - Filesystem browser
     - Show hidden files, sorted last
   - Terminal follow
 - Dolphin
+  - Remove folders panel (F7)
   - Interface
-    - Home on startup
-    - Show filter bar
+    - Folders and Tabs
+      - Home on startup
+      - Show filter bar
+      - Switch between panes with Tab key
   - View
-    - (Set default view first then do this) Remember display styles for each folder
+    - General
+      - (Set default view first then do this) Remember display styles for each folder
+      - Open folders during drag operations
+    - Content Display
+      - Folder size display: Size of contents
+      - Permissions style: Combined
+  - Trash
+    - Size limit
 - Beeper login
 - Vesktop login
 - MEGA sync settings
@@ -32,5 +44,9 @@
 - VSCode sync
   - Codeium
   - Wakatime
+- Postgres
+  - `sudo su - postgres`
+  - `psql`
+  - `\password`
 - Python packages
   - python-dotenv

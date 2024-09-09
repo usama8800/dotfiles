@@ -33,11 +33,11 @@
     pulse.enable = true;
   };
 
+  virtualisation.vmware.host.enable = true;
   # List packages installed in system profile. To search, run:
-  # $ nix search wget
+  # $ nix search nixpkgs wget
   environment.systemPackages = with pkgs-unstable; [
     xorg.libxcvt
-    unzip
     clinfo
     virtualglLib
     vulkan-tools
@@ -48,6 +48,7 @@
     libnotify # notify-send
     libsForQt5.kconfig # kde config cli
     kdocker # put any app in the system tray
+    x11vnc
 
     smartgithg # git client
     kdePackages.kfind # file finder
@@ -61,15 +62,18 @@
     obsidian # markdown editor
     beekeeper-studio # database browser
     onlyoffice-bin # office suite
-
     pkgs.floorp # browser
     megasync # cloud storage
     variety # wallpapers
     mpv # video player
     beeper # messaging app
     vesktop # discord
+    freetube # privacy youtube
   ];
 
+  services.xserver.displayManager.sessionCommands = ''
+    ${pkgs-unstable.x11vnc}/bin/x11vnc -wait 15 -noxdamage -rfbauth "$HOME"/.vnc/passwd -display :0 -forever -o /var/log/x11vnc.log -bg
+  '';
   systemd.user.services.megasync = {
     serviceConfig = {
       ExecStart = "${pkgs-unstable.megasync}/bin/megasync";

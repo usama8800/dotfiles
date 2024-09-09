@@ -8,6 +8,7 @@
   # Keep here for rebuild script
   # system.nixos.label = "REPLACE_ME";
 
+  # manually: nix flake update; rebuild update
   system.autoUpgrade = {
     enable = true;
     flake = "${config.users.users.usama.home}/.dotfiles/nixos";
@@ -16,27 +17,29 @@
       "nixpkgs"
       "-L" # print build logs
     ];
-    dates = "00:00";
-    randomizedDelaySec = "45min";
+    dates = lib.mkDefault "00:00";
+    randomizedDelaySec = "15min";
   };
 
   boot.supportedFilesystems = ["ntfs"];
 
   # Enable networking
   networking.networkmanager.enable = true;
+  networking.firewall.enable = false;
 
   # do garbage collection weekly to keep disk usage low
   nix.gc = {
-    automatic = lib.mkDefault true;
-    dates = lib.mkDefault "weekly";
-    options = lib.mkDefault "--delete-older-than 7d";
+    automatic = true;
+    dates = "weekly";
+    options = "--delete-older-than 7d";
   };
 
-  # Define a user account. Don't forget to set a password with ‘passwd’.
+  # Define a user account. Don't forget to change password with ‘passwd’.
   users.users.usama = {
     isNormalUser = true;
     description = "Usama Ahsan";
-    extraGroups = ["networkmanager" "wheel"];
+    extraGroups = ["networkmanager" "wheel" "docker"];
+    initialPassword = "123";
     openssh.authorizedKeys.keys = [
       "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIAH3VlNgMTY5pjrKWUDGu39WMcpCfiK0fwjWdwOkXDFT" # usama8800-desktop
       "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIE0JGch0tl4eyI947ysKtqsMIOuc7o5aiz9IqHS9ZuG6" # usama8800-office
@@ -90,7 +93,7 @@
       PermitRootLogin = "no"; # disable root login
       PasswordAuthentication = false; # disable password login
     };
-    ports = [22];
+    ports = lib.mkDefault [22];
     openFirewall = true;
   };
 
@@ -98,7 +101,7 @@
   nix.settings.experimental-features = ["nix-command" "flakes"];
 
   # List packages installed in system profile. To search, run:
-  # $ nix search wget
+  # $ nix search nixpkgs wget
   environment.systemPackages = with pkgs; [
     nix-index # for nix-locate
     nix-alien # for nix-alien-find-libs for nix-ld
@@ -106,6 +109,14 @@
     alejandra # nix code formatter
 
     usbutils
+    unzip
+    git
+    python3
+    python312Packages.pip
+    rclone
+    util-linux # for cfdisk ( tui partition manager )
+    zellij # terminal multiplexer
+    parted # partition manager
     fzf # fuzzy finder
     ripgrep # better grep
     xclip # pipe to clipboard
@@ -114,28 +125,42 @@
     atuin # shell history
     zoxide # better cd
     eza # better ls
-    broot # file manager
-    ncdu # disk usage analyzer
+    fnm # fast node manager
 
     # for python scripts
     pkgs-unstable.yt-dlp
     pkgs-unstable.ffmpeg_7
     pkgs-unstable.atomicparsley
 
-    git
-    lazygit # git client
     vim
-    fnm # fast node manager
-    python3
-    python312Packages.pip
+    btop # system monitor
+    lazygit # git client
+    lazydocker # docker client
+    broot # file manager
+    ncdu # disk usage analyzer
+    ventoy-full # bootable usb
   ];
   programs.git.config = {
     user.name = "Usama Ahsan";
     user.email = "usama8800@gmail.com";
   };
-  services = {
-    postgresql.enable = true;
-    postgresql.package = pkgs.postgresql_15;
+  virtualisation.docker = {
+    enable = true;
+    autoPrune.enable = true;
+    autoPrune.flags = ["--all"];
+    autoPrune.dates = "weekly";
+  };
+  services.postgresql = {
+    enable = true;
+    package = pkgs.postgresql_15;
+    enableTCPIP = true;
+    authentication = pkgs.lib.mkOverride 10 ''
+      # type database DBuser origin-address auth-method
+      local  all      all                   trust
+      host   all      all    127.0.0.1/32   scram-sha-256
+      host   all      all    ::1/128        scram-sha-256
+      host   all      all    172.0.0.0/8    scram-sha-256
+    '';
   };
 
   programs.nix-ld.enable = true;

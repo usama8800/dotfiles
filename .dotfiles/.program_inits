@@ -8,8 +8,8 @@ if [[ -f "$HOME/.config/broot/launcher/bash/br" ]]; then
   source "$HOME/.config/broot/launcher/bash/br"
 fi
 
-if [[ -f "$HOME/.dotfiles/bash-preexec.sh" ]]; then
-  source "$HOME/.dotfiles/bash-preexec.sh"
+if [[ -f "$HOME/.dotfiles/.bash-preexec.sh" ]]; then
+  source "$HOME/.dotfiles/.bash-preexec.sh"
   if [[ $(which atuin 2>/dev/null) ]]; then
     eval "$(atuin init bash --disable-up-arrow)"
   fi

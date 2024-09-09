@@ -43,7 +43,7 @@ alias egrep='grep --color=auto -E '
 alias sudo='sudo -E '
 
 alias dc='docker compose '
-alias rsync='rsync --delete --archive --verbose --prune-empty-dirs --human-readable --progress --partial --append --relative '
+alias rsync='rsync --delete --archive --verbose --prune-empty-dirs --human-readable --progress --partial --append --delete-excluded '
 alias dux='du -xh . | sort -rh | cat'
 
 alias myip='curl -s "ip.me"'
