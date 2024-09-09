@@ -114,6 +114,7 @@
     python3
     python312Packages.pip
     rclone
+    wakeonlan
     util-linux # for cfdisk ( tui partition manager )
     zellij # terminal multiplexer
     parted # partition manager
