@@ -69,6 +69,7 @@
     beeper # messaging app
     vesktop # discord
     freetube # privacy youtube
+    mythtv # dvr
   ];
 
   services.xserver.displayManager.sessionCommands = ''
