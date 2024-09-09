@@ -69,7 +69,6 @@
     beeper # messaging app
     vesktop # discord
     freetube # privacy youtube
-    go2rtc # camera client
   ];
 
   services.xserver.displayManager.sessionCommands = ''

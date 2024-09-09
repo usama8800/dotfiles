@@ -30,6 +30,13 @@
   programs.nix-ld.libraries = with pkgs; [
     libGL
   ];
+  services.hydra = {
+    enable = true;
+    hydraURL = "http://localhost:3000";
+    notificationSender = "hydra@localhost";
+    buildMachinesFiles = [];
+    useSubstitutes = true;
+  };
 
   services.xserver.videoDrivers = ["nvidia"];
   hardware.opengl.enable = true;
