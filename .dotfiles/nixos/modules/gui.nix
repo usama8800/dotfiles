@@ -69,7 +69,7 @@
     beeper # messaging app
     vesktop # discord
     freetube # privacy youtube
-    mythtv # dvr
+    zoneminder # dmss camera client
   ];
 
   services.xserver.displayManager.sessionCommands = ''
