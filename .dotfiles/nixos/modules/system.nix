@@ -113,9 +113,10 @@
     git
     python3
     python312Packages.pip
+    nodejs_22
     rclone
     wakeonlan
-    fly # concourse ci cli
+    just # command runner
     util-linux # for cfdisk ( tui partition manager )
     zellij # terminal multiplexer
     parted # partition manager
@@ -127,7 +128,6 @@
     atuin # shell history
     zoxide # better cd
     eza # better ls
-    fnm # fast node manager
 
     # for python scripts
     pkgs-unstable.yt-dlp
