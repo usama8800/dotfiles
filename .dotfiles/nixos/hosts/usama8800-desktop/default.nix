@@ -19,7 +19,10 @@
   programs.steam.enable = true;
   programs.steam.gamescopeSession.enable = true;
   programs.gamemode.enable = true;
-  services.jenkins.enable = true;
+  services.jenkins = {
+    enable = true;
+    port = 8081;
+  };
   environment.systemPackages = with pkgs-unstable; [
     protonup
     lutris
