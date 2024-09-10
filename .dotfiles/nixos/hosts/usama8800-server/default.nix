@@ -30,9 +30,11 @@
     };
   };
   systemd.services."erp-backup" = {
+    path = [pkgs.bash pkgs.rclone];
     serviceConfig = {
       Type = "oneshot";
       User = "usama";
+      WorkingDirectory = "/home/usama/Documents/erp/backups/";
       ExecStart = "/home/usama/Documents/erp/backups/cron.sh";
     };
   };

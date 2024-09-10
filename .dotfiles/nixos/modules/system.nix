@@ -115,6 +115,7 @@
     python312Packages.pip
     nodejs_22
     rclone
+    wakeonlan
     just # command runner
     util-linux # for cfdisk ( tui partition manager )
     zellij # terminal multiplexer
