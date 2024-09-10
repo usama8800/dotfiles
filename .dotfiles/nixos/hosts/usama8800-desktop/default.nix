@@ -21,7 +21,7 @@
   programs.gamemode.enable = true;
   services.jenkins = {
     enable = true;
-    port = 8081;
+    port = 8080;
   };
   environment.systemPackages = with pkgs-unstable; [
     protonup
