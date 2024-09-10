@@ -164,6 +164,10 @@
       host   all      all    172.0.0.0/8    scram-sha-256
     '';
   };
+  services.jenkins = {
+    enable = true;
+    port = 8080;
+  };
 
   programs.nix-ld.enable = true;
   programs.nix-ld.libraries = with pkgs; [
