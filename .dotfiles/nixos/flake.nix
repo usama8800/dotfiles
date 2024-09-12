@@ -46,7 +46,6 @@
             {
               home-manager.sharedModules = [plasma-manager.homeManagerModules.plasma-manager];
             }
-
             ({
               self,
               system,
@@ -55,8 +54,6 @@
               nixpkgs.overlays = [
                 self.inputs.nix-alien.overlays.default
               ];
-              # Optional, needed for `nix-alien-ld`
-              programs.nix-ld.enable = true;
             })
           ];
         };

@@ -69,6 +69,7 @@
     beeper # messaging app
     vesktop # discord
     freetube # privacy youtube
+    krita # image editor
   ];
 
   services.xserver.displayManager.sessionCommands = ''

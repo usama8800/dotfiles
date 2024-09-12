@@ -105,18 +105,26 @@
   environment.systemPackages = with pkgs; [
     nix-index # for nix-locate
     nix-alien # for nix-alien-find-libs for nix-ld
+
+    # Development tools
+    git
     nil # nix language server
     alejandra # nix code formatter
-
-    usbutils
-    unzip
-    git
     python3
     python312Packages.pip
     nodejs_22
+    shfmt # shell formatter
+    just # command runner
+
+    # for python scripts
+    pkgs-unstable.yt-dlp
+    pkgs-unstable.ffmpeg_7
+    pkgs-unstable.atomicparsley
+
+    usbutils
+    unzip
     rclone
     wakeonlan
-    just # command runner
     util-linux # for cfdisk ( tui partition manager )
     zellij # terminal multiplexer
     parted # partition manager
@@ -128,11 +136,6 @@
     atuin # shell history
     zoxide # better cd
     eza # better ls
-
-    # for python scripts
-    pkgs-unstable.yt-dlp
-    pkgs-unstable.ffmpeg_7
-    pkgs-unstable.atomicparsley
 
     vim
     btop # system monitor
