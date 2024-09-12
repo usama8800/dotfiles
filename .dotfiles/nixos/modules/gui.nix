@@ -64,6 +64,7 @@
     onlyoffice-bin # office suite
     pkgs.floorp # browser
     megasync # cloud storage
+    nextcloud-client # cloud storage
     variety # wallpapers
     mpv # video player
     beeper # messaging app
