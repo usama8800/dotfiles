@@ -76,9 +76,9 @@
   services.xserver.displayManager.sessionCommands = ''
     ${pkgs-unstable.x11vnc}/bin/x11vnc -wait 15 -noxdamage -rfbauth "$HOME"/.vnc/passwd -display :0 -forever -o /var/log/x11vnc.log -bg
   '';
-  systemd.user.services.megasync = {
+  systemd.user.services.nextcloud = {
     serviceConfig = {
-      ExecStart = "${pkgs-unstable.megasync}/bin/megasync";
+      ExecStart = "${pkgs-unstable.nextcloud-client}/bin/nextcloud --background";
       Restart = "on-failure";
       RestartSec = 5;
     };
@@ -128,6 +128,9 @@
       shortcuts = {
         "systemsettings.desktop" = {
           _launch = "Meta+I";
+        };
+        "org.kde.krunner.desktop" = {
+          _launch = "Meta+Space";
         };
         kwin = {
           "Window Maximize" = "Meta+M";

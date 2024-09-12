@@ -60,7 +60,7 @@ if [[ "${BASH_SOURCE[0]}" = "$0" ]]; then
 
   current=$(nixos-rebuild list-generations | grep current | awk -F ' ' '{print $5}')
   echo "NixOS Rebuilt as $red$current$reset"
-  if [ "$label" != "." ]; then
+  if [ -n "$label" ]&& [ "$label" != "." ]; then
     git --git-dir=dotfiles.git --work-tree="$HOME" add nixos
     git --git-dir=dotfiles.git --work-tree="$HOME" commit -m "Rebuilt NixOS $current"
   fi
