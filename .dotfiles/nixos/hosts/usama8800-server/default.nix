@@ -20,6 +20,7 @@
 
   services.openssh.ports = [2222];
   services.postgresql.ensureDatabases = ["nextcloud"];
+  services.jenkins.prefix = "/jenkins";
 
   systemd.timers."erp-backup" = {
     wantedBy = ["timers.target"];
