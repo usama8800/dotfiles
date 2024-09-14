@@ -59,6 +59,7 @@
         };
     in {
       usama8800-desktop = define-host "usama8800-desktop";
+      usama8800-lenovo = define-host "usama8800-lenovo";
       usama8800-farooqsb = define-host "usama8800-farooqsb";
       usama8800-server = define-host "usama8800-server";
       usama8800-vm = define-host "usama8800-vm";

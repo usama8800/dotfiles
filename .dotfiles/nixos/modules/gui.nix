@@ -1,4 +1,5 @@
 {
+  lib,
   pkgs,
   pkgs-unstable,
   ...
@@ -106,6 +107,7 @@
   # ${pkgs-unstable.kdocker} -d 60 -q -o -l COMMAND
   systemd.services.bins = {
     script = ''
+      mkdir -p /var/lib/sddm/.config;
       echo -e "[Keyboard]\nNumlock=0" > /var/lib/sddm/.config/kcminputrc;
       rm -f /usr/bin/variety;
       ln -s "${pkgs-unstable.variety}/bin/variety" /usr/bin/variety;
@@ -117,7 +119,7 @@
   home-manager.users.usama = {
     programs.plasma = {
       enable = true;
-      overrideConfig = false;
+      overrideConfig = lib.mkDefault false;
       hotkeys.commands = {
         konsole = {
           command = "konsole";

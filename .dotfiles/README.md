@@ -8,7 +8,7 @@
 
 ## Manual things
 - Plasma
-  - Mouse acceleration off
+  <!-- - Mouse acceleration off -->
   - All Screen Panels
     - Time format
     - Taskbar pins
@@ -19,23 +19,27 @@
   - Terminal follow
 - Dolphin
   - Remove folders panel (F7)
-  - Interface
+  <!-- - Interface
     - Folders and Tabs
       - Home on startup
       - Show filter bar
       - Switch between panes with Tab key
+    - Status and Location bars
+      - Show full path inside location bar
   - View
     - General
       - (Set default view first then do this) Remember display styles for each folder
       - Open folders during drag operations
     - Content Display
       - Folder size display: Size of contents
-      - Permissions style: Combined
+      - Permissions style: Combined -->
   - Trash
     - Size limit
-- Beeper login
-- Vesktop login
-- MEGA sync settings
+  - Toolbar
+    - Add "Show in Groups" button without text
+- Beeper
+- Vesktop
+- Nextcloud
 - Browser sync
   - Bitwarden
     - Autolock never

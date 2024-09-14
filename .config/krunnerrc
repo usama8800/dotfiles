@@ -1,8 +1,0 @@
-[Plugins]
-baloosearchEnabled=true
-browserhistoryEnabled=false
-krunner_appstreamEnabled=false
-unitconverterEnabled=true
-
-[Plugins][Favorites]
-plugins=krunner_services,krunner_systemsettings
