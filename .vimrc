@@ -314,6 +314,7 @@ function! TrimWhitespace()
 endfun
 nnoremap <leader>f :normal! mqgg=G`q<cr>
 nnoremap <leader>t :call TrimWhitespace()<cr>
+nnoremap <leader>z :set wrap!<cr>
 nnoremap <leader>h i <esc>l
 nnoremap <leader>l a <esc>
 " }}}
@@ -408,11 +409,16 @@ nnoremap / /\v
 nnoremap j gj
 nnoremap k gk
 nnoremap gj j
+nnoremap <C-j> 10j
+nnoremap <C-k> 10k
 nnoremap gk k
 vnoremap k gk
 vnoremap j gj
 vnoremap gk k
 vnoremap gj j
+vnoremap <C-j> 10j
+vnoremap <C-k> 10k
+
 nnoremap <leader>; :<up>
 vnoremap <leader>; :<up>
 nnoremap x "_x
@@ -430,10 +436,10 @@ vnoremap s "sy:%s/<C-r>h//c<left><left>
 nnoremap <leader>o o<Esc>k
 nnoremap <leader>O O<Esc>j
 " Go up and down through commands using CTRL+[jk]
-cnoremap <C-j> <down>
-cnoremap <C-k> <up>
-cnoremap <C-h> <left>
-cnoremap <C-l> <right>
+" cnoremap <C-j> <down>
+" cnoremap <C-k> <up>
+" cnoremap <C-h> <left>
+" cnoremap <C-l> <right>
 " Keep curson in center, zz to change
 let &scrolloff=999
 nnoremap zz :let &scrolloff=999-&scrolloff<cr>

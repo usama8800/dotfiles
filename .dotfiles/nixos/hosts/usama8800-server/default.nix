@@ -40,5 +40,23 @@
     };
   };
 
+  systemd.timers."arr-trakt-delete" = {
+    wantedBy = ["timers.target"];
+    timerConfig = {
+      OnBootSec = "10m";
+      OnUnitActiveSec = "30m";
+      Unit = "arr-trakt-delete.service";
+    };
+  };
+  systemd.services."arr-trakt-delete" = {
+    path = [pkgs.nodejs_22];
+    serviceConfig = {
+      Type = "oneshot";
+      User = "usama";
+      WorkingDirectory = "/home/usama/Documents/arr-trakt-delete";
+    };
+    script = "node ./out/index.js";
+  };
+
   system.stateVersion = "24.05";
 }
