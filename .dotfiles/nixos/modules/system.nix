@@ -114,8 +114,7 @@
     nil # nix language server
     alejandra # nix code formatter
     python3
-    python312Packages.pip
-    python312Packages.python-dotenv
+    python312Packages.pip # python -m venv .venv; source .venv/bin/activate
     nodejs_22
     shfmt # shell formatter
     just # command runner

@@ -16,7 +16,7 @@ if [[ "${BASH_SOURCE[0]}" = "$0" ]]; then
   fi
 
   # cd to the dotfiles root
-  pushd "$HOME"/.dotfiles/ > /dev/null || exit 1
+  pushd "$HOME"/.dotfiles/ >/dev/null || exit 1
 
   # check changes
   git --git-dir=dotfiles.git --work-tree="$HOME" diff --quiet nixos
@@ -24,7 +24,7 @@ if [[ "${BASH_SOURCE[0]}" = "$0" ]]; then
   new_files=$(git --git-dir=dotfiles.git --work-tree="$HOME" ls-files --others nixos)
   if [ -z "$new_files" ] && [ "$diff" -eq "0" ] && [ "$force" -eq 0 ]; then
     echo "Nothing to rebuild"
-    popd > /dev/null || exit 1
+    popd >/dev/null || exit 1
     exit 0
   fi
 
@@ -60,12 +60,12 @@ if [[ "${BASH_SOURCE[0]}" = "$0" ]]; then
 
   current=$(nixos-rebuild list-generations | grep current | awk -F ' ' '{print $5}')
   echo "NixOS Rebuilt as $red$current$reset"
-  if [ -n "$label" ]&& [ "$label" != "." ]; then
+  if [ -n "$label" ] && [ "$label" != "." ]; then
     git --git-dir=dotfiles.git --work-tree="$HOME" add nixos
     git --git-dir=dotfiles.git --work-tree="$HOME" commit -m "Rebuilt NixOS $current"
   fi
 
-  popd > /dev/null || exit 1
+  popd >/dev/null || exit 1
   if [ -x "$(command -v notify-send)" ]; then
     notify-send -e "NixOS Rebuilt OK!" --icon=software-update-available
   fi
