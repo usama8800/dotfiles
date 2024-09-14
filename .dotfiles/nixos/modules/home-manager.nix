@@ -182,6 +182,10 @@
           ContentDisplay.DirectorySizeCount = false;
           ContentDisplay.UsePermissionsFormat = "CombinedFormat";
         };
+        katerc = {
+          General."Startup Session" = "last";
+          Konsole.AutoSyncronize = true;
+        };
       };
       dataFile = {
         "kate/anonymous.katesession" = {
