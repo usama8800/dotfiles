@@ -241,6 +241,65 @@
         soundTheme = "ocean";
         theme = "breeze-dark";
       };
+      configFile = {
+        ktrashrc = {
+          "\\/home\\/usama\\/.local\\/share\\/Trash" = {
+            LimitReachedAction = 0;
+            Days = 7;
+            UseTimeLimit = true;
+            Percent = 5;
+            UseSizeLimit = true;
+          };
+        };
+        # Plasma Search
+        kuriikwsfilterrc.General = {
+          DefaultWebShortcut = "startpage";
+          EnableWebShortcuts = true;
+          KeywordDelimiter = "\s";
+          PreferredWebShortcuts = "startpage,youtube,google,wikipedia";
+          UsePreferredWebShortcutsOnly = false;
+        };
+        # Pulse Audio
+        plasmaparc.General.RaiseMaximumVolume = true;
+        spectaclerc = {
+          Annotations.annotationToolType = 8;
+          General = {
+            autoSaveImage = true;
+            clipboardGroup = "PostScreenshotCopyImage";
+            launchAction = "UseLastUsedCapturemode";
+            printKeyRunningAction = "FocusWindow";
+            showMagnifier = "ShowMagnifierAlways";
+          };
+          GuiConfig = {
+            captureMode = 5;
+            captureOnClick = true;
+            quitAfterSaveCopyExport = true;
+          };
+          ImageSave = {
+            imageFilenameTemplate = "<yyyy>-<MM>-<dd>_<hh>-<mm>-<ss>";
+            translatedScreenshotsFolder = "Screenshots";
+          };
+          VideoSave = {
+            preferredVideoFormat = 0;
+            translatedScreencastsFolder = "Screencasts";
+            videoFilenameTemplate = "<yyyy>-<MM>-<dd>_<hh>-<mm>-<ss>";
+          };
+        };
+        dolphinrc = {
+          MainWindow.MenuBar = "Enabled";
+          General = {
+            AutoExpandFolders = true;
+            BrowseThroughArchives = true;
+            FilterBar = true;
+            GlobalViewProps = false;
+            RememberOpenedTabs = false;
+            ShowFullPath = true;
+            UseTabForSwitchingSplitView = true;
+          };
+          ContentDisplay.DirectorySizeCount = false;
+          ContentDisplay.UsePermissionsFormat = "CombinedFormat";
+        };
+      };
     };
 
     programs.kate = {

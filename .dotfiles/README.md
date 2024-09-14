@@ -8,7 +8,7 @@
 
 ## Manual things
 - Plasma
-  <!-- - Mouse acceleration off -->
+  - Mouse acceleration off
   - All Screen Panels
     - Time format
     - Taskbar pins
@@ -33,8 +33,8 @@
     - Content Display
       - Folder size display: Size of contents
       - Permissions style: Combined -->
-  - Trash
-    - Size limit
+  <!-- - Trash
+    - Size limit -->
   - Toolbar
     - Add "Show in Groups" button without text
 - Beeper

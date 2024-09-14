@@ -1,6 +1,0 @@
-[General]
-DefaultWebShortcut=flatpak
-EnableWebShortcuts=true
-KeywordDelimiter=\s
-PreferredWebShortcuts=youtube,google,yahoo,wikipedia,wikit
-UsePreferredWebShortcutsOnly=false
