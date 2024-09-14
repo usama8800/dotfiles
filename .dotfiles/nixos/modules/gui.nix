@@ -298,6 +298,8 @@
           };
           ContentDisplay.DirectorySizeCount = false;
           ContentDisplay.UsePermissionsFormat = "CombinedFormat";
+          DetailsMode.PreviewSize = 32;
+          IconsMode.PreviewSize = 144;
         };
       };
     };
