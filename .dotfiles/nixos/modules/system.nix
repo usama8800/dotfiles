@@ -115,6 +115,7 @@
     alejandra # nix code formatter
     python3
     python312Packages.pip
+    python312Packages.python-dotenv
     nodejs_22
     shfmt # shell formatter
     just # command runner
