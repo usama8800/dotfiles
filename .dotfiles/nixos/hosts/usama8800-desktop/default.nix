@@ -9,6 +9,7 @@
   imports = [
     ./hardware-configuration.nix
     ../../modules/gui.nix
+    ../../modules/gamedev.nix
   ];
 
   boot.loader.grub.enable = true;

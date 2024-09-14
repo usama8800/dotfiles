@@ -203,7 +203,6 @@
     xorg.libxcb
   ];
 
-  programs.home-manager.enable = true;
   home-manager.useGlobalPkgs = true;
   home-manager.useUserPackages = true;
   home-manager.backupFileExtension = "hmbak";
@@ -226,6 +225,8 @@
         trim_trailing_whitespace = false;
       };
     };
+
+    programs.home-manager.enable = true;
     home.stateVersion = "24.05";
   };
 }
