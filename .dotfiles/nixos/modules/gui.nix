@@ -6,7 +6,6 @@
 }: {
   imports = [./home-manager.nix];
 
-  # Enable the X11 windowing system.
   services.xserver.enable = true;
   services.displayManager.sddm.enable = true;
   services.displayManager.sddm.wayland.enable = true;
@@ -20,14 +19,13 @@
     layout = "us";
     variant = "";
   };
-  # Enable automatic login for the user.
   services.displayManager.autoLogin.enable = false;
   services.displayManager.autoLogin.user = "usama";
 
   # Enable sound with pipewire.
   hardware.pulseaudio.enable = false;
-  hardware.bluetooth.enable = true; # enables support for Bluetooth
-  hardware.bluetooth.powerOnBoot = true; # powers up the default Bluetooth controller on boot
+  hardware.bluetooth.enable = true;
+  hardware.bluetooth.powerOnBoot = true;
   security.rtkit.enable = true;
   services.pipewire = {
     enable = true;
@@ -37,8 +35,6 @@
   };
 
   virtualisation.vmware.host.enable = true;
-  # List packages installed in system profile. To search, run:
-  # $ nix search nixpkgs wget
   environment.systemPackages = with pkgs-unstable; [
     xorg.libxcvt
     clinfo
@@ -72,7 +68,6 @@
     mpv # video player
     beeper # messaging app
     vesktop # discord
-    freetube # privacy youtube
     krita # image editor
   ];
 
@@ -106,7 +101,6 @@
     wantedBy = ["default.target"];
     after = ["graphical.target"];
   };
-  # ${pkgs-unstable.kdocker} -d 60 -q -o -l COMMAND
   systemd.services.bins = {
     script = ''
       mkdir -p /var/lib/sddm/.config;

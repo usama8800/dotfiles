@@ -853,12 +853,22 @@
         "title": "God Gamer",
         "genre": "Pop",
         "artist": "gRRiever, StoneEars, SofiUH, Beautiful Panda"
+      },
+      "rbsNDjMYmiU": {
+        "title": "Thousand Reels Stare",
+        "genre": "Pop",
+        "artist": "Confuzzled, Jo the Froggie, FluentSynth"
       }
     }
   },
   "Random Music": {
     "url": "https://www.youtube.com/playlist?list=PLZY56D5QXJZ_WyaiL6BlA7dV2UiwZOzzn",
     "track_info": {
+      "p5M9q2wCllU": {
+        "title": "Rollerdisco Rumble (Oscilloscope)",
+        "artist": "Vince Kaichan",
+        "genre": "Instrumental"
+      },
       "Zi_XLOBDo_Y": {
         "title": "Billie Jean",
         "artist": "Michael Jackson",

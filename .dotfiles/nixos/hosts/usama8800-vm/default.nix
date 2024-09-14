@@ -7,10 +7,9 @@
   pkgs,
   ...
 }: {
-  networking.hostName = "usama8800-vm"; # Define your hostname.
+  networking.hostName = "usama8800-vm";
 
   imports = [
-    # Include the results of the hardware scan.
     ./hardware-configuration.nix
     ../../modules/gui.nix
   ];

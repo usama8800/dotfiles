@@ -5,7 +5,7 @@
   modulesPath,
   ...
 }: {
-  networking.hostName = "anywhere"; # Define your hostname.
+  networking.hostName = "anywhere";
 
   imports = [
     (modulesPath + "/profiles/qemu-guest.nix")

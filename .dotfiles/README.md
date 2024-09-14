@@ -19,12 +19,12 @@
 - Beeper
 - Vesktop
 - Nextcloud
-- Browser sync
+- Browser
   - Bitwarden
     - Autolock never
   - Tampermonkey
   - Tab Sessions
-- VSCode sync
+- VSCode
   - Codeium
   - Wakatime
 - Postgres

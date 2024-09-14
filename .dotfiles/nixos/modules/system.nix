@@ -59,9 +59,7 @@
     }
   ];
 
-  # Set your time zone.
   time.timeZone = lib.mkDefault "Asia/Karachi";
-  # Select internationalisation properties.
   i18n.defaultLocale = "en_GB.UTF-8";
   i18n.extraLocaleSettings = {
     LC_ADDRESS = "en_GB.UTF-8";
@@ -85,13 +83,12 @@
   # Enable CUPS to print documents.
   services.printing.enable = true;
 
-  # Enable the OpenSSH daemon.
   services.openssh = {
     enable = true;
     settings = {
       X11Forwarding = true;
-      PermitRootLogin = "no"; # disable root login
-      PasswordAuthentication = false; # disable password login
+      PermitRootLogin = "no";
+      PasswordAuthentication = false;
     };
     ports = lib.mkDefault [22];
     openFirewall = true;
@@ -103,8 +100,7 @@
   };
   nix.settings.experimental-features = ["nix-command" "flakes"];
 
-  # List packages installed in system profile. To search, run:
-  # $ nix search nixpkgs wget
+  # To search, run: nix search nixpkgs wget
   environment.systemPackages = with pkgs; [
     nix-index # for nix-locate
     nix-alien # for nix-alien-find-libs for nix-ld
@@ -170,15 +166,9 @@
       host   all      all    172.0.0.0/8    scram-sha-256
     '';
   };
-  services.jenkins = {
-    enable = true;
-    port = 8080;
-  };
 
   programs.nix-ld.enable = true;
   programs.nix-ld.libraries = with pkgs; [
-    # Add any missing dynamic libraries for unpackaged programs
-    # here, NOT in environment.systemPackages
     # Use nix-alien-find-libs to find what to add
     # or nix-index then nix-locate --top-level libname.so
     stdenv.cc.cc.lib
@@ -213,6 +203,7 @@
     xorg.libxcb
   ];
 
+  programs.home-manager.enable = true;
   home-manager.useGlobalPkgs = true;
   home-manager.useUserPackages = true;
   home-manager.backupFileExtension = "hmbak";
@@ -235,18 +226,6 @@
         trim_trailing_whitespace = false;
       };
     };
-
-    # This value determines the Home Manager release that your
-    # configuration is compatible with. This helps avoid breakage
-    # when a new Home Manager release introduces backwards
-    # incompatible changes.
-    #
-    # You can update Home Manager without changing this value. See
-    # the Home Manager release notes for a list of state version
-    # changes in each release.
     home.stateVersion = "24.05";
-
-    # Let Home Manager install and manage itself.
-    programs.home-manager.enable = true;
   };
 }

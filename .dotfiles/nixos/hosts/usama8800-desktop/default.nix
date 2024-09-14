@@ -4,17 +4,25 @@
   pkgs-unstable,
   ...
 }: {
-  networking.hostName = "usama8800-desktop"; # Define your hostname.
+  networking.hostName = "usama8800-desktop";
 
   imports = [
     ./hardware-configuration.nix
     ../../modules/gui.nix
   ];
 
-  # Bootloader.
   boot.loader.grub.enable = true;
   boot.loader.grub.device = "/dev/nvme0n1";
   boot.loader.grub.useOSProber = true;
+
+  # List USB devices: `lsusb` or `grep . /sys/bus/usb/devices/*/product`
+  #   Bus x Device y ID a:b
+  #   Folder = x-y;  a = Vendor ID; b = Product ID
+  # Check wakeup status: `grep . /sys/bus/usb/devices/*/power/wakeup`
+  # Temp check as sudo: `echo enabled > /sys/bus/usb/devices/BUS-DEVICE/power/wakeup`
+  services.udev.extraRules = ''
+    ACTION=="add" SUBSYSTEM=="usb" ATTR{idVendor}=="1bcf" ATTR{power/wakeup}="enabled"
+  '';
 
   programs.steam.enable = true;
   programs.steam.gamescopeSession.enable = true;

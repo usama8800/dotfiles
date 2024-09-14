@@ -331,7 +331,7 @@ def tag_videos():
                 continue
             id = id_from_filename(file)
             if id not in track_info:
-                print(f'ID "{id}" not in track info for {playlist_name}')
+                print(f'ID "{id}" ({file}) not in track info for {playlist_name}')
                 continue
             old_title, old_artist, old_genre = get_atomic_parsley_data(
                 os.path.join(os.environ["VIDEO_PATH"], playlist_name, file)
