@@ -206,7 +206,7 @@
           powerButtonAction = "sleep";
           turnOffDisplay.idleTimeout = 600;
           turnOffDisplay.idleTimeoutWhenLocked = 30;
-          whenLaptopLidClosed = "turnOffScreen";
+          whenLaptopLidClosed = "doNothing";
           whenSleepingEnter = "standbyThenHibernate";
         };
         battery = {
@@ -216,11 +216,11 @@
           powerButtonAction = "sleep";
           turnOffDisplay.idleTimeout = 300;
           turnOffDisplay.idleTimeoutWhenLocked = 30;
-          whenLaptopLidClosed = "turnOffScreen";
+          whenLaptopLidClosed = "doNothing";
           whenSleepingEnter = "standbyThenHibernate";
         };
         lowBattery = {
-          autoSuspend.action = "hibernate"; # or "sleep"?
+          autoSuspend.action = "hibernate";
           dimDisplay.enable = true;
           dimDisplay.idleTimeOut = 30;
           powerButtonAction = "sleep";
