@@ -203,7 +203,6 @@
     xorg.libxcb
   ];
 
-  programs.home-manager.enable = true;
   home-manager.useGlobalPkgs = true;
   home-manager.useUserPackages = true;
   home-manager.backupFileExtension = "hmbak";
@@ -222,10 +221,15 @@
         indent_style = "space";
         indent_size = 2;
       };
+      "py" = {
+        indent_size = 4;
+      };
       "md" = {
         trim_trailing_whitespace = false;
       };
     };
+
+    programs.home-manager.enable = true;
     home.stateVersion = "24.05";
   };
 }
