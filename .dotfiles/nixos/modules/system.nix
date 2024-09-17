@@ -203,6 +203,7 @@
     xorg.libxcb
     # krita ai
     systemc
+    libgcc
   ];
 
   home-manager.useGlobalPkgs = true;
