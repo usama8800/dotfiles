@@ -204,6 +204,7 @@
     # krita ai
     systemc
     libgcc
+    libstdcxx5
   ];
 
   home-manager.useGlobalPkgs = true;
