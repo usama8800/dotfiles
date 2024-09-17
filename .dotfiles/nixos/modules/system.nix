@@ -201,6 +201,8 @@
     xorg.libXfixes
     xorg.libXrandr
     xorg.libxcb
+    # krita ai
+    systemc
   ];
 
   home-manager.useGlobalPkgs = true;
