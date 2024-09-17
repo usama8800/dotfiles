@@ -61,13 +61,15 @@
     obsidian # markdown editor
     beekeeper-studio # database browser
     onlyoffice-bin # office suite
-    pkgs.floorp # browser
+    floorp # browser
     nextcloud-client # cloud storage
     variety # wallpapers
     mpv # video player
     beeper # messaging app
     vesktop # discord
     krita # image editor
+    google-chrome # browser
+    protonvpn-gui # vpn
   ];
 
   services.xserver.displayManager.sessionCommands = ''
