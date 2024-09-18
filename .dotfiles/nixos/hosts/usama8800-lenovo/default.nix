@@ -31,5 +31,36 @@
     };
   };
 
+  systemd.timers."conservation-on" = {
+    wantedBy = ["timers.target"];
+    timerConfig = {
+      OnCalendar = "*-*-* 17:00:00";
+      Persistent = true;
+      Unit = "conservation-on.service";
+    };
+  };
+  systemd.services."conservation-on" = {
+    path = [pkgs.bash];
+    serviceConfig = {
+      Type = "oneshot";
+      ExecStart = "/home/usama/Documents/bin/conservationmodeon";
+    };
+  };
+
+  systemd.timers."conservation-off" = {
+    wantedBy = ["timers.target"];
+    timerConfig = {
+      OnCalendar = "*-*-* 15:30:00";
+      Unit = "conservation-off.service";
+    };
+  };
+  systemd.services."conservation-off" = {
+    path = [pkgs.bash];
+    serviceConfig = {
+      Type = "oneshot";
+      ExecStart = "/home/usama/Documents/bin/conservationmodeoff";
+    };
+  };
+
   system.stateVersion = "24.05";
 }
