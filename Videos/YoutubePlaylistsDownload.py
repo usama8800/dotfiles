@@ -2,6 +2,7 @@
 
 import datetime
 import json
+import math
 import os
 import re
 import shutil
@@ -30,6 +31,8 @@ with open("playlists.json", "r") as f:
             playlists[playlist_name]["ids_desc_print_skip"] = []
         if "ongoing" not in playlists[playlist_name]:
             playlists[playlist_name]["ongoing"] = False
+        if "accurate" not in playlists[playlist_name]:
+            playlists[playlist_name]["accurate"] = False
         if "path" not in playlists[playlist_name]:
             playlists[playlist_name]["path"] = playlist_name
 
@@ -166,8 +169,11 @@ def download_videos():
             if playlists[playlist_name]["ongoing"]:
                 output_name = f"{video['date']} - {output_name}"
             else:
-                output_name = f"{i+1:0{len(videos)//10+1}} - {output_name}"
-                print(i + 1, len(videos) // 10 + 1)
+                output_name = (
+                    f"{i+1:0{math.floor(math.log10(len(videos))) + 1}} - {output_name}"
+                )
+            if playlists[playlist_name]["accurate"]:
+                output_name = f"%(upload_date)s {output_name}"
             ytdlp = subprocess.run(
                 [
                     "yt-dlp",
@@ -195,17 +201,18 @@ def download_videos():
     os.rmdir(downloading_folder)
 
 
-def clean_downloading_folder(id, copy_to):
+def clean_downloading_folder(id, copy_to, to_filename=None):
     for filename in os.listdir(downloading_folder):
         if filename.find(f"[{id}]"):
-            print(filename)
+            if to_filename is None:
+                to_filename = filename
             if filename.endswith(".mp4") or filename.endswith(".webm"):
                 bps = find_bytes_per_second(os.path.join("Downloading", filename))
                 if bps > bytes_per_second:
                     print(f"NEW LARGEST BYTES PER SECOND: {bps}")
                 shutil.move(
                     os.path.join("Downloading", filename),
-                    os.path.join(copy_to, filename),
+                    os.path.join(copy_to, to_filename),
                 )
             else:
                 os.remove(os.path.join("Downloading", filename))

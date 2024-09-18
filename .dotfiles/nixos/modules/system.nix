@@ -110,7 +110,10 @@
     nil # nix language server
     alejandra # nix code formatter
     python3
-    python312Packages.pip # python -m venv .venv; source .venv/bin/activate
+    # python -m venv .venv --copies; source .venv/bin/activate
+    # nix shell github:GuillaumeDesforges/fix-python
+    # fix-python --venv .venv
+    python312Packages.pip
     nodejs_22
     shfmt # shell formatter
     just # command runner
@@ -203,7 +206,6 @@
     xorg.libxcb
   ];
 
-  programs.home-manager.enable = true;
   home-manager.useGlobalPkgs = true;
   home-manager.useUserPackages = true;
   home-manager.backupFileExtension = "hmbak";
@@ -222,10 +224,15 @@
         indent_style = "space";
         indent_size = 2;
       };
+      "py" = {
+        indent_size = 4;
+      };
       "md" = {
         trim_trailing_whitespace = false;
       };
     };
+
+    programs.home-manager.enable = true;
     home.stateVersion = "24.05";
   };
 }
