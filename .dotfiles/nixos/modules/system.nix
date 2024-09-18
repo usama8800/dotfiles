@@ -110,7 +110,10 @@
     nil # nix language server
     alejandra # nix code formatter
     python3
-    python312Packages.pip # python -m venv .venv; source .venv/bin/activate
+    # python -m venv .venv --copies; source .venv/bin/activate
+    # nix shell github:GuillaumeDesforges/fix-python
+    # fix-python --venv .venv
+    python312Packages.pip
     nodejs_22
     shfmt # shell formatter
     just # command runner
@@ -201,10 +204,6 @@
     xorg.libXfixes
     xorg.libXrandr
     xorg.libxcb
-    # krita ai
-    systemc
-    libgcc
-    libstdcxx5
   ];
 
   home-manager.useGlobalPkgs = true;
