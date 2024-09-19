@@ -40,11 +40,7 @@
     };
   };
   systemd.services."conservation-on" = {
-    path = [pkgs.bash];
-    serviceConfig = {
-      Type = "oneshot";
-      ExecStart = "/home/usama/Documents/bin/conservationmodeon";
-    };
+    script = ''echo 1 | tee /sys/bus/platform/drivers/ideapad_acpi/VPC2004:00/conservation_mode'';
   };
 
   systemd.timers."conservation-off" = {
@@ -55,11 +51,7 @@
     };
   };
   systemd.services."conservation-off" = {
-    path = [pkgs.bash];
-    serviceConfig = {
-      Type = "oneshot";
-      ExecStart = "/home/usama/Documents/bin/conservationmodeoff";
-    };
+    script = ''echo 0 | tee /sys/bus/platform/drivers/ideapad_acpi/VPC2004:00/conservation_mode'';
   };
 
   system.stateVersion = "24.05";
