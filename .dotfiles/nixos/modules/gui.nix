@@ -70,6 +70,7 @@
     krita # image editor
     google-chrome # browser
     protonvpn-gui # vpn
+    xournalpp # handwritten note taking
   ];
 
   services.xserver.displayManager.sessionCommands = ''
