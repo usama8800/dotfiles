@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+set -ex
+
 if [ ! -d "$HOME"/.dotfiles ]; then
   mkdir "$HOME"/.dotfiles
 fi
@@ -10,7 +12,8 @@ fi
 if [ ! -f setup.sh ]; then
   git --git-dir=dotfiles.git/ --work-tree="$HOME" checkout
 fi
-git --git-dir="$HOME"/.dotfiles/dotfiles.git/ config status.showUntrackedFiles no
-git --git-dir="$HOME"/.dotfiles/dotfiles.git/ config remote.origin.fetch "+refs/heds/*:refs/remotes/origin/*"
+git --git-dir=dotfiles.git config status.showUntrackedFiles no
+git --git-dir=dotfiles.git branch --set-upstream-to origin/master
+git --git-dir=dotfiles.git config remote.origin.fetch "+refs/heds/*:refs/remotes/origin/*"
 bash -c "$(curl -fsSL https://raw.githubusercontent.com/tomasklaen/uosc/HEAD/installers/unix.sh)"
 popd || exit 1

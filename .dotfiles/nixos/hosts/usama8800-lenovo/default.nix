@@ -31,5 +31,24 @@
     };
   };
 
+  systemd.timers."conservation-off" = {
+    wantedBy = ["timers.target"];
+    timerConfig = {
+      OnCalendar = "*-*-* 15:30:00";
+      Unit = "conservation-off.service";
+    };
+  };
+  systemd.services."conservation-off".script = ''echo 0 | tee /sys/bus/platform/drivers/ideapad_acpi/VPC2004:00/conservation_mode'';
+
+  systemd.timers."conservation-on" = {
+    wantedBy = ["timers.target"];
+    timerConfig = {
+      OnCalendar = "*-*-* 16:30:00";
+      Persistent = true;
+      Unit = "conservation-on.service";
+    };
+  };
+  systemd.services."conservation-on".script = ''echo 1 | tee /sys/bus/platform/drivers/ideapad_acpi/VPC2004:00/conservation_mode'';
+
   system.stateVersion = "24.05";
 }

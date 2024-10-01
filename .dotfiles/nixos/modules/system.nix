@@ -127,6 +127,7 @@
     unzip
     rclone
     wakeonlan
+    aria2 # downloader
     util-linux # for cfdisk ( tui partition manager )
     zellij # terminal multiplexer
     parted # partition manager
