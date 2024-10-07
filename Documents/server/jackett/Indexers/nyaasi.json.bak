@@ -9,7 +9,7 @@
     "id": "cookieheader",
     "type": "hiddendata",
     "name": "CookieHeader",
-    "value": "__ddg1_=BT4CmlOVq7dBLS3M6yCk"
+    "value": "__ddg1_=r60meZLVhLLPWVQi8l4G; __ddg8_=3gaftDXGgO4enP7p; __ddg9_=43.251.255.28; __ddg10_=1728328799"
   },
   {
     "id": "lasterror",
@@ -22,6 +22,24 @@
     "type": "inputbool",
     "name": "Prefer Magnet Links",
     "value": true
+  },
+  {
+    "id": "improvesonarrcompatibilitybytryingtoaddseasoninformationintoreleasetitles",
+    "type": "inputbool",
+    "name": "Improve Sonarr compatibility by trying to add Season information into Release Titles",
+    "value": false
+  },
+  {
+    "id": "removefirstseasonkeywords(s1/s01/season1),assomeresultsdonotincludethisforfirst/singleseasonreleases",
+    "type": "inputbool",
+    "name": "Remove first season keywords (S1/S01/Season 1), as some results do not include this for first/single season releases",
+    "value": false
+  },
+  {
+    "id": "improveradarrcompatibilitybyremovingyearinformationfromkeywordsandaddingittoreleasetitles",
+    "type": "inputbool",
+    "name": "Improve Radarr compatibility by removing year information from keywords and adding it to Release Titles",
+    "value": false
   },
   {
     "id": "filter",
