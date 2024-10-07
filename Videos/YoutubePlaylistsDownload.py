@@ -35,6 +35,8 @@ with open("playlists.json", "r") as f:
             playlists[playlist_name]["accurate"] = False
         if "path" not in playlists[playlist_name]:
             playlists[playlist_name]["path"] = playlist_name
+        if "max_count" not in playlists[playlist_name]:
+            playlists[playlist_name]["max_count"] = 100
 
 dump_filename = ".dump.json"
 videos_filename = ".videos.json"
@@ -151,6 +153,11 @@ def download_videos():
         with open(os.path.join(path, videos_filename), "r") as f:
             videos = json.loads(f.read())
         for i, video in enumerate(videos):
+            download_count = len(
+                list(filter(lambda f: f.endswith(".mp4"), os.listdir(path)))
+            )
+            if download_count >= playlists[playlist_name]["max_count"]:
+                break
             if (
                 video["date"] < playlists[playlist_name]["min_date"]
                 or f"youtube {video['id']}" in archive
@@ -197,8 +204,9 @@ def download_videos():
             if ytdlp.returncode != 0:
                 print(ytdlp.stderr)
                 continue
+            download_count += 1
             clean_downloading_folder(video["id"], path)
-    os.rmdir(downloading_folder)
+    shutil.rmtree(downloading_folder)
 
 
 def clean_downloading_folder(id, copy_to, to_filename=None):

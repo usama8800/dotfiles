@@ -137,3 +137,4 @@ if __name__ == "__main__":
                 print()
             else:
                 raise ValueError(f"Unknown argument {arg}")
+        main()

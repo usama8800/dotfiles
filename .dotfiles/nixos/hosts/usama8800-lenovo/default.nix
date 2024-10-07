@@ -34,7 +34,7 @@
   systemd.timers."conservation-off" = {
     wantedBy = ["timers.target"];
     timerConfig = {
-      OnCalendar = "*-*-* 15:30:00";
+      OnCalendar = "*-*-* 16:00:00";
       Unit = "conservation-off.service";
     };
   };
