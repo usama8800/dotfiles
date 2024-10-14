@@ -139,7 +139,9 @@
     atuin # shell history
     zoxide # better cd
     eza # better ls
+    termdown # timer and stopwatch
 
+    # TUIs
     vim
     btop # system monitor
     lazygit # git client
