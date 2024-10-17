@@ -32,4 +32,30 @@
 
   nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
   hardware.cpu.amd.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
+
+  services.xserver.videoDrivers = ["nvidia"];
+  hardware.opengl.enable = true;
+  hardware.nvidia = {
+    modesetting.enable = true;
+    powerManagement.enable = true;
+    powerManagement.finegrained = false;
+    open = false;
+    nvidiaSettings = true;
+    # package = config.boot.kernelPackages.nvidiaPackages.stable;
+    # package = config.boot.kernelPackages.nvidiaPackages.beta;
+    package = config.boot.kernelPackages.nvidiaPackages.production; # (installs 550)
+    # package = config.boot.kernelPackages.nvidiaPackages.vulkan_beta;
+    # package = config.boot.kernelPackages.nvidiaPackages.legacy_470;
+    # package = config.boot.kernelPackages.nvidiaPackages.legacy_390;
+    # package = config.boot.kernelPackages.nvidiaPackages.legacy_340;
+  };
+
+  # List USB devices: `lsusb` or `grep . /sys/bus/usb/devices/*/product`
+  #   Bus x Device y ID a:b
+  #   Folder = x-y;  a = Vendor ID; b = Product ID
+  # Check wakeup status: `grep . /sys/bus/usb/devices/*/power/wakeup`
+  # Temp check as sudo: `echo enabled > /sys/bus/usb/devices/BUS-DEVICE/power/wakeup`
+  services.udev.extraRules = ''
+    ACTION=="add" SUBSYSTEM=="usb" ATTR{idVendor}=="1bcf" ATTR{power/wakeup}="enabled"
+  '';
 }
