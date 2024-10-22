@@ -72,6 +72,9 @@
     protonvpn-gui # vpn
     xournalpp # handwritten note taking
   ];
+  environment.sessionVariables = {
+    PLAYWRIGHT_SKIP_VALIDATE_HOST_REQUIREMENTS = "true";
+  };
 
   services.xserver.displayManager.sessionCommands = ''
     ${pkgs-unstable.x11vnc}/bin/x11vnc -wait 15 -noxdamage -rfbauth "$HOME"/.vnc/passwd -display :0 -forever -o /var/log/x11vnc.log -bg
