@@ -10,6 +10,7 @@
     ./hardware-configuration.nix
     ../../modules/laptop.nix
     ../../modules/gui.nix
+    ../../modules/gaming.nix
   ];
 
   boot.loader.systemd-boot.enable = true;

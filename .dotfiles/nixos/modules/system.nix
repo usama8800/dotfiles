@@ -45,6 +45,7 @@
       "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIE0JGch0tl4eyI947ysKtqsMIOuc7o5aiz9IqHS9ZuG6" # usama8800-office
       "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIEBggZsRBOrgwDyVwDlaGlvRw/X/c7U0vsUK7G9I/IJD" # usama8800-lenovo
       "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAINEo0SAQiP5h7xNUAIyPCBS8ty204K+glVQj614JujX0" # usama8800-server
+      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIK3OIp9D2qjgOC9Cr2CY0y+9NLODpjY4leEEH9ySlrOh" # usama8800-vm
     ];
   };
   security.sudo.extraRules = [
@@ -139,7 +140,9 @@
     atuin # shell history
     zoxide # better cd
     eza # better ls
+    termdown # timer and stopwatch
 
+    # TUIs
     vim
     btop # system monitor
     lazygit # git client
@@ -166,6 +169,7 @@
       # type database DBuser origin-address auth-method
       local  all      all                   trust
       host   all      all    127.0.0.1/32   scram-sha-256
+      host   all      all    192.168.0.0/16 scram-sha-256
       host   all      all    ::1/128        scram-sha-256
       host   all      all    172.0.0.0/8    scram-sha-256
     '';
