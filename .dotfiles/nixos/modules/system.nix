@@ -128,6 +128,7 @@
     unzip
     rclone
     wakeonlan
+    psmisc # ps utils ( killall, fuser )
     aria2 # downloader
     util-linux # for cfdisk ( tui partition manager )
     zellij # terminal multiplexer
