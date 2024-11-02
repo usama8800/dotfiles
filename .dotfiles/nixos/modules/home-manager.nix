@@ -85,7 +85,7 @@
         AC = {
           autoSuspend.action = "nothing";
           dimDisplay.enable = true;
-          dimDisplay.idleTimeOut = 300;
+          dimDisplay.idleTimeout = 300;
           powerButtonAction = "sleep";
           turnOffDisplay.idleTimeout = 600;
           turnOffDisplay.idleTimeoutWhenLocked = 30;
@@ -95,7 +95,7 @@
         battery = {
           autoSuspend.action = "nothing";
           dimDisplay.enable = true;
-          dimDisplay.idleTimeOut = 120;
+          dimDisplay.idleTimeout = 120;
           powerButtonAction = "sleep";
           turnOffDisplay.idleTimeout = 300;
           turnOffDisplay.idleTimeoutWhenLocked = 30;
@@ -105,7 +105,7 @@
         lowBattery = {
           autoSuspend.action = "hibernate";
           dimDisplay.enable = true;
-          dimDisplay.idleTimeOut = 30;
+          dimDisplay.idleTimeout = 30;
           powerButtonAction = "sleep";
           turnOffDisplay.idleTimeout = 60;
           turnOffDisplay.idleTimeoutWhenLocked = 30;
