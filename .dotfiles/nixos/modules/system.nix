@@ -115,7 +115,7 @@
     # nix shell github:GuillaumeDesforges/fix-python
     # fix-python --venv .venv
     python312Packages.pip
-    nodejs_22
+    fnm # fast node manager
     shfmt # shell formatter
     just # command runner
 
