@@ -100,3 +100,13 @@ qr() {
 		echo "$_stdin" | curl -F 'clbin=<-' https://qrenco.de
 	fi
 }
+venv() {
+	if [ -d .venv ]; then
+		source .venv/bin/activate
+	elif [ -d venv ]; then
+		source venv/bin/activate
+	else
+		python3 -m venv .venv
+		source .venv/bin/activate
+	fi
+}

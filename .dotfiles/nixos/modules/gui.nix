@@ -65,7 +65,7 @@
     nextcloud-client # cloud storage
     variety # wallpapers
     mpv # video player
-    beeper # messaging app
+    pkgs.beeper # messaging app
     vesktop # discord
     krita # image editor
     google-chrome # browser
