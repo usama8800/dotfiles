@@ -42,10 +42,11 @@
     initialPassword = "123";
     openssh.authorizedKeys.keys = [
       "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIAH3VlNgMTY5pjrKWUDGu39WMcpCfiK0fwjWdwOkXDFT" # usama8800-desktop
-      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIE0JGch0tl4eyI947ysKtqsMIOuc7o5aiz9IqHS9ZuG6" # usama8800-office
+      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIE0JGch0tl4eyI947ysKtqsMIOuc7o5aiz9IqHS9ZuG6" # usama8800-farooqsb
       "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIEBggZsRBOrgwDyVwDlaGlvRw/X/c7U0vsUK7G9I/IJD" # usama8800-lenovo
       "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAINEo0SAQiP5h7xNUAIyPCBS8ty204K+glVQj614JujX0" # usama8800-server
       "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIK3OIp9D2qjgOC9Cr2CY0y+9NLODpjY4leEEH9ySlrOh" # usama8800-vm
+      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIBUis01MRy8atujt2/rbxoXIXaCzKDcUbGcm3nPNXj+K" # phone
     ];
   };
   security.sudo.extraRules = [
