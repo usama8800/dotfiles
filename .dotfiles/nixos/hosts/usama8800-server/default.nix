@@ -18,6 +18,13 @@
     port = 8080;
     prefix = "/jenkins";
   };
+  home-manager.users.usama.programs.ssh.matchBlocks = {
+    desktop = {
+      host = "desktop";
+      user = "usama";
+      hostname = "192.168.100.81";
+    };
+  };
 
   systemd.timers."erp-backup" = {
     wantedBy = ["timers.target"];

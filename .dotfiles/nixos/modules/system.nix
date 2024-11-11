@@ -218,6 +218,27 @@
     home.username = "usama";
     home.homeDirectory = "/home/usama";
 
+    programs.ssh.enable = true;
+    programs.ssh.matchBlocks = {
+      server = {
+        host = "server";
+        user = "usama";
+        port = 2222;
+        hostname = "usama8800.net";
+      };
+      factory = {
+        host = "factory";
+        user = "usama";
+        port = 2222;
+        hostname = "154.208.40.87";
+      };
+      oracle = {
+        host = "oracle";
+        user = "ubuntu";
+        hostname = "152.67.0.75";
+      };
+    };
+
     editorconfig.enable = true;
     editorconfig.settings = {
       "*" = {
