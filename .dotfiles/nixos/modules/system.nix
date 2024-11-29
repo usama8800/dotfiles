@@ -226,13 +226,13 @@
         host = "server";
         user = "usama";
         port = 2222;
-        hostname = "usama8800.net";
+        hostname = lib.mkDefault "usama8800.net";
       };
       factory = {
         host = "factory";
         user = "usama";
-        port = 2222;
-        hostname = "154.208.40.87";
+        port = lib.mkDefault 2222;
+        hostname = lib.mkDefault "154.208.40.87";
       };
       oracle = {
         host = "oracle";
