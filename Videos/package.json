@@ -13,10 +13,12 @@
     "date-fns": "^4.1.0",
     "execa": "^9.5.2",
     "fs-extra": "^11.2.0",
+    "lodash": "^4.17.21",
     "zx": "^8.2.4"
   },
   "devDependencies": {
     "@types/fs-extra": "^11.0.4",
+    "@types/lodash": "^4.17.13",
     "@types/node": "^22.10.1",
     "tsx": "^4.19.2",
     "typescript": "^5.7.2"

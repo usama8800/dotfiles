@@ -204,7 +204,6 @@ def download_videos():
             if ytdlp.returncode != 0:
                 print(ytdlp.stderr)
                 continue
-            download_count += 1
             clean_downloading_folder(video["id"], path)
     shutil.rmtree(downloading_folder)
 

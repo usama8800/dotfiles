@@ -1,22 +1,108 @@
 #!/usr/bin/env -S npx tsx
 
-import { program } from 'commander';
-import { $ } from 'execa';
-import { ensureDirSync, existsSync, readJsonSync, statSync } from 'fs-extra';
-import { resolve } from 'path';
+import { Command, Option, program } from 'commander';
+import { differenceInHours, format, isAfter, parse } from 'date-fns';
+import { ensureDirSync, existsSync, readdirSync, readFileSync, readJsonSync, statfsSync, statSync, writeJsonSync } from 'fs-extra';
+import { compact, padStart } from 'lodash';
+import { isAbsolute, resolve } from 'path';
+import { $ as $throw } from 'zx';
+
+const $ = $throw({
+  nothrow: true,
+});
 
 const DUMP_FILENAME = '.dump.json';
 const VIDEOS_FILENAME = '.videos.json';
+const ARCHIVE_FILENAME = '.archive';
+const DOWNLOADING_FOLDER = "Downloading";
+const BYTES_PER_SECOND = 463_000;
+const MIN_GBS_LEFT = 2;
+const MIN_HOURS_TO_UPDATE_METADATA = 6;
 
 type Playlist = {
   url: string;
   min_date: string;
-  idsDescPrintSkip: string[];
   ongoing: boolean;
   accurate: boolean;
   path: string;
-  maxCount: number;
+  max_count: number;
   disabled: boolean;
+};
+type EntryThumbnail = {
+  url: string;
+  height: number;
+  width: number;
+};
+type Thumbnail = EntryThumbnail & {
+  preference: number;
+  id: string;
+  resolution: string;
+};
+type Entry = {
+  _type: "url";
+  ie_key: string;
+  id: string;
+  url: string;
+  title: string;
+  description: string;
+  duration: number;
+  channel_id: null;
+  channel: null;
+  channel_url: null;
+  uploader: null;
+  uploader_id: null;
+  uploader_url: null;
+  thumbnails: EntryThumbnail[];
+  // Null when video is private
+  timestamp: number | null;
+  release_timestamp: null;
+  availability: null;
+  view_count: number | null;
+  live_status: null;
+  channel_is_verified: null;
+  __x_forwarded_for_ip: null;
+};
+type Version = {
+  version: string;
+  current_git_head: null;
+  release_git_head: string;
+  repository: string;
+};
+type Metadata = {
+  id: string;
+  channel: string;
+  channel_id: string;
+  title: string;
+  availablility: null;
+  channel_follower_count: number;
+  description: string;
+  tags: string[];
+  thumbnails: Thumbnail[];
+  uploader_id: string;
+  uploader_url: string;
+  modified_date: null;
+  view_count: number | null;
+  playlist_count: number;
+  uploader: string;
+  channel_url: string;
+  _type: "playlist";
+  entries: Entry[];
+  extractor_key: string;
+  extractor: string;
+  webpage_url: string;
+  original_url: string;
+  webpage_url_basename: string;
+  webpage_url_domain: string;
+  release_year: null;
+  epoch: number;
+  __files_to_move: {};
+  _version: Version;
+};
+type Video = {
+  id: string,
+  url: string,
+  title: string,
+  date: string,
 };
 
 let playlists: { [key: string]: Playlist } = readJsonSync("playlists.json");
@@ -24,19 +110,122 @@ for (const playlistName in playlists) {
   const playlist = playlists[playlistName];
   if (!playlist.url) throw new Error(`Missing url for playlist ${playlistName} in playlists.json`);
   if (!playlist.min_date) playlist.min_date = "1970-01-01";
-  if (!playlist.idsDescPrintSkip) playlist.idsDescPrintSkip = [];
   if (!playlist.ongoing) playlist.ongoing = false;
   if (!playlist.accurate) playlist.accurate = false;
   if (!playlist.path) playlist.path = playlistName;
-  if (!playlist.maxCount) playlist.maxCount = 100;
+  if (!playlist.max_count) playlist.max_count = 100;
   if (!playlist.disabled) playlist.disabled = false;
   else delete playlists[playlistName];
 }
 
-async function downloadVideos() {
+function freeDiskGBs() {
+  const stat = statfsSync(DOWNLOADING_FOLDER)
+  return stat.bavail * stat.bsize / 1024 / 1024 / 1024;
 }
 
-async function downloadMetadata(options: { force?: boolean }) {
+function videoGBs(videoUrl: string) {
+  const $ytdlp = $({ sync: true, stdio: ['ignore', 'pipe', 'ignore'] })`yt-dlp --print "%(filesize)s,%(duration)s" ${videoUrl}`;
+  if ($ytdlp.exitCode !== 0) return Number.POSITIVE_INFINITY;
+  const [filesizeStr, durationStr] = $ytdlp.stdout.split(',');
+  let filesize = +filesizeStr;
+  if (isNaN(filesize)) filesize = +durationStr * BYTES_PER_SECOND;
+  if (!filesize) return Number.POSITIVE_INFINITY;
+  return filesize / 1024 / 1024 / 1024;
+}
+
+async function downloadVideos() {
+  ensureDirSync(DOWNLOADING_FOLDER);
+  for (const playlistName in playlists) {
+    const playlist = playlists[playlistName];
+    const videos: Video[] = readJsonSync(resolve(playlist.path, VIDEOS_FILENAME));
+    let printedAboutDownloadingPlaylist = false;
+    let archive: string[];
+    try {
+      archive = readFileSync(resolve(playlist.path, ARCHIVE_FILENAME), { encoding: 'utf-8' }).split('\r?\n');
+    } catch (error) {
+      archive = [];
+    }
+
+    for (let i = 0; i < videos.length; i++) {
+      const video = videos[i];
+      const downloadCount = readdirSync(playlist.path).filter(f => f.endsWith('.mp4')).length;
+      if (downloadCount >= playlist.max_count) break;
+      if (video.date.localeCompare(playlist.min_date) < 0 || archive.includes(`youtube ${video.id}`)) continue;
+
+      if (!printedAboutDownloadingPlaylist) {
+        console.log(`Downloading videos for ${playlistName}`);
+        printedAboutDownloadingPlaylist = true;
+      }
+
+      console.log(`Checking space for ${video.title}`);
+      const diskGBs = freeDiskGBs();
+      const videoSize = videoGBs(video.url);
+      console.log(`${videoSize.toFixed(2)} / ${diskGBs.toFixed(2)}`)
+      if (freeDiskGBs() - videoGBs(video.url) < MIN_GBS_LEFT) break;
+
+      let outputName = "%(title)s [%(id)s].%(ext)s";
+      if (playlist.ongoing) outputName = `${video.date} - ${outputName}`;
+      else {
+        const playlistIndex = i + 1;
+        const padLength = Math.floor(Math.log10(videos.length)) + 1;
+        outputName = `${padStart(playlistIndex.toString(), padLength, '0')} - ${outputName}`;
+      }
+      if (playlist.accurate) outputName = `%(upload_date)s ${outputName}`;
+
+      const flags = [
+        "yt-dlp",
+        "-f",
+        "bestvideo[height<=1080][ext=mp4]+bestaudio[ext=m4a]/best[ext=mp4]/best",
+        "--downloader",
+        "aria2c",
+        "--download-archive",
+        isAbsolute(playlist.path) ? resolve(playlist.path, ARCHIVE_FILENAME) : resolve('..', playlist.path, ARCHIVE_FILENAME),
+        "-o",
+        outputName,
+        video["url"],
+      ];
+      const $ytdlp = $({ sync: true, cwd: DOWNLOADING_FOLDER, stdio: 'inherit' })`yt-dlp ${flags}`;
+      if ($ytdlp.exitCode === 0) cleanDownloadingFolder(video.id, playlist.path);
+      break;
+    }
+    break;
+  }
+}
+
+
+
+const ATRIOC_PATTERN = new RegExp("Streamed Live on (?<month>January|February|March|April|May|June|July|August|September|October|November|December) (?<date>\\d{1,2})(?:.*?),? (?<year>\\d{4})");
+const ASPECTICOR_PATTERN = new RegExp("VOD from (?<month>\\w+) (?<date>\\d{1,2}), (?<year>\\d{4})");
+function getVideoFromEntry(playlist: Playlist, entry: Entry): Video | undefined {
+  if (!entry.timestamp) return;
+
+  let date = new Date(entry.timestamp * 1000);
+  if (playlist.url === "https://www.youtube.com/@atriocvods/videos") {
+    const match = entry.description.match(ATRIOC_PATTERN);
+    if (match?.groups) {
+      date = parse(`${match.groups.year} ${match.groups.month} ${match.groups.date}`, "yyyy MMMM d", new Date());
+    } else if (!['19j_ClWR7aA', 'v2L091WK780'].includes(entry.id)) {
+      console.log(`No date found in the description for ${entry.id}`);
+      console.log(entry.description);
+    }
+  } else if (playlist.url === "https://www.youtube.com/@aspecticorvods/videos") {
+    const match = entry.description.match(ASPECTICOR_PATTERN);
+    if (match?.groups) {
+      date = parse(`${match.groups.year} ${match.groups.month.slice(0, 3)} ${match.groups.date}`, `yyyy MMM d`, new Date());
+    } else if (isAfter(date, new Date(2023, 12, 11))) {
+      console.log(`No date found in the description for ${entry.id}`);
+      console.log(entry.description);
+    }
+  }
+  return {
+    id: entry.id,
+    url: entry.url,
+    title: entry.title,
+    date: format(date, "yyyy-MM-dd"),
+  };
+}
+
+async function downloadMetadata(options: { force?: boolean, video?: boolean }) {
   for (const playlistName in playlists) {
     const playlist = playlists[playlistName];
     const dumpFilepath = resolve(playlist.path, DUMP_FILENAME);
@@ -45,100 +234,39 @@ async function downloadMetadata(options: { force?: boolean }) {
 
     if (!options.force && existsSync(dumpFilepath) && existsSync(videosFilepath)) {
       const modifiedTime = statSync(videosFilepath).mtimeMs;
-      console.log(modifiedTime);
+      const hours = differenceInHours(new Date(), new Date(modifiedTime));
+      if (hours < MIN_HOURS_TO_UPDATE_METADATA) continue;
     }
 
     if (!playlist.ongoing && existsSync(dumpFilepath) && existsSync(videosFilepath) && !options.force)
       continue;
 
-    console.log(`Downloading metadata for ${playlistName}`);
-    // const $metadata = await $({ shell: 'bash' })`yt-dlp -J --flat-playlist --extractor-args youtubetab:approximate_date ${playlist.url} > ${dumpFilepath}`;
-    const x = await $`yt-dlp`;
-    console.log(x);
+    if (!options.video || !existsSync(dumpFilepath)) {
+      console.log(`Downloading metadata for ${playlistName}`);
+      await $throw`yt-dlp -J --flat-playlist --extractor-args youtubetab:approximate_date "${playlist.url}" > "${dumpFilepath}.tmp"`;
+      await $throw`mv "${dumpFilepath}.tmp" "${dumpFilepath}"`
+    }
+
+    const metadata: Metadata = readJsonSync(dumpFilepath);
+    const videos: Video[] = compact(metadata.entries.map(e => getVideoFromEntry(playlist, e)));
+    if (playlist.ongoing) videos.sort((a, b) => a.date.localeCompare(b.date));
+    writeJsonSync(videosFilepath, videos, { spaces: 2 });
   }
-  //         if not os.path.exists(path):
-  //             os.mkdir(path)
-
-  //         if (
-  //             not force
-  //             and os.path.exists(dump_filepath)
-  //             and os.path.exists(videos_filepath)
-  //         ):
-  //             modified_time = os.path.getmtime(videos_filepath)
-  //             time_difference = time.time() - modified_time
-  //             hours_difference = time_difference / 3600
-  //             if hours_difference < 6:
-  //                 continue
-
-  //         print(f"Downloading metadata for {playlist_name}")
-  //         with open(dump_filepath, "w") as f:
-  //             ytdlp = subprocess.run(
-  //                 [
-  //                     "yt-dlp",
-  //                     "-J",
-  //                     "--flat-playlist",
-  //                     "--extractor-args",
-  //                     "youtubetab:approximate_date",
-  //                     playlists[playlist_name]["url"],
-  //                 ],
-  //                 stdout=f,
-  //                 stderr=subprocess.PIPE,
-  //                 text=True,
-  //             )
-  //             if ytdlp.returncode != 0:
-  //                 print(ytdlp.stderr)
-  //                 sys.exit(ytdlp.returncode)
-
-  //         with open(dump_filepath, "r") as f:
-  //             metadata = json.loads(f.read())
-
-  //         videos = []
-  //         # atrioc_pattern = r"Streamed Live on (January|February|March|April|May|June|July|August|September|October|November|December) (\d{1,2})(?:.*?),? (\d{4})"
-  //         for entry in metadata["entries"]:
-  //             if playlist_name == "Atrioc":
-  //                 match = re.search(atrioc_pattern, entry["description"])
-  //                 if match:
-  //                     month_name, day, year = match.groups()
-  //                     date_object = datetime.datetime.strptime(
-  //                         f"{month_name} {day} {year}", "%B %d %Y"
-  //                     )
-  //                 else:
-  //                     if (
-  //                         entry["id"]
-  //                         not in playlists[playlist_name]["ids_desc_print_skip"]
-  //                     ):
-  //                         print(f"No date found in the description for {entry['id']}")
-  //                         print(entry["description"])
-  //                     date_object = datetime.datetime.fromtimestamp(entry["timestamp"])
-  //             else:
-  //                 if entry["timestamp"] is None:
-  //                     # Private video
-  //                     continue
-  //                 date_object = datetime.datetime.fromtimestamp(entry["timestamp"])
-  //             videos.append(
-  //                 {
-  //                     "id": entry["id"],
-  //                     "url": entry["url"],
-  //                     "title": entry["title"],
-  //                     "date": date_object.strftime("%Y-%m-%d"),
-  //                 }
-  //             )
-  //         if playlists[playlist_name]["ongoing"]:
-  //             videos = sorted(videos, key=lambda x: x["date"], reverse=False)
-  //         with open(videos_filepath, "w") as f:
-  //             json.dump(videos, f, indent=4)
-
-
 }
 
 async function main(options: { force?: boolean }) {
+  downloadMetadata(options);
+  downloadVideos()
+}
 
+async function defaultAction(options, command: Command) {
+  console.log(command.name());
+  console.log(options);
 }
 
 program
   .nameFromFilename(__filename)
   .description('Download playlists listed in playlists.json')
-  .option('-f, --force', 'Force metadata update');
 program.command('run', { hidden: true, isDefault: true })
   .option('-f, --force', 'Force metadata update')
   .action(main);
@@ -148,38 +276,16 @@ program.command('download')
   .action(downloadVideos);
 program.command('metadata')
   .description('Update metadata without downloading videos')
-  .alias('m')
   .option('-f, --force', 'Force metadata update')
+  .addOption(new Option('-v, --video', 'Update .videos.json without updating .dump.json').implies({ force: true }))
+  .alias('m')
   .action(downloadMetadata);
 program.command('bytes-per-second')
   .description('Find maximum bytes per second for a playlist')
   .alias('bps')
-  .argument('[playlist]', 'Playlist to find max bps for', 'Atrioc');
-program.parseAsync();
-
-// if __name__ == "__main__":
-//     if len(sys.argv) == 1:
-//         main()
-//     else:
-//         for arg in sys.argv[1:]:
-//             if arg == "download":
-//                 download_videos()
-//             elif arg == "metadata":
-//                 download_metadata()
-//             elif arg == "metadata-force":
-//                 download_metadata(True)
-//             elif arg == "bps":
-//                 find_all_bytes_per_second()
-//             elif arg == "help":
-//                 print(
-//                     """
-// Usage:
-//     index.py <commands>
-
-// Commands:
-//     download
-//     metadata
-//     help"""
-//                 )
-//             else:
-//                 raise ValueError(f"Unknown argument {arg}")
+  .argument('[playlist]', 'Playlist to find max bps for', 'Atrioc')
+  .action(defaultAction);
+(async () => {
+  await program.parseAsync();
+  console.log('Done');
+})();

@@ -117,6 +117,7 @@
     # fix-python --venv .venv
     python312Packages.pip
     fnm # fast node manager
+    nodejs_22
     shfmt # shell formatter
     just # command runner
 
