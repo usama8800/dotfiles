@@ -1,11 +1,13 @@
 #!/usr/bin/env -S npx tsx
 
-import { Command, Option, program } from 'commander';
+import { Option, program } from 'commander';
 import { differenceInHours, format, isAfter, parse } from 'date-fns';
-import { ensureDirSync, existsSync, readdirSync, readFileSync, readJsonSync, statfsSync, statSync, writeJsonSync } from 'fs-extra';
+import { ensureDirSync, existsSync, moveSync, readdirSync, readFileSync, readJsonSync, rmSync, statfsSync, statSync, writeJsonSync } from 'fs-extra';
 import { compact, padStart } from 'lodash';
 import { isAbsolute, resolve } from 'path';
-import { $ as $throw } from 'zx';
+import { $ as $$ } from 'zx';
+
+const $throw = $$.sync;
 
 const $ = $throw({
   nothrow: true,
@@ -133,7 +135,7 @@ function videoGBs(videoUrl: string) {
   return filesize / 1024 / 1024 / 1024;
 }
 
-async function downloadVideos() {
+function downloadVideos() {
   ensureDirSync(DOWNLOADING_FOLDER);
   for (const playlistName in playlists) {
     const playlist = playlists[playlistName];
@@ -148,7 +150,7 @@ async function downloadVideos() {
 
     for (let i = 0; i < videos.length; i++) {
       const video = videos[i];
-      const downloadCount = readdirSync(playlist.path).filter(f => f.endsWith('.mp4')).length;
+      const downloadCount = readdirSync(playlist.path).filter(f => isFileVideo(f)).length;
       if (downloadCount >= playlist.max_count) break;
       if (video.date.localeCompare(playlist.min_date) < 0 || archive.includes(`youtube ${video.id}`)) continue;
 
@@ -173,7 +175,6 @@ async function downloadVideos() {
       if (playlist.accurate) outputName = `%(upload_date)s ${outputName}`;
 
       const flags = [
-        "yt-dlp",
         "-f",
         "bestvideo[height<=1080][ext=mp4]+bestaudio[ext=m4a]/best[ext=mp4]/best",
         "--downloader",
@@ -192,7 +193,43 @@ async function downloadVideos() {
   }
 }
 
+function cleanDownloadingFolder(id: string, copyToDir: string) {
+  const files = readdirSync(DOWNLOADING_FOLDER);
+  for (const file of files) {
+    if (file.indexOf(`[${id}]`) === -1) continue;
+    if (isFileVideo(file)) {
+      const bps = videoBPS(resolve(DOWNLOADING_FOLDER, file));
+      if (bps > BYTES_PER_SECOND) {
+        console.log(`NEW LARGEST BYTES PER SECOND: ${bps}`);
+      }
+      moveSync(resolve(DOWNLOADING_FOLDER, file), resolve(copyToDir, file));
+    } else {
+      rmSync(resolve(DOWNLOADING_FOLDER, file));
+    }
+  }
+}
 
+function printAllBPS(playlistName: string) {
+  const bpss = [] as number[];
+  const files = readdirSync(playlists[playlistName].path);
+  for (const file of files) {
+    if (!isFileVideo(file) || file.startsWith('.')) continue;
+    bpss.push(videoBPS(resolve(playlists[playlistName].path, file)));
+  }
+  bpss.sort((a, b) => b - a);
+  console.log(bpss.map(x => Math.floor(x)).join('\n'));
+}
+
+function videoBPS(filepath: string) {
+  const $ffprobe = $({ sync: true, stdio: ['ignore', 'pipe', 'ignore'] })`ffprobe -v error -show_entries format=duration -of default=noprint_wrappers=1:nokey=1 "${filepath}"`;
+  const filesize = statSync(filepath).size;
+  const duration = +$ffprobe.stdout;
+  return filesize / duration;
+}
+
+function isFileVideo(filepath: string) {
+  return filepath.endsWith(".mp4") || filepath.endsWith(".webm");
+}
 
 const ATRIOC_PATTERN = new RegExp("Streamed Live on (?<month>January|February|March|April|May|June|July|August|September|October|November|December) (?<date>\\d{1,2})(?:.*?),? (?<year>\\d{4})");
 const ASPECTICOR_PATTERN = new RegExp("VOD from (?<month>\\w+) (?<date>\\d{1,2}), (?<year>\\d{4})");
@@ -225,7 +262,7 @@ function getVideoFromEntry(playlist: Playlist, entry: Entry): Video | undefined 
   };
 }
 
-async function downloadMetadata(options: { force?: boolean, video?: boolean }) {
+function downloadMetadata(options: { force?: boolean, video?: boolean }) {
   for (const playlistName in playlists) {
     const playlist = playlists[playlistName];
     const dumpFilepath = resolve(playlist.path, DUMP_FILENAME);
@@ -243,8 +280,8 @@ async function downloadMetadata(options: { force?: boolean, video?: boolean }) {
 
     if (!options.video || !existsSync(dumpFilepath)) {
       console.log(`Downloading metadata for ${playlistName}`);
-      await $throw`yt-dlp -J --flat-playlist --extractor-args youtubetab:approximate_date "${playlist.url}" > "${dumpFilepath}.tmp"`;
-      await $throw`mv "${dumpFilepath}.tmp" "${dumpFilepath}"`
+      $throw`yt-dlp -J --flat-playlist --extractor-args youtubetab:approximate_date "${playlist.url}" > "${dumpFilepath}.tmp"`;
+      $throw`mv "${dumpFilepath}.tmp" "${dumpFilepath}"`
     }
 
     const metadata: Metadata = readJsonSync(dumpFilepath);
@@ -254,14 +291,9 @@ async function downloadMetadata(options: { force?: boolean, video?: boolean }) {
   }
 }
 
-async function main(options: { force?: boolean }) {
+function main(options: { force?: boolean }) {
   downloadMetadata(options);
   downloadVideos()
-}
-
-async function defaultAction(options, command: Command) {
-  console.log(command.name());
-  console.log(options);
 }
 
 program
@@ -283,9 +315,7 @@ program.command('metadata')
 program.command('bytes-per-second')
   .description('Find maximum bytes per second for a playlist')
   .alias('bps')
-  .argument('[playlist]', 'Playlist to find max bps for', 'Atrioc')
-  .action(defaultAction);
-(async () => {
-  await program.parseAsync();
-  console.log('Done');
-})();
+  .argument('[playlist-name]', 'Playlist to find max bps for', Object.keys(playlists)[0])
+  .action(printAllBPS);
+program.parse();
+console.log('Done');
