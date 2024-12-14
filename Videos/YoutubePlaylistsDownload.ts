@@ -143,7 +143,7 @@ function downloadVideos() {
     let printedAboutDownloadingPlaylist = false;
     let archive: string[];
     try {
-      archive = readFileSync(resolve(playlist.path, ARCHIVE_FILENAME), { encoding: 'utf-8' }).split('\r?\n');
+      archive = readFileSync(resolve(playlist.path, ARCHIVE_FILENAME), { encoding: 'utf-8' }).split(/\r?\n/);
     } catch (error) {
       archive = [];
     }
@@ -280,8 +280,9 @@ function downloadMetadata(options: { force?: boolean, video?: boolean }) {
 
     if (!options.video || !existsSync(dumpFilepath)) {
       console.log(`Downloading metadata for ${playlistName}`);
-      $throw`yt-dlp -J --flat-playlist --extractor-args youtubetab:approximate_date "${playlist.url}" > "${dumpFilepath}.tmp"`;
-      $throw`mv "${dumpFilepath}.tmp" "${dumpFilepath}"`
+	  const tmpDumpFilepath = `${dumpFilepath}.tmp`;
+      $throw`yt-dlp -J --flat-playlist --extractor-args youtubetab:approximate_date ${playlist.url} > ${tmpDumpFilepath}`;
+      $throw`mv ${tmpDumpFilepath} ${dumpFilepath}`
     }
 
     const metadata: Metadata = readJsonSync(dumpFilepath);
