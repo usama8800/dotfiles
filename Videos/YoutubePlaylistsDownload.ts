@@ -4,7 +4,8 @@ import { Option, program } from 'commander';
 import { differenceInHours, format, isAfter, parse } from 'date-fns';
 import { ensureDirSync, existsSync, moveSync, readdirSync, readFileSync, readJsonSync, rmSync, statfsSync, statSync, writeJsonSync } from 'fs-extra';
 import { compact, padStart } from 'lodash';
-import { isAbsolute, resolve } from 'path';
+import { resolve } from 'path';
+import { z } from 'zod';
 import { $ as $$ } from 'zx';
 
 const $throw = $$.sync;
@@ -108,16 +109,20 @@ type Video = {
 };
 
 let playlists: { [key: string]: Playlist } = readJsonSync("playlists.json");
+const schema = z.strictObject({
+  url: z.string().url(),
+  min_date: z.string().date().default('1970-01-01'),
+  ongoing: z.boolean().default(false),
+  accurate: z.boolean().default(false),
+  path: z.string().default(''),
+  max_count: z.number().int().positive().default(100),
+  disabled: z.boolean().default(false),
+});
 for (const playlistName in playlists) {
-  const playlist = playlists[playlistName];
-  if (!playlist.url) throw new Error(`Missing url for playlist ${playlistName} in playlists.json`);
-  if (!playlist.min_date) playlist.min_date = "1970-01-01";
-  if (!playlist.ongoing) playlist.ongoing = false;
-  if (!playlist.accurate) playlist.accurate = false;
-  if (!playlist.path) playlist.path = playlistName;
-  if (!playlist.max_count) playlist.max_count = 100;
-  if (!playlist.disabled) playlist.disabled = false;
-  else delete playlists[playlistName];
+  const parsed = schema.parse(playlists[playlistName]);
+  parsed.path = parsed.path || playlistName;
+  if (parsed.disabled) delete playlists[playlistName]
+  else playlists[playlistName] = parsed;
 }
 
 function freeDiskGBs() {
@@ -180,16 +185,14 @@ function downloadVideos() {
         "--downloader",
         "aria2c",
         "--download-archive",
-        isAbsolute(playlist.path) ? resolve(playlist.path, ARCHIVE_FILENAME) : resolve('..', playlist.path, ARCHIVE_FILENAME),
+        resolve(playlist.path, ARCHIVE_FILENAME),
         "-o",
         outputName,
         video["url"],
       ];
       const $ytdlp = $({ sync: true, cwd: DOWNLOADING_FOLDER, stdio: 'inherit' })`yt-dlp ${flags}`;
       if ($ytdlp.exitCode === 0) cleanDownloadingFolder(video.id, playlist.path);
-      break;
     }
-    break;
   }
 }
 
@@ -280,7 +283,7 @@ function downloadMetadata(options: { force?: boolean, video?: boolean }) {
 
     if (!options.video || !existsSync(dumpFilepath)) {
       console.log(`Downloading metadata for ${playlistName}`);
-	  const tmpDumpFilepath = `${dumpFilepath}.tmp`;
+      const tmpDumpFilepath = `${dumpFilepath}.tmp`;
       $throw`yt-dlp -J --flat-playlist --extractor-args youtubetab:approximate_date ${playlist.url} > ${tmpDumpFilepath}`;
       $throw`mv ${tmpDumpFilepath} ${dumpFilepath}`
     }
@@ -319,4 +322,3 @@ program.command('bytes-per-second')
   .argument('[playlist-name]', 'Playlist to find max bps for', Object.keys(playlists)[0])
   .action(printAllBPS);
 program.parse();
-console.log('Done');
