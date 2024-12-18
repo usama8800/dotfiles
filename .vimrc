@@ -297,7 +297,7 @@ set smarttab
 set tabstop=4    " show existing tab with 4 spaces width
 set shiftwidth=4 " when indenting with '>', use 4 spaces width
 set shiftround
-set noexpandtab
+set expandtab
 set autoindent
 autocmd FileType python setlocal expandtab
 autocmd FileType c setlocal expandtab
