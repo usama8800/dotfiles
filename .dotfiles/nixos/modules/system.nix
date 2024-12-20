@@ -130,6 +130,7 @@
     unzip
     rclone
     wakeonlan
+    jq # json processor
     psmisc # ps utils ( killall, fuser )
     aria2 # downloader
     util-linux # for cfdisk ( tui partition manager )
