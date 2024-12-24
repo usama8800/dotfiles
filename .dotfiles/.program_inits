@@ -42,7 +42,7 @@ if [[ $(which lazygit 2>/dev/null) ]];then
   alias dfe='lazygit --git-dir=$HOME/.dotfiles/dotfiles.git/ --work-tree=$HOME '
 fi
 
-zellij_hostnames=("usama8800-server")
+zellij_hostnames=("usama8800-server" "usama8800-factory")
 if [[ $(which zellij 2>/dev/null) ]] && [[ ${zellij_hostnames[*]} =~ $(uname -n)  ]]; then
   # ./zellij.py
   if [ -z "$ZELLIJ" ]; then

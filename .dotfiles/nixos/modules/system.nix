@@ -108,7 +108,6 @@
     nix-alien # for nix-alien-find-libs for nix-ld
 
     # Development tools
-    git
     nil # nix language server
     alejandra # nix code formatter
     python3
@@ -130,6 +129,7 @@
     unzip
     rclone
     wakeonlan
+    jq # json processor
     psmisc # ps utils ( killall, fuser )
     aria2 # downloader
     util-linux # for cfdisk ( tui partition manager )
@@ -154,9 +154,29 @@
     ncdu # disk usage analyzer
     ventoy-full # bootable usb
   ];
+  programs.git.enable = true;
   programs.git.config = {
     user.name = "Usama Ahsan";
     user.email = "usama8800@gmail.com";
+    core.excludesFile = "/home/usama/.gitignore";
+    init.defaultBranch = "master";
+    commit.gpgSign = false;
+    push.recurseSubmodules = "check";
+    pull.rebase = false;
+    alias = {
+      st = "status --short";
+      last = "log -1 HEAD";
+      unstage = "restore --staged";
+      untracked = "ls-files --other --exclude-standard -x */*";
+      untracked-dotfiles = "ls-files --other --exclude-standard -x dotfiles.git";
+      add-modified = "add --update";
+    };
+    gui.pruneduringfetch = true;
+    "smartgit \"submodule\"" = {
+      fetchalways = false;
+      update = true;
+      initializenew = false;
+    };
   };
   virtualisation.docker = {
     enable = true;
