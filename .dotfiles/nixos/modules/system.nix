@@ -119,6 +119,7 @@
     nodejs_22
     shfmt # shell formatter
     just # command runner
+    pgadmin4
 
     # for python scripts
     pkgs-unstable.yt-dlp
