@@ -21,6 +21,8 @@
   networking.defaultGateway = "216.236.100.1";
   networking.nameservers = [
     "216.236.100.1"
+    "1.1.1.1"
+    "8.8.8.8"
   ];
 
   services.caddy.enable = true;
