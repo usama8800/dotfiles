@@ -10,4 +10,5 @@ cache
 .nvm
 .pub-cache
 *.local
-!.local
+# !.local
+local.*

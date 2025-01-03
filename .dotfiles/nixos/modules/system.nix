@@ -198,6 +198,11 @@
       host   all      all    172.0.0.0/8    scram-sha-256
     '';
   };
+  services.pgadmin = {
+    enable = true;
+    initialEmail = "usama8800@gmail.com";
+    initialPasswordFile = "/home/usama/.dotfiles/nixos/data/local.pgadmin";
+  };
 
   programs.nix-ld.enable = true;
   programs.nix-ld.libraries = with pkgs; [

@@ -11,6 +11,7 @@
     lutris
     mangohud
     prismlauncher
+    heroic # epic games and gog launcher
   ];
   environment.sessionVariables = {
     STEAM_EXTRA_COMPAT_TOOLS_PATHS = "\${HOME}/.steam/root/compatibilitytools.d";
