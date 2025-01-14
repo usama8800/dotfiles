@@ -60,6 +60,7 @@
     vscode # code editor
     obsidian # markdown editor
     beekeeper-studio # database browser
+    dbeaver-bin # database browser
     onlyoffice-bin # office suite
     floorp # browser
     nextcloud-client # cloud storage
@@ -71,6 +72,7 @@
     google-chrome # browser
     protonvpn-gui # vpn
     xournalpp # handwritten note taking
+    postman # rest client
   ];
   environment.sessionVariables = {
     PLAYWRIGHT_SKIP_VALIDATE_HOST_REQUIREMENTS = "true";
