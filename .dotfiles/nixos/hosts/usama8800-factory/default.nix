@@ -33,6 +33,9 @@
     "http://procurement_backend.jilaniplastic.com".extraConfig = ''
       reverse_proxy :9011
     '';
+    "http://jenkins.jilaniplastic.com".extraConfig = ''
+      reverse_proxy :8080
+    '';
     "http://procurement.jilaniplastic.com".extraConfig = ''
       root /var/www/procurement
       handle {
@@ -53,7 +56,6 @@
   services.jenkins = {
     enable = true;
     port = 8080;
-    prefix = "/jenkins";
   };
 
   system.stateVersion = "24.05";
