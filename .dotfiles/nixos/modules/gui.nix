@@ -49,7 +49,6 @@
     kdocker # put any app in the system tray
     x11vnc
 
-    smartgithg # git client
     kdePackages.kfind # file finder
     kdePackages.partitionmanager # partition manager
     kdePackages.filelight # disk usage analyzer
