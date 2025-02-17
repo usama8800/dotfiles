@@ -8,7 +8,7 @@
   # Keep here for rebuild script
   # system.nixos.label = "REPLACE_ME";
 
-  # manually: nix flake update; rebuild update
+  # manually: sudo nix flake update; rebuild update
   system.autoUpgrade = {
     enable = lib.mkDefault true;
     flake = "${config.users.users.usama.home}/.dotfiles/nixos";

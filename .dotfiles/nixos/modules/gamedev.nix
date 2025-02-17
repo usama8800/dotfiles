@@ -1,6 +1,10 @@
-{pkgs-unstable, ...}: {
+{
+  pkgs,
+  pkgs-unstable,
+  ...
+}: {
   environment.systemPackages = with pkgs-unstable; [
-    aseprite
+    pkgs.aseprite
     godot_4
   ];
 }

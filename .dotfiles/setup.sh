@@ -7,8 +7,10 @@ if [ ! -d "$HOME"/.dotfiles ]; then
 fi
 pushd "$HOME"/.dotfiles || exit 1
 if [ ! -d dotfiles.git ]; then
+  set +e
   git clone --bare git@github.com:usama8800/dotfiles.git
   success=$?
+  set -e
   if [ "$success" -ne 0 ]; then
     if [[ ! -f "$HOME/.ssh/id_ed25519.pub" ]]; then
       ssh-keygen -t ed25519 -f "$HOME/.ssh/id_ed25519" -C "usama8800@gmail.com"
