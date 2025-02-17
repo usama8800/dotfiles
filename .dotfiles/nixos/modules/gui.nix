@@ -49,7 +49,6 @@
     kdocker # put any app in the system tray
     x11vnc
 
-    smartgithg # git client
     kdePackages.kfind # file finder
     kdePackages.partitionmanager # partition manager
     kdePackages.filelight # disk usage analyzer
@@ -59,7 +58,6 @@
     speedcrunch # calculator
     vscode # code editor
     obsidian # markdown editor
-    beekeeper-studio # database browser
     dbeaver-bin # database browser
     onlyoffice-bin # office suite
     floorp # browser

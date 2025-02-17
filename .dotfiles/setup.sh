@@ -8,6 +8,15 @@ fi
 pushd "$HOME"/.dotfiles || exit 1
 if [ ! -d dotfiles.git ]; then
   git clone --bare git@github.com:usama8800/dotfiles.git
+  success=$?
+  if [ "$success" -ne 0 ]; then
+    if [[ ! -f "$HOME/.ssh/id_ed25519.pub" ]]; then
+      ssh-keygen -t ed25519 -f "$HOME/.ssh/id_ed25519" -C "usama8800@gmail.com"
+    fi
+    curl -F 'clbin=<-' https://qrenco.de <"$HOME/.ssh/id_ed25519.pub"
+    echo "Add this to github and run again"
+    exit 1
+  fi
 fi
 if [ ! -f setup.sh ]; then
   git --git-dir=dotfiles.git/ --work-tree="$HOME" checkout

@@ -4,6 +4,7 @@
   pkgs-unstable,
   ...
 }: {
+  system.autoUpgrade.enable = false;
   services.power-profiles-daemon.enable = false;
   powerManagement.enable = true;
   services.thermald.enable = true;
