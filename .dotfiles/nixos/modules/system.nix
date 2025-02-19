@@ -104,7 +104,7 @@
   };
   nix.settings.experimental-features = ["nix-command" "flakes"];
 
-  # To search, run: nix search nixpkgs wget
+  # To search, run: nix search nixpkgs wget 2> /dev/null
   environment.systemPackages = with pkgs; [
     nix-index # for nix-locate
     # nix-alien # for nix-alien-find-libs for nix-ld
@@ -135,7 +135,6 @@
     parted # partition manager
     fzf # fuzzy finder
     ripgrep # better grep
-    xclip # pipe to clipboard
     neofetch # styled system info
     bat # better cat
     atuin # shell history
@@ -151,6 +150,7 @@
     broot # file manager
     ncdu # disk usage analyzer
     ventoy-full # bootable usb
+    fx # json viewer
   ];
   programs.git.enable = true;
   programs.git.config = {
