@@ -33,6 +33,7 @@
     dates = "weekly";
     options = "--delete-older-than 7d";
   };
+  nix.optimise.automatic = true;
 
   # Define a user account. Don't forget to change password with ‘passwd’.
   users.users.usama = {
