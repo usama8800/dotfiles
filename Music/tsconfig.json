@@ -1,0 +1,11 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "moduleResolution": "node",
+    "lib": [
+      "ESNext"
+    ],
+    "module": "CommonJS",
+    "strictNullChecks": true,
+  },
+}
