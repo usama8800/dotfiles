@@ -10,8 +10,11 @@
 - Plasma
   - Mouse acceleration off
   - All Screen Panels
-    - Time format
-    - Taskbar pins
+    - Configure digital clock
+      - Time format "ddd d MMM"
+    - Taskbar
+      - Pins
+      - Ungroup
 - Dolphin
   - Remove folders panel (F7)
   - Toolbar
@@ -20,6 +23,13 @@
 - Vesktop
 - Nextcloud
 - Browser
+  - Settings
+    - Sleeping tabs
+    - New tab position
+    - Disable browser manager sidebar
+    - Search engine
+  - Clean toolbar
+  - Clean bookmarks
   - Bitwarden
     - Autolock never
   - Tampermonkey
@@ -31,5 +41,3 @@
   - `sudo su - postgres`
   - `psql`
   - `\password`
-- Python packages
-  - python-dotenv
