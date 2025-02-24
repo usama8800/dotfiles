@@ -3,6 +3,7 @@
 import { env as loadEnv } from '@usama8800/dotenvplus';
 import { program } from 'commander';
 import { ensureDirSync, existsSync, moveSync, readdirSync, readFileSync, readJsonSync, removeSync, writeFileSync } from 'fs-extra';
+import { countBy } from 'lodash';
 import { parse as parsePath, resolve } from 'path';
 import { z } from 'zod';
 import { $ as $$ } from 'zx';
@@ -149,7 +150,7 @@ type Playlist = {
   outputFormat: string;
   indices: string;
   genre?: Genre;
-  trackInfo?: Record<string, TrackInfo>;
+  trackInfo?: Record<string, TrackInfo[]>;
   disabled: boolean;
 };
 type EntryThumbnail = {
@@ -238,11 +239,6 @@ const REMOVED_PATH = resolve(VIDEOS_PATH, 'Removed');
 const ARCHIVE_FILENAME = '.archive';
 const METADATA_FILENAME = '.metadata';
 
-ensureDirSync(VIDEOS_PATH);
-ensureDirSync(AUDIOS_PATH);
-ensureDirSync(REMOVED_PATH);
-
-let playlists: { [key: string]: Playlist } = readJsonSync("playlists.json");
 const secondsSchema = z.union([z.string().transform((s, ctx) => {
   const num = +s;
   if (!isNaN(num)) return num;
@@ -257,6 +253,13 @@ const secondsSchema = z.union([z.string().transform((s, ctx) => {
   if (parts.length === 3) return parts[0] * 60 * 60 + parts[1] * 60 + parts[2];
   return parts[0] * 60 + parts[1];
 }), z.number()]);
+const trackInfoSchema = z.strictObject({
+  title: z.string(),
+  artist: z.string(),
+  genre: z.nativeEnum(Genre).optional(),
+  start: secondsSchema.default(0),
+  end: secondsSchema.optional(),
+});
 const schema = z.strictObject({
   videosPath: z.string().default(''),
   audiosPath: z.string().default(''),
@@ -265,144 +268,175 @@ const schema = z.strictObject({
   outputFormat: z.string().default('%(title)s - %(id)s.%(ext)s'),
   indices: z.string().regex(/((-?\d+|-?\d*[\-:]-?\d*|-?\d*:-?\d*:-?\d*),?)+/).default(':'),
   genre: z.nativeEnum(Genre).optional(),
-  trackInfo: z.record(z.string(), z.strictObject({
-    title: z.string(),
-    artist: z.string(),
-    genre: z.nativeEnum(Genre).optional(),
-    start: secondsSchema.default(0),
-    end: secondsSchema.optional(),
-  })).optional(),
+  trackInfo: z.record(z.string(), z.union([trackInfoSchema, trackInfoSchema.array()])).optional().transform((t) => {
+    for (const id in t) {
+      if (Array.isArray(t[id])) continue;
+      t[id] = [t[id]];
+    }
+    return t as Record<string, TrackInfo[]>;
+  }),
 }).refine((p) => {
+  // Check at least one genre is set (in playlist as a whole or per item)
   if (p.genre) return true;
   if (!p.trackInfo) return false;
-  return Object.values(p.trackInfo).every((t) => t.genre);
+  return Object.values(p.trackInfo).every((t) => t.every((ti) => ti.genre));
 });
-for (const playlistName in playlists) {
-  const parsed = schema.parse(playlists[playlistName]);
-  parsed.videosPath = parsed.videosPath || resolve(VIDEOS_PATH, playlistName);
-  parsed.audiosPath = parsed.audiosPath || resolve(AUDIOS_PATH, playlistName);
-  if (parsed.disabled) delete playlists[playlistName]
-  else playlists[playlistName] = parsed;
 
-  ensureDirSync(parsed.videosPath);
-  ensureDirSync(parsed.audiosPath);
-  ensureDirSync(resolve(REMOVED_PATH, playlistName));
+export function idFromFilename(filename: string) {
+  let whole = filename.split("- ").at(-1)!.split(".")[0].trim();
+  if (whole.length === 11) whole += '-0';
+  return {
+    id: whole.slice(0, 11),
+    part: +whole.slice(12),
+    whole,
+  };
 }
 
-function idFromFilename(filename: string) {
-  return filename.split("- ").at(-1)!.split(".")[0].trim()
+export function getDuplicateIdFiles(files: string[]): string[] {
+  const ret: string[] = [];
+  const idVideos: Record<string, [number[], string[]]> = {};
+  for (const file of files) {
+    if (file.startsWith('.') || file === 'temp.mp4') continue;
+    const { id, part } = idFromFilename(file);
+    if (!idVideos[id]) idVideos[id] = [[], []];
+    idVideos[id][0].push(part);
+    idVideos[id][1].push(file);
+  }
+  for (const id in idVideos) {
+    const [parts, files] = idVideos[id];
+    if (files.length === 1) continue;
+    if (parts.includes(0)) {
+      ret.push(...files);
+      continue;
+    }
+    const partCounts = countBy(parts);
+    if (Object.values(partCounts).some((c) => c > 1)) {
+      ret.push(...files);
+      continue;
+    }
+  }
+  return ret;
 }
 
-function removeDuplicateIdFiles() {
-  for (const playlistName in playlists) {
-    const playlist = playlists[playlistName];
-    const files = readdirSync(playlist.videosPath);
-    const idVideos: Record<string, string[]> = {};
-    for (const file of files) {
-      if (file.startsWith('.')) continue;
-      if (file.endsWith('.temp.mp4')) {
-        removeSync(resolve(playlist.videosPath, file));
-        continue;
+export function getIncompletePartFiles(files: string[], parts: Record<string, number>): string[] {
+  for (const file of files) {
+    if (file.startsWith('.') || file === 'temp.mp4') continue;
+    parts[idFromFilename(file).id] -= 1;
+  }
+  const ret: string[] = [];
+  for (const file of files) {
+    if (file.startsWith('.') || file === 'temp.mp4') continue;
+    const { id } = idFromFilename(file);
+    if (parts[id] !== 0 && !isNaN(parts[id])) ret.push(file)
+  }
+  return ret;
+}
+
+export function getFixedArchiveFile(archive: string[], files: string[]): string | undefined {
+  if (archive.length === 0) return;
+  const fileIds = files.map(idFromFilename).map(({ id }) => id);
+  const archiveIds = new Set(archive.map(a => a.slice('youtube '.length)));
+  let ret = '';
+  for (const archiveId of archiveIds) {
+    if (!archiveId) continue;
+    for (const fileId of fileIds) {
+      if (archiveId === fileId) {
+        ret += `youtube ${archiveId}\n`;
+        break;
       }
-      const id = idFromFilename(file);
-      if (!idVideos[id]) idVideos[id] = [];
-      idVideos[id].push(file);
     }
-    for (const id in idVideos) {
-      const files = idVideos[id];
-      if (files.length === 1) continue;
-      for (const file of files) {
-        moveSync(resolve(playlist.videosPath, file), resolve(REMOVED_PATH, playlistName, file), { overwrite: true });
+  }
+  return ret.slice(0, -1);
+}
+
+export function getFilesNotInMetadata(metadata: string[], files: string[]): string[] {
+  if (metadata.length === 0) return [];
+  const ret: string[] = [];
+  for (const file of files) {
+    if (file.startsWith('.')) continue;
+    if (metadata.includes(idFromFilename(file).id)) continue;
+    ret.push(file);
+  }
+  return ret;
+}
+
+type CutAction = {
+  inputFile: string;
+  outputFile?: string;
+  start?: number;
+  end?: number;
+};
+export function getCutActions(tracksInfo: TrackInfo[], files: string[], videosPath: string): CutAction[] {
+  if (files.length === 0) return [];
+  const id = idFromFilename(files[0]).id;
+  const mainFile = files.find(f => idFromFilename(f).whole === `${id}-0`);
+  if (tracksInfo.length === 1 && mainFile && !tracksInfo[0].start && !tracksInfo[0].end) return [];
+
+  const onlyMainFileAvailable = files.length === 1 && mainFile;
+  const notAllPartsAvailable = files.length !== tracksInfo.length;
+  const incorrectlyNumberedSingleFile = files.length === 1 && idFromFilename(files[0]).part > 0;
+  let invalid = false;
+  if (!onlyMainFileAvailable && (notAllPartsAvailable || incorrectlyNumberedSingleFile)) invalid = true;
+  if (!invalid && files.length === tracksInfo.length) {
+    for (let i = 0; i < tracksInfo.length; i++) {
+      const trackInfo = tracksInfo[i];
+      const part = tracksInfo.length === 1 ? i : i + 1;
+      const trackFile = files.find(f => idFromFilename(f).whole === `${id}-${part}`);
+      if (!trackFile) {
+        invalid = true;
+        break;
+      }
+      const videoDuration = getVideoDuration(resolve(videosPath, trackFile));
+      const trackDuration = getTrackDuration(trackInfo, videoDuration);
+      const diff = videoDuration - trackDuration;
+      if (tracksInfo.length === 1) {
+        if (diff > 1) continue;
+        if (diff < -1) {
+          invalid = true;
+          break;
+        }
+        return [];
+      }
+      if (Math.abs(diff) > 1) {
+        invalid = true;
+        break;
       }
     }
   }
-}
+  if (invalid || (!mainFile && tracksInfo.length === 1))
+    return files.map(f => ({ inputFile: f }));
+  if (!mainFile) return [];
 
-function removeArchiveIdsForDeletedFiles() {
-  for (const playlistName in playlists) {
-    const playlist = playlists[playlistName];
-    if (!existsSync(resolve(playlist.videosPath, ARCHIVE_FILENAME))) continue;
-    const archive = readFileSync(resolve(playlist.videosPath, ARCHIVE_FILENAME), 'utf-8').split(/\r?\n/);
-    if (archive.length === 0) continue;
-    const archiveSet = new Set(archive);
-    const encounteredSet = new Set();
-    const files = readdirSync(playlist.videosPath);
-    for (const file of files) {
-      if (file.startsWith('.')) continue;
-      const id = idFromFilename(file);
-      encounteredSet.add(id);
-    }
-    const diff = archiveSet.difference(encounteredSet);
-    if (diff.size === 0) continue;
-    writeFileSync(resolve(playlist.videosPath, ARCHIVE_FILENAME), [...diff].join('\n'));
+  if (tracksInfo.length === 1)
+    return [{
+      inputFile: mainFile!,
+      outputFile: mainFile,
+      start: tracksInfo[0].start,
+      end: tracksInfo[0].end,
+    }];
+  const ret: CutAction[] = [];
+  for (let i = 0; i < tracksInfo.length; i++) {
+    const trackInfo = tracksInfo[i];
+    ret.push({
+      inputFile: mainFile,
+      outputFile: parsePath(mainFile).name + `-${i + 1}.mp4`,
+      start: trackInfo.start,
+      end: trackInfo.end,
+    });
   }
-}
-
-function removeFilesNotInMetadata() {
-  for (const playlistName in playlists) {
-    const playlist = playlists[playlistName];
-    if (!existsSync(resolve(playlist.videosPath, METADATA_FILENAME))) continue;
-    const metadata = readFileSync(resolve(playlist.videosPath, METADATA_FILENAME), 'utf-8').split(/\r?\n/);
-    if (metadata.length === 0) continue;
-    const files = readdirSync(playlist.videosPath);
-    for (const file of files) {
-      if (file.startsWith('.')) continue;
-      if (metadata.includes(idFromFilename(file))) continue;
-      moveSync(resolve(playlist.videosPath, file), resolve(REMOVED_PATH, playlistName, file), { overwrite: true });
-    }
-  }
-}
-
-function removeAudiosNotInVideos() {
-  for (const playlistName in playlists) {
-    const playlist = playlists[playlistName];
-    const videoFiles = readdirSync(playlist.videosPath).map(f => parsePath(f).name);
-    const audioFiles = readdirSync(playlist.audiosPath);
-    for (const audioFile of audioFiles) {
-      if (videoFiles.includes(parsePath(audioFile).name)) continue;
-      removeSync(resolve(playlist.audiosPath, audioFile));
-    }
-  }
+  return ret;
 }
 
 function getVideoDuration(filepath: string): number {
+  if (filepath.startsWith('/test/')) return +filepath.match(/test\/(\d+)/)![1];
   const $ffprobe = $({ sync: true, stdio: ['ignore', 'pipe', 'ignore'] })`ffprobe -v error -show_streams -select_streams v:0 -of json ${filepath}`;
   const output = JSON.parse($ffprobe.stdout);
   return +output.streams[0].duration;
 }
 
-function cutVideos() {
-  console.log('Cutting videos');
-  for (const playlistName in playlists) {
-    const playlist = playlists[playlistName];
-    if (!playlist.trackInfo) continue;
-    const files = readdirSync(playlist.videosPath);
-    for (const file of files) {
-      if (file.startsWith('.') || parsePath(file).ext !== '.mp4') continue;
-      const id = idFromFilename(file);
-      const trackInfo = playlist.trackInfo[id];
-      if (!trackInfo) continue;
-      if (!trackInfo.start && !trackInfo.end) continue;
-      const videoDuration = getVideoDuration(resolve(playlist.videosPath, file));
-      const cutDuration = (trackInfo.end ?? videoDuration) - trackInfo.start;
-      const diff = videoDuration - cutDuration;
-      if (diff < -1) moveSync(resolve(playlist.videosPath, file), resolve(REMOVED_PATH, playlistName, file), { overwrite: true });
-      if (diff < 1) continue;
-      console.log(`Cutting ${file}`);
-      const args = ['-y', '-i', resolve(playlist.videosPath, file)];
-      if (trackInfo.start) args.push('-ss', trackInfo.start.toString());
-      if (trackInfo.end) args.push('-to', trackInfo.end.toString());
-      args.push('-c:v', 'libx264', '-c:a', 'aac', resolve(playlist.videosPath, parsePath(file).name + '.temp.mp4'));
-      const $ffmpeg = $({ sync: true, stdio: ['ignore', 'inherit', 'inherit'] })`ffmpeg ${args}`;
-      if ($ffmpeg.exitCode !== 0) {
-        console.log(`Failed to cut ${file}`);
-        removeSync(resolve(playlist.videosPath, parsePath(file).name + '.temp.mp4'));
-        continue;
-      }
-      removeSync(resolve(playlist.audiosPath, parsePath(file).name + '.mp3'));
-      moveSync(resolve(playlist.videosPath, parsePath(file).name + '.temp.mp4'), resolve(playlist.videosPath, file), { overwrite: true });
-    }
-  }
+function getTrackDuration(track: TrackInfo, videoDuration: number): number {
+  if (track.end) return track.end - track.start;
+  return videoDuration - track.start;
 }
 
 const apRegex = new RegExp('^.*?Atom \"(.+?)\" contains: (.*)$');
@@ -425,7 +459,126 @@ function getAtomicParsleyData(filepath: string) {
   return { title, artist, genre };
 }
 
-function tagVideos() {
+function removeTempFiles() {
+  for (const playlistName in playlists) {
+    const playlist = playlists[playlistName];
+    const videoFiles = readdirSync(playlist.videosPath);
+    for (const file of videoFiles) {
+      if (file === 'temp.mp4') {
+        removeSync(resolve(playlist.videosPath, file));
+      }
+    }
+    const audioFiles = readdirSync(playlist.audiosPath);
+    for (const file of audioFiles) {
+      if (file === 'temp.mp3') {
+        removeSync(resolve(playlist.videosPath, file));
+      }
+    }
+  }
+}
+
+function removeDuplicateIdFiles() {
+  for (const playlistName in playlists) {
+    const playlist = playlists[playlistName];
+    const files = readdirSync(playlist.videosPath);
+    const duplicates = getDuplicateIdFiles(files);
+    for (const file of duplicates) {
+      moveSync(resolve(playlist.videosPath, file), resolve(REMOVED_PATH, playlistName, file), { overwrite: true });
+    }
+  }
+}
+
+function removeIncompletePartFiles() {
+  for (const playlistName in playlists) {
+    const playlist = playlists[playlistName];
+    if (!playlist.trackInfo) continue;
+    const files = readdirSync(playlist.videosPath);
+    const parts: Record<string, number> = {};
+    for (const id in playlist.trackInfo) {
+      parts[id] = playlist.trackInfo[id].length;
+    }
+    const incomplete = getIncompletePartFiles(files, parts);
+    for (const file of incomplete) {
+      removeSync(resolve(playlist.videosPath, file));
+    }
+  }
+}
+
+function removeArchiveIdsForDeletedFiles() {
+  for (const playlistName in playlists) {
+    const playlist = playlists[playlistName];
+    if (!existsSync(resolve(playlist.videosPath, ARCHIVE_FILENAME))) continue;
+    const archive = readFileSync(resolve(playlist.videosPath, ARCHIVE_FILENAME), 'utf-8').split(/\r?\n/);
+    const files = readdirSync(playlist.videosPath);
+    const newArchive = getFixedArchiveFile(archive, files);
+    if (newArchive !== undefined) writeFileSync(resolve(playlist.videosPath, ARCHIVE_FILENAME), newArchive);
+  }
+}
+
+function removeFilesNotInMetadata() {
+  for (const playlistName in playlists) {
+    const playlist = playlists[playlistName];
+    if (!existsSync(resolve(playlist.videosPath, METADATA_FILENAME))) continue;
+    const metadata = readFileSync(resolve(playlist.videosPath, METADATA_FILENAME), 'utf-8').split(/\r?\n/);
+    const files = readdirSync(playlist.videosPath);
+
+    const toDelete = getFilesNotInMetadata(metadata, files);
+    for (const file of toDelete) {
+      moveSync(resolve(playlist.videosPath, file), resolve(REMOVED_PATH, playlistName, file), { overwrite: true });
+    }
+  }
+}
+
+function removeAudiosNotInVideos() {
+  for (const playlistName in playlists) {
+    const playlist = playlists[playlistName];
+    const videoFiles = readdirSync(playlist.videosPath).map(f => parsePath(f).name);
+    const audioFiles = readdirSync(playlist.audiosPath);
+    for (const audioFile of audioFiles) {
+      if (videoFiles.includes(parsePath(audioFile).name)) continue;
+      removeSync(resolve(playlist.audiosPath, audioFile));
+    }
+  }
+}
+
+export function cutVideos() {
+  console.log('Cutting videos');
+  for (const playlistName in playlists) {
+    const playlist = playlists[playlistName];
+    if (!playlist.trackInfo) continue;
+    const files = readdirSync(playlist.videosPath);
+    for (const id in playlist.trackInfo) {
+      const tracksInfo = playlist.trackInfo[id];
+      const trackFiles = files.filter(f => idFromFilename(f).id === id);
+      const cutActions = getCutActions(tracksInfo, trackFiles, playlist.videosPath);
+      let cutted = false;
+      for (const { inputFile, outputFile, start, end } of cutActions) {
+        if (!outputFile) {
+          removeSync(resolve(playlist.videosPath, inputFile));
+          continue;
+        }
+        cutted = true;
+        console.log(`Cutting ${inputFile} to ${outputFile} from ${start} to ${end}`);
+        const args = ['-y', '-i', resolve(playlist.videosPath, inputFile)];
+        if (start) args.push('-ss', start.toString());
+        if (end) args.push('-to', end.toString());
+        args.push('-c:v', 'libx264', '-c:a', 'aac', resolve(playlist.videosPath, 'temp.mp4'));
+        const $ffmpeg = $({ sync: true, stdio: ['ignore', 'inherit', 'inherit'] })`ffmpeg ${args}`;
+        if ($ffmpeg.exitCode !== 0) {
+          console.log(`Failed to cut`);
+          removeSync(resolve(playlist.videosPath, 'temp.mp4'));
+          continue;
+        }
+        removeSync(resolve(playlist.audiosPath, parsePath(outputFile).name + '.mp3'));
+        moveSync(resolve(playlist.videosPath, 'temp.mp4'), resolve(playlist.videosPath, outputFile), { overwrite: true });
+      }
+      if (tracksInfo.length > 1 && cutted)
+        removeSync(resolve(playlist.videosPath, trackFiles.find(f => idFromFilename(f).part === 0)!));
+    }
+  }
+}
+
+export function tagVideos() {
   for (const playlistName in playlists) {
     const playlist = playlists[playlistName];
     if (!playlist.trackInfo) {
@@ -435,10 +588,15 @@ function tagVideos() {
     const files = readdirSync(playlist.videosPath);
     for (const file of files) {
       if (file.startsWith('.') || parsePath(file).ext !== '.mp4') continue;
-      const id = idFromFilename(file);
-      const trackInfo = playlist.trackInfo[id];
-      if (!trackInfo) {
+      const { id, part } = idFromFilename(file);
+      const tracksInfo = playlist.trackInfo[id];
+      if (!tracksInfo) {
         console.log(`No track info for id ${id} in '${playlistName}'`);
+        continue;
+      }
+      const trackInfo = tracksInfo[part === 0 ? 0 : part - 1];
+      if (!trackInfo) {
+        console.log(`No track info for part ${part} of id ${id} in '${playlistName}'`);
         continue;
       }
       const oldInfo = getAtomicParsleyData(resolve(playlist.videosPath, file));
@@ -459,7 +617,7 @@ function tagVideos() {
   }
 }
 
-function convertToMp3s() {
+export function convertToMp3s() {
   console.log("Converting videos to mp3s")
   for (const playlistName in playlists) {
     const playlist = playlists[playlistName];
@@ -469,25 +627,25 @@ function convertToMp3s() {
       const outputFilepath = resolve(playlist.audiosPath, parsePath(file).name + '.mp3');
       if (existsSync(outputFilepath)) continue;
       console.log(`Converting ${file} to mp3`);
-      const $ffmpeg = $({ sync: true, stdio: ['ignore', 'ignore', 'ignore'] })`ffmpeg -y -i ${resolve(playlist.videosPath, file)} -codec:a libmp3lame -qscale:a 0 ${outputFilepath + '.temp.mp3'}`;
+      const $ffmpeg = $({ sync: true, stdio: ['ignore', 'ignore', 'ignore'] })`ffmpeg -y -i ${resolve(playlist.videosPath, file)} -codec:a libmp3lame -qscale:a 0 temp.mp3`;
       if ($ffmpeg.exitCode !== 0) {
         console.log(`Failed to convert ${file}`);
         continue;
       }
-      moveSync(outputFilepath + '.temp.mp3', outputFilepath, { overwrite: true });
+      moveSync('temp.mp3', outputFilepath, { overwrite: true });
     }
   }
 }
 
-function downloadVideos() {
+export function downloadVideos() {
   for (const playlistName in playlists) {
     console.log(`Downloading playlist '${playlistName}'`);
     const playlist = playlists[playlistName];
-    $({ sync: true, stdio: ['ignore', 'inherit', 'inherit'] })`yt-dlp -f 'bestvideo[height<=1080][ext=mp4]+bestaudio[ext=m4a]/best[ext=mp4]/best' --no-mtime --playlist-items ${playlist.indices} -o ${resolve(playlist.videosPath, playlist.outputFormat)}  --download-archive ${resolve(playlist.videosPath, ARCHIVE_FILENAME)} ${playlist.url}`;
+    $({ sync: true, stdio: ['ignore', 'inherit', 'inherit'] })`yt-dlp -f 'bestvideo[height<=1080][ext=mp4]+bestaudio[ext=m4a]/best[ext=mp4]/best' --no-mtime --playlist-items ${playlist.indices} -o ${resolve(playlist.videosPath, playlist.outputFormat)} --download-archive ${resolve(playlist.videosPath, ARCHIVE_FILENAME)} ${playlist.url}`;
   }
 }
 
-function downloadMetadata() {
+export function downloadMetadata() {
   for (const playlistName in playlists) {
     console.log(`Downloading metadata for '${playlistName}'`);
     const playlist = playlists[playlistName];
@@ -501,15 +659,20 @@ function downloadMetadata() {
   }
 }
 
-function clean() {
+export function clean() {
+  removeTempFiles();
   removeDuplicateIdFiles();
+  removeIncompletePartFiles();
   removeArchiveIdsForDeletedFiles();
   removeFilesNotInMetadata();
   removeAudiosNotInVideos();
 }
 
-function main() {
+export function main() {
+  // console.log(existsSync(resolve('Videos', 'Best Classics', `Prokofiev - Romeo and Juliet, No. 13 Dance of the Knights (Mariinsky Orchestra, Valery Gergiev) - s_9Uw9bCM30.mp4`)));
+  removeTempFiles();
   removeDuplicateIdFiles();
+  removeIncompletePartFiles();
   removeArchiveIdsForDeletedFiles();
 
   downloadVideos();
@@ -517,39 +680,58 @@ function main() {
 
   removeDuplicateIdFiles();
   removeFilesNotInMetadata();
-  removeArchiveIdsForDeletedFiles();
 
   cutVideos();
   tagVideos();
   convertToMp3s();
 
   removeAudiosNotInVideos();
+  removeTempFiles();
 }
 
-program
-  .nameFromFilename(__filename)
-  .description('Download playlists listed in playlists.json')
-program.command('run', { hidden: true, isDefault: true })
-  .action(main);
-program.command('download')
-  .description('Download videos')
-  .alias('d')
-  .action(downloadVideos);
-program.command('metadata')
-  .description('Update metadata')
-  .alias('m')
-  .action(downloadMetadata);
-program.command('cut')
-  .description('Cut videos')
-  .action(cutVideos);
-program.command('convert')
-  .description('Convert videos to mp3s')
-  .alias('conv')
-  .action(convertToMp3s);
-program.command('tag')
-  .description('Tag videos')
-  .action(tagVideos);
-program.command('clean')
-  .description('Delete unwanted files')
-  .action(clean);
-program.parse();
+let playlists: { [key: string]: Playlist };
+if (require.main === module) {
+  ensureDirSync(VIDEOS_PATH);
+  ensureDirSync(AUDIOS_PATH);
+  ensureDirSync(REMOVED_PATH);
+  playlists = readJsonSync("playlists.json");
+  for (const playlistName in playlists) {
+    const parsed = schema.parse(playlists[playlistName]);
+    parsed.videosPath = parsed.videosPath || resolve(VIDEOS_PATH, playlistName);
+    parsed.audiosPath = parsed.audiosPath || resolve(AUDIOS_PATH, playlistName);
+    if (parsed.disabled) delete playlists[playlistName]
+    else playlists[playlistName] = parsed;
+
+    ensureDirSync(parsed.videosPath);
+    ensureDirSync(parsed.audiosPath);
+    ensureDirSync(resolve(REMOVED_PATH, playlistName));
+  }
+
+  program
+    .nameFromFilename(__filename)
+    .description('Download playlists listed in playlists.json')
+  program.command('run', { hidden: true, isDefault: true })
+    .action(main);
+  program.command('download')
+    .description('Download videos')
+    .alias('d')
+    .action(downloadVideos);
+  program.command('metadata')
+    .description('Update metadata')
+    .alias('m')
+    .action(downloadMetadata);
+  program.command('cut')
+    .description('Cut videos')
+    .action(cutVideos);
+  program.command('convert')
+    .description('Convert videos to mp3s')
+    .alias('conv')
+    .action(convertToMp3s);
+  program.command('tag')
+    .description('Tag videos')
+    .action(tagVideos);
+  program.command('clean')
+    .description('Delete unwanted files')
+    .action(clean);
+  program.parse();
+}
