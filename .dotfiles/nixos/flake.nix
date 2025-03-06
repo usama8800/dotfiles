@@ -21,7 +21,6 @@
     nix-alien,
     home-manager,
     plasma-manager,
-    disko,
     ...
   }: {
     nixosConfigurations = let
@@ -38,7 +37,6 @@
           modules = [
             ./modules/system.nix
             ./hosts/${hostname}
-            disko.nixosModules.disko
             home-manager.nixosModules.home-manager
             {
               home-manager.sharedModules = [plasma-manager.homeManagerModules.plasma-manager];

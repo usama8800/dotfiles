@@ -146,6 +146,7 @@
     # TUIs
     vim
     btop # system monitor
+    bandwhich # network monitor
     lazygit # git client
     lazydocker # docker client
     broot # file manager
