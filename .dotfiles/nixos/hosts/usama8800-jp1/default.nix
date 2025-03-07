@@ -4,7 +4,7 @@
   pkgs,
   ...
 }: {
-  networking.hostName = "usama8800-farooqsb";
+  networking.hostName = "usama8800-jp1";
 
   imports = [
     ./hardware-configuration.nix

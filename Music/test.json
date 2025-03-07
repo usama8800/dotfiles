@@ -1,0 +1,23 @@
+{
+  "Test": {
+    "url": "https://www.youtube.com/playlist?list=PLZY56D5QXJZ-cRXYxAwHhXNDcaQEPGLR9",
+    "genre": "Pop",
+    "trackInfo": {
+      "EtapU5nI6G4": [
+        {
+          "title": "Smells like teen spirit",
+          "artist": "Nirvana",
+          "genre": "Instrumental",
+          "end": "3:31"
+        },
+        {
+          "title": "In Bloom",
+          "artist": "Nirvana",
+          "genre": "Instrumental",
+          "start": "3:30",
+          "end": "7:31"
+        }
+      ]
+    }
+  }
+}

@@ -35,52 +35,57 @@
   };
 
   virtualisation.vmware.host.enable = true;
-  environment.systemPackages = with pkgs-unstable; [
-    xorg.libxcvt
-    clinfo
-    virtualglLib
-    vulkan-tools
-    wayland-utils
-    pciutils
-    aha
-    fwupd
-    libnotify # notify-send
-    libsForQt5.kconfig # kde config cli
-    kdocker # put any app in the system tray
-    x11vnc
+  environment.systemPackages =
+    (with pkgs; [
+      xorg.libxcvt
+      clinfo
+      virtualglLib
+      vulkan-tools
+      wayland-utils
+      pciutils
+      aha
+      fwupd
+      xclip # pipe to clipboard
+      libnotify # notify-send
+      libsForQt5.kconfig # kde config cli
+      kdocker # put any app in the system tray
+    ])
+    ++ (with pkgs-unstable; [
+      x11vnc # vnc server
+      tigervnc # vncpasswd
 
-    smartgithg # git client
-    kdePackages.kfind # file finder
-    kdePackages.partitionmanager # partition manager
-    kdePackages.filelight # disk usage analyzer
-    kdePackages.kate # text editor
-    remmina # rdp / vnc client
-    anydesk # remote server and cliet
-    speedcrunch # calculator
-    vscode # code editor
-    obsidian # markdown editor
-    beekeeper-studio # database browser
-    dbeaver-bin # database browser
-    onlyoffice-bin # office suite
-    floorp # browser
-    nextcloud-client # cloud storage
-    variety # wallpapers
-    mpv # video player
-    pkgs.beeper # messaging app
-    vesktop # discord
-    krita # image editor
-    google-chrome # browser
-    protonvpn-gui # vpn
-    xournalpp # handwritten note taking
-    postman # rest client
-  ];
+      kdePackages.kfind # file finder
+      kdePackages.partitionmanager # partition manager
+      kdePackages.filelight # disk usage analyzer
+      kdePackages.kate # text editor
+      remmina # rdp / vnc client
+      anydesk # remote server and cliet
+      speedcrunch # calculator
+      vscode # code editor
+      obsidian # markdown editor
+      dbeaver-bin # database browser
+      onlyoffice-bin # office suite
+      floorp # browser
+      nextcloud-client # cloud storage
+      variety # wallpapers
+      mpv # video player
+      beeper # messaging app
+      vesktop # discord
+      krita # image editor
+      google-chrome # browser
+      protonvpn-gui # vpn
+      xournalpp # handwritten note taking
+      postman # rest client
+    ]);
   environment.sessionVariables = {
     PLAYWRIGHT_SKIP_VALIDATE_HOST_REQUIREMENTS = "true";
   };
 
+  # Set password with `vncpasswd ~/.vnc/passwd`
   services.xserver.displayManager.sessionCommands = ''
     ${pkgs-unstable.x11vnc}/bin/x11vnc -wait 15 -noxdamage -rfbauth "$HOME"/.vnc/passwd -display :0 -forever -o /var/log/x11vnc.log -bg
   '';
+
   systemd.user.services.nextcloud = {
     serviceConfig = {
       ExecStart = "${pkgs-unstable.nextcloud-client}/bin/nextcloud --background";

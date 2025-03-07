@@ -1,0 +1,33 @@
+{
+  "name": "youtube-playlists-download",
+  "version": "1.0.0",
+  "scripts": {
+    "dev": "tsx watch YoutubePlaylistsDownload.ts",
+    "start": "tsx YoutubePlaylistsDownload.ts",
+    "test": "mocha --bail --require tsx test.ts"
+  },
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "@usama8800/dotenvplus": "^2.2.0",
+    "commander": "^12.1.0",
+    "date-fns": "^4.1.0",
+    "execa": "^9.5.2",
+    "fs-extra": "^11.2.0",
+    "lodash": "^4.17.21",
+    "zod": "^3.24.1",
+    "zx": "^8.2.4"
+  },
+  "devDependencies": {
+    "@types/chai": "5.0.1",
+    "@types/fs-extra": "^11.0.4",
+    "@types/lodash": "^4.17.13",
+    "@types/mocha": "10.0.10",
+    "@types/node": "^22.10.1",
+    "chai": "5.2.0",
+    "mocha": "11.1.0",
+    "tsx": "^4.19.2",
+    "typescript": "^5.7.2"
+  }
+}

@@ -8,9 +8,9 @@
   # Keep here for rebuild script
   # system.nixos.label = "REPLACE_ME";
 
-  # manually: nix flake update; rebuild update
+  # manually: sudo nix flake update; rebuild update
   system.autoUpgrade = {
-    enable = true;
+    enable = lib.mkDefault true;
     flake = "${config.users.users.usama.home}/.dotfiles/nixos";
     flags = [
       "--update-input"
@@ -33,6 +33,7 @@
     dates = "weekly";
     options = "--delete-older-than 7d";
   };
+  nix.optimise.automatic = true;
 
   # Define a user account. Don't forget to change password with ‘passwd’.
   users.users.usama = {
@@ -43,7 +44,8 @@
     openssh.authorizedKeys.keys = [
       "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIAH3VlNgMTY5pjrKWUDGu39WMcpCfiK0fwjWdwOkXDFT" # usama8800-desktop
       "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIEBggZsRBOrgwDyVwDlaGlvRw/X/c7U0vsUK7G9I/IJD" # usama8800-lenovo
-      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIE0JGch0tl4eyI947ysKtqsMIOuc7o5aiz9IqHS9ZuG6" # usama8800-farooqsb
+      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIE0JGch0tl4eyI947ysKtqsMIOuc7o5aiz9IqHS9ZuG6" # usama8800-jp1
+      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIBfGh4EBgutHF2mZHcIzrb4Y8S5XpB2JrT5D/3uYKAkk" # usama8800-jp2
       "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAINEo0SAQiP5h7xNUAIyPCBS8ty204K+glVQj614JujX0" # usama8800-server
       "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAID8EJOl5XWDl/I654MUXHFddtJHqeO/VjNf4a3pIWhU3" # usama8800-factory
       "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIK3OIp9D2qjgOC9Cr2CY0y+9NLODpjY4leEEH9ySlrOh" # usama8800-vm
@@ -103,19 +105,14 @@
   };
   nix.settings.experimental-features = ["nix-command" "flakes"];
 
-  # To search, run: nix search nixpkgs wget
+  # To search, run: nix search nixpkgs wget 2> /dev/null
   environment.systemPackages = with pkgs; [
     nix-index # for nix-locate
-    nix-alien # for nix-alien-find-libs for nix-ld
+    # nix-alien # for nix-alien-find-libs for nix-ld
 
     # Development tools
     nil # nix language server
     alejandra # nix code formatter
-    python3
-    # python -m venv .venv --copies; source .venv/bin/activate
-    # nix shell github:GuillaumeDesforges/fix-python
-    # fix-python --venv .venv
-    python312Packages.pip
     fnm # fast node manager
     nodejs_22
     shfmt # shell formatter
@@ -139,7 +136,6 @@
     parted # partition manager
     fzf # fuzzy finder
     ripgrep # better grep
-    xclip # pipe to clipboard
     neofetch # styled system info
     bat # better cat
     atuin # shell history
@@ -150,11 +146,13 @@
     # TUIs
     vim
     btop # system monitor
+    bandwhich # network monitor
     lazygit # git client
     lazydocker # docker client
     broot # file manager
     ncdu # disk usage analyzer
     ventoy-full # bootable usb
+    fx # json viewer
   ];
   programs.git.enable = true;
   programs.git.config = {

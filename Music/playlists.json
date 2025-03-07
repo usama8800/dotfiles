@@ -3,6 +3,12 @@
     "url": "https://www.youtube.com/playlist?list=PLZY56D5QXJZ9IISu_gzegHwZURZYFQc8z",
     "genre": "Classical",
     "trackInfo": {
+      "s_9Uw9bCM30": {
+        "title": "Romeo and Juliet No. 13, Op. 64 \"Dance of the Knights\"",
+        "artist": "Sergei Prokofiev",
+        "start": 8,
+        "end": "5:04"
+      },
       "LEXsrlk48-Y": {
         "title": "Danzon Cubano",
         "artist": "Aaron Copland"
@@ -20,15 +26,17 @@
         "artist": "Andre Rieu"
       },
       "2B9kZ2jguwk": {
-        "title": "Humoresque, Op. 101, B. 187, No. 7 in G flat major - Augustin Hadelich",
+        "title": "Humoresque No. 7 in G flat major, Op. 101, B. 187 - Augustin Hadelich",
         "artist": "Antonin Dvorak"
       },
-      "uOmaQSqnPfw": {
-        "start": 17,
-        "end": "43:28",
-        "title": "Symphony No. 9 in E minor, Op. 95, B. 178, \"From the New World\"",
-        "artist": "Antonin Dvorak"
-      },
+      "uOmaQSqnPfw": [
+        {
+          "start": 17,
+          "end": "43:28",
+          "title": "Symphony No. 9 in E minor, Op. 95, B. 178, \"From the New World\"",
+          "artist": "Antonin Dvorak"
+        }
+      ],
       "wwaSSQnceu8": {
         "start": 0,
         "end": "2:49",
@@ -710,6 +718,10 @@
     "url": "https://www.youtube.com/playlist?list=PLZY56D5QXJZ_WyaiL6BlA7dV2UiwZOzzn",
     "genre": "Pop",
     "trackInfo": {
+      "KHLNSxe5Y8A": {
+        "title": "Sammi Meri Waar",
+        "artist": "Umair Jaswal, Quratulain Balouch"
+      },
       "zZasH6qkn8M": {
         "title": "Teri Deewani",
         "artist": "Kailash Kher"

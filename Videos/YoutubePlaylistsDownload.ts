@@ -1,114 +1,24 @@
 #!/usr/bin/env -S npx tsx
 
 import { Option, program } from 'commander';
-import { differenceInHours, format, isAfter, parse } from 'date-fns';
+import { differenceInHours, format } from 'date-fns';
 import { ensureDirSync, existsSync, moveSync, readdirSync, readFileSync, readJsonSync, rmSync, statfsSync, statSync, writeJsonSync } from 'fs-extra';
 import { compact, padStart } from 'lodash';
 import { resolve } from 'path';
 import { z } from 'zod';
-import { $ as $$ } from 'zx';
-
-const $throw = $$.sync;
-
-const $ = $throw({
-  nothrow: true,
-});
+import { $ } from 'zx';
+import { playlists as inputPlaylists } from './playlists';
+import { Entry, Metadata, Playlist, Video } from './utils';
 
 const DUMP_FILENAME = '.dump.json';
 const VIDEOS_FILENAME = '.videos.json';
 const ARCHIVE_FILENAME = '.archive';
-const DOWNLOADING_FOLDER = "Downloading";
-const BYTES_PER_SECOND = 463_000;
+const DOWNLOADING_FOLDER = 'Downloading';
+const BYTES_PER_SECOND = 566_000;
 const MIN_GBS_LEFT = 2;
 const MIN_HOURS_TO_UPDATE_METADATA = 6;
 
-type Playlist = {
-  url: string;
-  min_date: string;
-  ongoing: boolean;
-  accurate: boolean;
-  path: string;
-  max_count: number;
-  disabled: boolean;
-};
-type EntryThumbnail = {
-  url: string;
-  height: number;
-  width: number;
-};
-type Thumbnail = EntryThumbnail & {
-  preference: number;
-  id: string;
-  resolution: string;
-};
-type Entry = {
-  _type: "url";
-  ie_key: string;
-  id: string;
-  url: string;
-  title: string;
-  description: string;
-  duration: number;
-  channel_id: null;
-  channel: null;
-  channel_url: null;
-  uploader: null;
-  uploader_id: null;
-  uploader_url: null;
-  thumbnails: EntryThumbnail[];
-  // Null when video is private
-  timestamp: number | null;
-  release_timestamp: null;
-  availability: null;
-  view_count: number | null;
-  live_status: null;
-  channel_is_verified: null;
-  __x_forwarded_for_ip: null;
-};
-type Version = {
-  version: string;
-  current_git_head: null;
-  release_git_head: string;
-  repository: string;
-};
-type Metadata = {
-  id: string;
-  channel: string;
-  channel_id: string;
-  title: string;
-  availablility: null;
-  channel_follower_count: number;
-  description: string;
-  tags: string[];
-  thumbnails: Thumbnail[];
-  uploader_id: string;
-  uploader_url: string;
-  modified_date: null;
-  view_count: number | null;
-  playlist_count: number;
-  uploader: string;
-  channel_url: string;
-  _type: "playlist";
-  entries: Entry[];
-  extractor_key: string;
-  extractor: string;
-  webpage_url: string;
-  original_url: string;
-  webpage_url_basename: string;
-  webpage_url_domain: string;
-  release_year: null;
-  epoch: number;
-  __files_to_move: {};
-  _version: Version;
-};
-type Video = {
-  id: string,
-  url: string,
-  title: string,
-  date: string,
-};
-
-let playlists: { [key: string]: Playlist } = readJsonSync("playlists.json");
+const playlists = inputPlaylists as Record<string, Playlist>;
 const schema = z.strictObject({
   url: z.string().url(),
   min_date: z.string().date().default('1970-01-01'),
@@ -117,17 +27,29 @@ const schema = z.strictObject({
   path: z.string().default(''),
   max_count: z.number().int().positive().default(100),
   disabled: z.boolean().default(false),
+  getEntry: z.function(z.tuple([z.any()]), z.any()).optional(),
 });
 for (const playlistName in playlists) {
   const parsed = schema.parse(playlists[playlistName]);
   parsed.path = parsed.path || playlistName;
-  if (parsed.disabled) delete playlists[playlistName]
+  if (parsed.disabled) delete playlists[playlistName];
   else playlists[playlistName] = parsed;
 }
 
 function freeDiskGBs() {
-  const stat = statfsSync(DOWNLOADING_FOLDER)
+  const stat = statfsSync(DOWNLOADING_FOLDER);
   return stat.bavail * stat.bsize / 1024 / 1024 / 1024;
+}
+
+function fileGBs(path: string) {
+  const stat = statSync(path);
+  if (stat.isFile()) return stat.size / 1024 / 1024 / 1024;
+  const files = readdirSync(path);
+  let size = 0;
+  for (const file of files) {
+    size += fileGBs(resolve(path, file));
+  }
+  return size;
 }
 
 function videoGBs(videoUrl: string) {
@@ -140,7 +62,7 @@ function videoGBs(videoUrl: string) {
   return filesize / 1024 / 1024 / 1024;
 }
 
-function downloadVideos() {
+function downloadVideos(skipSizeCheck = false) {
   ensureDirSync(DOWNLOADING_FOLDER);
   for (const playlistName in playlists) {
     const playlist = playlists[playlistName];
@@ -164,13 +86,16 @@ function downloadVideos() {
         printedAboutDownloadingPlaylist = true;
       }
 
-      console.log(`Checking space for ${video.title}`);
-      const diskGBs = freeDiskGBs();
-      const videoSize = videoGBs(video.url);
-      console.log(`${videoSize.toFixed(2)} / ${diskGBs.toFixed(2)}`)
-      if (freeDiskGBs() - videoGBs(video.url) < MIN_GBS_LEFT) break;
+      if (!skipSizeCheck) {
+        console.log(`Checking space for ${video.title}`);
+        const diskGBs = freeDiskGBs();
+        const videoSize = videoGBs(video.url);
+        const downloadingFolderSize = fileGBs(DOWNLOADING_FOLDER);
+        console.log(`(${videoSize.toFixed(2)} * 2) / (${diskGBs.toFixed(2)} + ${downloadingFolderSize.toFixed(2)})`);
+        if (diskGBs + downloadingFolderSize - videoSize * 2 < MIN_GBS_LEFT) break;
+      }
 
-      let outputName = "%(title)s [%(id)s].%(ext)s";
+      let outputName = '%(title)s [%(id)s].%(ext)s';
       if (playlist.ongoing) outputName = `${video.date} - ${outputName}`;
       else {
         const playlistIndex = i + 1;
@@ -180,15 +105,15 @@ function downloadVideos() {
       if (playlist.accurate) outputName = `%(upload_date)s ${outputName}`;
 
       const flags = [
-        "-f",
-        "bestvideo[height<=1080][ext=mp4]+bestaudio[ext=m4a]/best[ext=mp4]/best",
-        "--downloader",
-        "aria2c",
-        "--download-archive",
+        '-f',
+        'bestvideo[height<=1080][ext=mp4]+bestaudio[ext=m4a]/best[ext=mp4]/best',
+        '--downloader',
+        'aria2c',
+        '--download-archive',
         resolve(playlist.path, ARCHIVE_FILENAME),
-        "-o",
+        '-o',
         outputName,
-        video["url"],
+        video['url'],
       ];
       const $ytdlp = $({ sync: true, cwd: DOWNLOADING_FOLDER, stdio: 'inherit' })`yt-dlp ${flags}`;
       if ($ytdlp.exitCode === 0) cleanDownloadingFolder(video.id, playlist.path);
@@ -224,48 +149,39 @@ function printAllBPS(playlistName: string) {
 }
 
 function videoBPS(filepath: string) {
-  const $ffprobe = $({ sync: true, stdio: ['ignore', 'pipe', 'ignore'] })`ffprobe -v error -show_entries format=duration -of default=noprint_wrappers=1:nokey=1 "${filepath}"`;
-  const filesize = statSync(filepath).size;
+  const $ffprobe = $({ sync: true, stdio: ['ignore', 'pipe', 'inherit'] })`ffprobe -v error -show_entries format=duration -of default=noprint_wrappers=1:nokey=1 ${filepath}`;
   const duration = +$ffprobe.stdout;
+  const filesize = statSync(filepath).size;
   return filesize / duration;
 }
 
 function isFileVideo(filepath: string) {
-  return filepath.endsWith(".mp4") || filepath.endsWith(".webm");
+  return filepath.endsWith('.mp4') || filepath.endsWith('.webm');
 }
 
-const ATRIOC_PATTERN = new RegExp("Streamed Live on (?<month>January|February|March|April|May|June|July|August|September|October|November|December) (?<date>\\d{1,2})(?:.*?),? (?<year>\\d{4})");
-const ASPECTICOR_PATTERN = new RegExp("VOD from (?<month>\\w+) (?<date>\\d{1,2}), (?<year>\\d{4})");
 function getVideoFromEntry(playlist: Playlist, entry: Entry): Video | undefined {
   if (!entry.timestamp) return;
 
   let date = new Date(entry.timestamp * 1000);
-  if (playlist.url === "https://www.youtube.com/@atriocvods/videos") {
-    const match = entry.description.match(ATRIOC_PATTERN);
-    if (match?.groups) {
-      date = parse(`${match.groups.year} ${match.groups.month} ${match.groups.date}`, "yyyy MMMM d", new Date());
-    } else if (!['19j_ClWR7aA', 'v2L091WK780'].includes(entry.id)) {
-      console.log(`No date found in the description for ${entry.id}`);
-      console.log(entry.description);
-    }
-  } else if (playlist.url === "https://www.youtube.com/@aspecticorvods/videos") {
-    const match = entry.description.match(ASPECTICOR_PATTERN);
-    if (match?.groups) {
-      date = parse(`${match.groups.year} ${match.groups.month.slice(0, 3)} ${match.groups.date}`, `yyyy MMM d`, new Date());
-    } else if (isAfter(date, new Date(2023, 12, 11))) {
-      console.log(`No date found in the description for ${entry.id}`);
-      console.log(entry.description);
+  let title = entry.title;
+  if (playlist.getEntry) {
+    const data = playlist.getEntry(entry);
+    if (data === null) {
+      return;
+    } else {
+      if (data?.date) date = data.date;
+      if (data?.title) title = data.title;
     }
   }
   return {
     id: entry.id,
     url: entry.url,
-    title: entry.title,
-    date: format(date, "yyyy-MM-dd"),
+    date: format(date, 'yyyy-MM-dd'),
+    title,
   };
 }
 
-function downloadMetadata(options: { force?: boolean, video?: boolean }) {
+function downloadMetadata(options: { force?: boolean, video?: boolean, skipSizeCheck: boolean }) {
   for (const playlistName in playlists) {
     const playlist = playlists[playlistName];
     const dumpFilepath = resolve(playlist.path, DUMP_FILENAME);
@@ -284,8 +200,8 @@ function downloadMetadata(options: { force?: boolean, video?: boolean }) {
     if (!options.video || !existsSync(dumpFilepath)) {
       console.log(`Downloading metadata for ${playlistName}`);
       const tmpDumpFilepath = `${dumpFilepath}.tmp`;
-      $throw`yt-dlp -J --flat-playlist --extractor-args youtubetab:approximate_date ${playlist.url} > ${tmpDumpFilepath}`;
-      $throw`mv ${tmpDumpFilepath} ${dumpFilepath}`
+      $({ sync: true })`yt-dlp -J --flat-playlist --extractor-args youtubetab:approximate_date ${playlist.url} > ${tmpDumpFilepath}`;
+      moveSync(tmpDumpFilepath, dumpFilepath, { overwrite: true });
     }
 
     const metadata: Metadata = readJsonSync(dumpFilepath);
@@ -295,24 +211,28 @@ function downloadMetadata(options: { force?: boolean, video?: boolean }) {
   }
 }
 
-function main(options: { force?: boolean }) {
+function main(options: { force?: boolean, skipSizeCheck: boolean }) {
   downloadMetadata(options);
-  downloadVideos()
+  downloadVideos(options.skipSizeCheck);
 }
 
 program
   .nameFromFilename(__filename)
-  .description('Download playlists listed in playlists.json')
+  .description('Download playlists listed in playlists.json');
 program.command('run', { hidden: true, isDefault: true })
   .option('-f, --force', 'Force metadata update')
+  .option('-s, --skip-size-check', 'Skip size check', false)
+  .option('-p, --playlist <playlist_name>', 'S')
   .action(main);
 program.command('download')
   .description('Download videos without updating metadata')
   .alias('d')
+  .option('-s, --skip-size-check', 'Skip size check', false)
   .action(downloadVideos);
 program.command('metadata')
   .description('Update metadata without downloading videos')
   .option('-f, --force', 'Force metadata update')
+  .option('-s, --skip-size-check', 'Skip size check', false)
   .addOption(new Option('-v, --video', 'Update .videos.json without updating .dump.json').implies({ force: true }))
   .alias('m')
   .action(downloadMetadata);
