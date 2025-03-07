@@ -115,6 +115,7 @@
     alejandra # nix code formatter
     fnm # fast node manager
     nodejs_22
+    python3
     shfmt # shell formatter
     just # command runner
     pgadmin4
@@ -135,6 +136,7 @@
     zellij # terminal multiplexer
     parted # partition manager
     fzf # fuzzy finder
+    fd # find files
     ripgrep # better grep
     neofetch # styled system info
     bat # better cat

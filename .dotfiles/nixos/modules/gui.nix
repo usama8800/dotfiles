@@ -53,6 +53,7 @@
     ++ (with pkgs-unstable; [
       x11vnc # vnc server
       tigervnc # vncpasswd
+      rustdesk
 
       kdePackages.kfind # file finder
       kdePackages.partitionmanager # partition manager
