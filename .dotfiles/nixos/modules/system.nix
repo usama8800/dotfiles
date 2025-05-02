@@ -9,6 +9,7 @@
   # system.nixos.label = "REPLACE_ME";
 
   # manually: sudo nix flake update; rebuild update
+  # fix store: nix-store --verify --repair --check-contents
   system.autoUpgrade = {
     enable = lib.mkDefault true;
     flake = "${config.users.users.usama.home}/.dotfiles/nixos";

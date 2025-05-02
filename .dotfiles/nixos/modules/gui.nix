@@ -1,5 +1,6 @@
 {
   lib,
+  inputs,
   pkgs,
   pkgs-unstable,
   ...
@@ -34,7 +35,7 @@
     pulse.enable = true;
   };
 
-  virtualisation.vmware.host.enable = true;
+  # virtualisation.vmware.host.enable = true;
   environment.systemPackages =
     (with pkgs; [
       xorg.libxcvt
@@ -49,11 +50,12 @@
       libnotify # notify-send
       libsForQt5.kconfig # kde config cli
       kdocker # put any app in the system tray
+
+      protonvpn-gui # vpn
     ])
     ++ (with pkgs-unstable; [
       x11vnc # vnc server
       tigervnc # vncpasswd
-      rustdesk
 
       kdePackages.kfind # file finder
       kdePackages.partitionmanager # partition manager
@@ -61,21 +63,24 @@
       kdePackages.kate # text editor
       remmina # rdp / vnc client
       anydesk # remote server and cliet
+      localsend # LAN file sharing
+      # rustdesk # remote server and cliet
       speedcrunch # calculator
       vscode # code editor
       obsidian # markdown editor
+      xournalpp # handwritten note taking
       dbeaver-bin # database browser
       onlyoffice-bin # office suite
       floorp # browser
+      google-chrome # browser
       nextcloud-client # cloud storage
       variety # wallpapers
+      # inputs.tagstudio.packages.${pkgs.stdenv.hostPlatform.system}.tagstudio
       mpv # video player
       beeper # messaging app
       vesktop # discord
+      wechat-uos # wechat
       krita # image editor
-      google-chrome # browser
-      protonvpn-gui # vpn
-      xournalpp # handwritten note taking
       postman # rest client
     ]);
   environment.sessionVariables = {

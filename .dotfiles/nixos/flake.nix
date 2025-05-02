@@ -12,9 +12,12 @@
     plasma-manager.url = "github:nix-community/plasma-manager";
     plasma-manager.inputs.nixpkgs.follows = "nixpkgs";
     plasma-manager.inputs.home-manager.follows = "home-manager";
+
+    # tagstudio.url = "github:TagStudioDev/TagStudio";
+    # tagstudio.inputs.nixpkgs.follows = "nixpkgs-unstable";
   };
 
-  outputs = {
+  outputs = inputs @ {
     self,
     nixpkgs,
     nixpkgs-unstable,
@@ -28,7 +31,7 @@
         nixpkgs.lib.nixosSystem rec {
           system = "x86_64-linux";
           specialArgs = {
-            inherit self system;
+            inherit self system inputs;
             pkgs-unstable = import nixpkgs-unstable {
               inherit system;
               config.allowUnfree = true;
