@@ -57,15 +57,16 @@
       x11vnc # vnc server
       tigervnc # vncpasswd
 
+      kdePackages.kdeconnect-kde # phone to pc connection
       kdePackages.kfind # file finder
       kdePackages.partitionmanager # partition manager
       kdePackages.filelight # disk usage analyzer
-      kdePackages.kate # text editor
       remmina # rdp / vnc client
       anydesk # remote server and cliet
-      localsend # LAN file sharing
+      localsend # LAN file sharinga
       # rustdesk # remote server and cliet
       speedcrunch # calculator
+      kdePackages.kate # text editor
       vscode # code editor
       obsidian # markdown editor
       xournalpp # handwritten note taking
@@ -80,8 +81,11 @@
       beeper # messaging app
       vesktop # discord
       wechat-uos # wechat
-      krita # image editor
       postman # rest client
+      krita # image editor
+      kdePackages.kdenlive # video editor
+      audacity # audio recorder / editor
+      obs-studio # screen recorder
     ]);
   environment.sessionVariables = {
     PLAYWRIGHT_SKIP_VALIDATE_HOST_REQUIREMENTS = "true";
