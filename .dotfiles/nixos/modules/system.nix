@@ -148,7 +148,7 @@
     dysk # mounted drives info
 
     # TUIs
-    vim
+    vim # editor
     btop # system monitor
     bandwhich # network monitor
     lazygit # git client

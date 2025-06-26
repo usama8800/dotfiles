@@ -52,12 +52,12 @@
       kdocker # put any app in the system tray
 
       protonvpn-gui # vpn
+      floorp # browser
     ])
     ++ (with pkgs-unstable; [
       x11vnc # vnc server
       tigervnc # vncpasswd
 
-      kdePackages.kdeconnect-kde # phone to pc connection
       kdePackages.kfind # file finder
       kdePackages.partitionmanager # partition manager
       kdePackages.filelight # disk usage analyzer
@@ -72,11 +72,10 @@
       xournalpp # handwritten note taking
       dbeaver-bin # database browser
       onlyoffice-bin # office suite
-      floorp # browser
+      libreoffice-qt-fresh # office suite
       google-chrome # browser
       nextcloud-client # cloud storage
       variety # wallpapers
-      # inputs.tagstudio.packages.${pkgs.stdenv.hostPlatform.system}.tagstudio
       mpv # video player
       beeper # messaging app
       vesktop # discord
@@ -86,7 +85,9 @@
       kdePackages.kdenlive # video editor
       audacity # audio recorder / editor
       obs-studio # screen recorder
+      # inputs.tagstudio.packages.${pkgs.stdenv.hostPlatform.system}.tagstudio
     ]);
+  programs.kdeconnect.enable = true; # phone to pc connection
   environment.sessionVariables = {
     PLAYWRIGHT_SKIP_VALIDATE_HOST_REQUIREMENTS = "true";
   };
