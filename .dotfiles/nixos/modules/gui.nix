@@ -53,6 +53,7 @@
 
       protonvpn-gui # vpn
       floorp # browser
+      mpv # video player
     ])
     ++ (with pkgs-unstable; [
       x11vnc # vnc server
@@ -76,7 +77,6 @@
       google-chrome # browser
       nextcloud-client # cloud storage
       variety # wallpapers
-      mpv # video player
       beeper # messaging app
       vesktop # discord
       wechat-uos # wechat

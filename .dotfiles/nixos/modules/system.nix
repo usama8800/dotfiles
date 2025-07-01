@@ -109,7 +109,7 @@
   # To search, run: nix search nixpkgs wget 2> /dev/null
   environment.systemPackages = with pkgs; [
     nix-index # for nix-locate
-    # nix-alien # for nix-alien-find-libs for nix-ld
+    nix-alien # for nix-alien-find-libs for nix-ld
 
     # Development tools
     nil # nix language server

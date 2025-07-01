@@ -51,6 +51,11 @@
             }: {
               nixpkgs.overlays = [
                 self.inputs.nix-alien.overlays.default
+                (self: super: {
+                  mpv = super.mpv.override {
+                    scripts = [self.mpvScripts.mpris];
+                  };
+                })
               ];
             })
           ];
