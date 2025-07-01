@@ -74,11 +74,13 @@
       dbeaver-bin # database browser
       onlyoffice-bin # office suite
       libreoffice-qt-fresh # office suite
+      hunspell # libre office spell check
+      hunspellDicts.uk_UA # libre offfice spell check
       google-chrome # browser
       nextcloud-client # cloud storage
       variety # wallpapers
       beeper # messaging app
-      vesktop # discord
+      discord # messaging app
       wechat-uos # wechat
       postman # rest client
       krita # image editor
@@ -106,9 +108,9 @@
     wantedBy = ["default.target"];
     after = ["graphical.target"];
   };
-  systemd.user.services.vesktop = {
+  systemd.user.services.discord = {
     serviceConfig = {
-      ExecStart = "${pkgs-unstable.vesktop}/bin/vesktop --start-minimized";
+      ExecStart = "${pkgs-unstable.discord}/bin/discord --start-minimized";
       Restart = "on-failure";
       RestartSec = 5;
     };

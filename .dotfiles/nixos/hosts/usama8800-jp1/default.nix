@@ -10,7 +10,6 @@
     ./hardware-configuration.nix
     ../../modules/gui.nix
     ../../modules/gamedev.nix
-    ../../modules/gaming.nix
   ];
 
   boot.loader.systemd-boot.enable = true;
