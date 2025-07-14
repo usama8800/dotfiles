@@ -10,6 +10,7 @@
     protonup
     protontricks
     lutris
+    bottles
     mangohud
     prismlauncher
     heroic # epic games and gog launcher

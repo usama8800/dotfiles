@@ -64,7 +64,7 @@
       kdePackages.filelight # disk usage analyzer
       remmina # rdp / vnc client
       anydesk # remote server and cliet
-      localsend # LAN file sharinga
+      localsend # LAN file sharing
       # rustdesk # remote server and cliet
       speedcrunch # calculator
       kdePackages.kate # text editor
