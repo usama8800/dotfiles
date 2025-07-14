@@ -87,6 +87,7 @@
       kdePackages.kdenlive # video editor
       audacity # audio recorder / editor
       obs-studio # screen recorder
+      deluge # torrent client
       # inputs.tagstudio.packages.${pkgs.stdenv.hostPlatform.system}.tagstudio
     ]);
   programs.kdeconnect.enable = true; # phone to pc connection
