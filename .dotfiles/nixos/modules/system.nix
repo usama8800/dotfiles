@@ -35,6 +35,9 @@
     options = "--delete-older-than 7d";
   };
   nix.optimise.automatic = true;
+  services.journald.extraConfig = ''
+    MaxRetentionSec=3day
+  '';
 
   # Define a user account. Don't forget to change password with ‘passwd’.
   users.users.usama = {
