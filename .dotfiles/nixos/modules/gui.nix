@@ -35,7 +35,6 @@
     pulse.enable = true;
   };
 
-  # virtualisation.vmware.host.enable = true;
   environment.systemPackages =
     (with pkgs; [
       xorg.libxcvt
@@ -54,6 +53,7 @@
       protonvpn-gui # vpn
       floorp # browser
       mpv # video player
+      audacity # audio recorder / editor
     ])
     ++ (with pkgs-unstable; [
       x11vnc # vnc server
@@ -85,7 +85,6 @@
       postman # rest client
       krita # image editor
       kdePackages.kdenlive # video editor
-      audacity # audio recorder / editor
       obs-studio # screen recorder
       deluge # torrent client
       pureref # notes with imgaes

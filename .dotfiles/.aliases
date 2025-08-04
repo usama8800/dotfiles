@@ -19,17 +19,17 @@ alias :q="touch ~/.manual_exit; exit"
 
 # Detect which `ls` flavor is in use
 if ls --color >/dev/null 2>&1; then # GNU `ls`
-	colorflag="--color"
-	export LS_COLORS='no=00:fi=00:di=01;31:ln=01;36:pi=40;33:so=01;35:do=01;35:bd=40;33;01:cd=40;33;01:or=40;31;01:ex=01;32:*.tar=01;31:*.tgz=01;31:*.arj=01;31:*.taz=01;31:*.lzh=01;31:*.zip=01;31:*.z=01;31:*.Z=01;31:*.gz=01;31:*.bz2=01;31:*.deb=01;31:*.rpm=01;31:*.jar=01;31:*.jpg=01;35:*.jpeg=01;35:*.gif=01;35:*.bmp=01;35:*.pbm=01;35:*.pgm=01;35:*.ppm=01;35:*.tga=01;35:*.xbm=01;35:*.xpm=01;35:*.tif=01;35:*.tiff=01;35:*.png=01;35:*.mov=01;35:*.mpg=01;35:*.mpeg=01;35:*.avi=01;35:*.fli=01;35:*.gl=01;35:*.dl=01;35:*.xcf=01;35:*.xwd=01;35:*.ogg=01;35:*.mp3=01;35:*.wav=01;35:'
+  colorflag="--color"
+  export LS_COLORS='no=00:fi=00:di=01;31:ln=01;36:pi=40;33:so=01;35:do=01;35:bd=40;33;01:cd=40;33;01:or=40;31;01:ex=01;32:*.tar=01;31:*.tgz=01;31:*.arj=01;31:*.taz=01;31:*.lzh=01;31:*.zip=01;31:*.z=01;31:*.Z=01;31:*.gz=01;31:*.bz2=01;31:*.deb=01;31:*.rpm=01;31:*.jar=01;31:*.jpg=01;35:*.jpeg=01;35:*.gif=01;35:*.bmp=01;35:*.pbm=01;35:*.pgm=01;35:*.ppm=01;35:*.tga=01;35:*.xbm=01;35:*.xpm=01;35:*.tif=01;35:*.tiff=01;35:*.png=01;35:*.mov=01;35:*.mpg=01;35:*.mpeg=01;35:*.avi=01;35:*.fli=01;35:*.gl=01;35:*.dl=01;35:*.xcf=01;35:*.xwd=01;35:*.ogg=01;35:*.mp3=01;35:*.wav=01;35:'
 else # macOS `ls`
-	colorflag="-G"
-	export LSCOLORS='BxBxhxDxfxhxhxhxhxcxcx'
+  colorflag="-G"
+  export LSCOLORS='BxBxhxDxfxhxhxhxhxcxcx'
 fi
 
-alias ll="ls -lF ${colorflag}"     # List all files long format
+alias ll="ls -lF ${colorflag}"      # List all files long format
 alias la="\ls -A ${colorflag}"      # List all files
 alias lla="\ls -A ${colorflag} -lF" # List all files long format
-alias ld="ls -d ${colorflag}"      # List only directories
+alias ld="ls -d ${colorflag}"       # List only directories
 
 # Always use color output for `ls`
 alias ls="command ls ${colorflag}"
@@ -46,67 +46,69 @@ alias dc='docker compose '
 alias rsync='rsync --delete --archive --verbose --prune-empty-dirs --human-readable --progress --partial --append --delete-excluded '
 alias dux='du -xh . | sort -rh | cat'
 alias termdown='termdown -f clb8x10 '
+alias stopwatch='termdown -a '
+alias timer='termdown -a '
 
 alias myip='curl -s "ip.me"'
 alias speedtest="curl -s https://raw.githubusercontent.com/sivel/speedtest-cli/master/speedtest.py | python3 -"
 cheat() {
-	if [[ $(which bat 2>/dev/null) ]]; then
-		curl -s "cheat.sh/$1" | bat
-	else
-		curl -s "cheat.sh/$1" | cat
-	fi
+  if [[ $(which bat 2>/dev/null) ]]; then
+    curl -s "cheat.sh/$1" | bat
+  else
+    curl -s "cheat.sh/$1" | cat
+  fi
 }
 weather() {
-    location="${1:-Lahore}"
-	curl -s "wttr.in/$location"
+  location="${1:-Lahore}"
+  curl -s "wttr.in/$location"
 }
 pastebin() {
-	__=""
-	_stdin=""
-	read -N1 -t1 __  && {
-		(( $? <= 128 ))  && {
-			IFS= read -rd '' _stdin
-			_stdin="$__$_stdin"
-		}
-	}
-	if [ $# -eq 1 ] && [ -z "$_stdin" ]; then
-		_stdin="$1"
-	fi
-	_stdin=$(sed -e 's/[ \n\r]*$//' <<<${_stdin})
+  __=""
+  _stdin=""
+  read -N1 -t1 __ && {
+    (($? <= 128)) && {
+      IFS= read -rd '' _stdin
+      _stdin="$__$_stdin"
+    }
+  }
+  if [ $# -eq 1 ] && [ -z "$_stdin" ]; then
+    _stdin="$1"
+  fi
+  _stdin=$(sed -e 's/[ \n\r]*$//' <<<${_stdin})
 
-	if [ -z "$_stdin" ]; then
-		echo "Need some text"
-	else
-		echo "$_stdin" | curl -F 'clbin=<-' https://clbin.com
-	fi
+  if [ -z "$_stdin" ]; then
+    echo "Need some text"
+  else
+    echo "$_stdin" | curl -F 'clbin=<-' https://clbin.com
+  fi
 }
 qr() {
-	__=""
-	_stdin=""
-	read -N1 -t1 __  && {
-		(( $? <= 128 ))  && {
-			IFS= read -rd '' _stdin
-			_stdin="$__$_stdin"
-		}
-	}
-	if [ $# -eq 1 ] && [ -z "$_stdin" ]; then
-		_stdin="$1"
-	fi
-	_stdin=$(sed -e 's/[ \n\r]*$//' <<<${_stdin})
+  __=""
+  _stdin=""
+  read -N1 -t1 __ && {
+    (($? <= 128)) && {
+      IFS= read -rd '' _stdin
+      _stdin="$__$_stdin"
+    }
+  }
+  if [ $# -eq 1 ] && [ -z "$_stdin" ]; then
+    _stdin="$1"
+  fi
+  _stdin=$(sed -e 's/[ \n\r]*$//' <<<${_stdin})
 
-	if [ -z "$_stdin" ]; then
-		echo "Need some text"
-	else
-		echo "$_stdin" | curl -F 'clbin=<-' https://qrenco.de
-	fi
+  if [ -z "$_stdin" ]; then
+    echo "Need some text"
+  else
+    echo "$_stdin" | curl -F 'clbin=<-' https://qrenco.de
+  fi
 }
 venv() {
-	if [ -d .venv ]; then
-		source .venv/bin/activate
-	elif [ -d venv ]; then
-		source venv/bin/activate
-	else
-		python3 -m venv .venv
-		source .venv/bin/activate
-	fi
+  if [ -d .venv ]; then
+    source .venv/bin/activate
+  elif [ -d venv ]; then
+    source venv/bin/activate
+  else
+    python3 -m venv .venv
+    source .venv/bin/activate
+  fi
 }

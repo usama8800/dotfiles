@@ -11,6 +11,7 @@
     ../../modules/gui.nix
     ../../modules/gaming.nix
     ../../modules/gamedev.nix
+    ../../modules/vmware.nix
   ];
 
   boot.loader.grub.enable = true;
