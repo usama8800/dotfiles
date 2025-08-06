@@ -272,6 +272,11 @@
         user = "ubuntu";
         hostname = "152.67.0.75";
       };
+      laptop = {
+        host = "laptop";
+        user = "usama";
+        hostname = lib.mkDefault "192.168.1.100";
+      };
     };
 
     editorconfig.enable = true;
