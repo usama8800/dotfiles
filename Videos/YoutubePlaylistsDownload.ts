@@ -106,7 +106,7 @@ function downloadVideos(skipSizeCheck = false) {
 
       const flags = [
         '-f',
-        'bestvideo[height<=1080][ext=mp4]+bestaudio[ext=m4a]/best[ext=mp4]/best',
+        'bestvideo[height<=1080][ext=mp4]+bestaudio[ext=m4a]/best[ext=mp4]/best/bestvideo+bestaudio',
         '--downloader',
         'aria2c',
         '--download-archive',
