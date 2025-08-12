@@ -32,21 +32,39 @@
       "uOmaQSqnPfw": [
         {
           "start": 17,
+          "end": "12:37",
+          "title": "Symphony No. 9 in E minor, I. Adagio - Allegro molto, Op. 95, B. 178, \"From the New World\"",
+          "artist": "Antonin Dvorak"
+        },
+        {
+          "start": "12:55",
+          "end": "25:11",
+          "title": "Symphony No. 9 in E minor, II. Largo, Op. 95, B. 178, \"From the New World\"",
+          "artist": "Antonin Dvorak"
+        },
+        {
+          "start": "25:16",
+          "end": "32:42",
+          "title": "Symphony No. 9 in E minor, III. Scherzo. Molto vivace, Op. 95, B. 178, \"From the New World\"",
+          "artist": "Antonin Dvorak"
+        },
+        {
+          "start": "32:42",
           "end": "43:28",
-          "title": "Symphony No. 9 in E minor, Op. 95, B. 178, \"From the New World\"",
+          "title": "Symphony No. 9 in E minor, IV. Allegro con fuoco, Op. 95, B. 178, \"From the New World\"",
           "artist": "Antonin Dvorak"
         }
       ],
       "wwaSSQnceu8": {
         "start": 0,
         "end": "2:49",
-        "title": "Four Seasons Concerto No. 2 in G minor, Op. 8, RV 315, \"Summer\" (L'estate), III. Presto - Cynthia Freivogel",
+        "title": "Four Seasons Concerto No. 2 in G minor, III. Presto, Op. 8, RV 315, \"Summer\" (L'estate) - Cynthia Freivogel",
         "artist": "Antonio Vivaldi"
       },
       "UWg5ugyMjIc": {
         "start": 0,
         "end": "3:20",
-        "title": "Four Seasons Concerto No. 4 in F minor, Op. 8, RV 297, \"Winter\" (L'inverno), III. Allegro - Cynthia Freivogel",
+        "title": "Four Seasons Concerto No. 4 in F minor, III. Allegro, Op. 8, RV 297, \"Winter\" (L'inverno) - Cynthia Freivogel",
         "artist": "Antonio Vivaldi"
       },
       "EXgNlueMu6k": {
@@ -84,7 +102,7 @@
         "artist": "Carlos Gardel"
       },
       "WK7StsZVr90": {
-        "title": "Piano Trio No. 1 in F sharp minor, Op. 1 No. 1 - Richter, Kagan, Gutman",
+        "title": "Piano Trio No. 1 in F sharp minor, Op. 1 - Richter, Kagan, Gutman",
         "artist": "Cesar Franck"
       },
       "CwMMwAWAFds": {
@@ -92,11 +110,11 @@
         "artist": "Charles-Camille Saint-Saens"
       },
       "OzM3_4AJZNA": {
-        "title": "The Carnival of the Animals, R. 125, VII. Aquarium",
+        "title": "The Carnival of the Animals, VII. Aquarium, R. 125",
         "artist": "Charles-Camille Saint-Saens"
       },
       "3qrKjywjo7Q": {
-        "title": "The Swan - Yo-Yo Ma, Kathryn Stott",
+        "title": "The Carnival of the Animals, XIII. Le Cygne (The Swan), R. 125 - Yo-Yo Ma, Kathryn Stott",
         "artist": "Charles-Camille Saint-Saens"
       },
       "_5h4Y66HnG0": {
@@ -110,13 +128,35 @@
         "artist": "Claude Debussy"
       },
       "q_Y0ZmumMaU": {
-        "title": "Chamber Symphony (String Quartet) No. 8 in C minor, Op. 110, II. Allegro molto",
+        "title": "Chamber Symphony (String Quartet) No. 8 in C minor, II. Allegro molto, Op. 110",
         "artist": "Dmitri Shostakovich"
       },
-      "Lu09CWT41NE": {
-        "title": "Symphony No. 11 in G minor, Op. 103",
-        "artist": "Dmitri Shostakovich"
-      },
+      "Lu09CWT41NE": [
+        {
+          "title": "Symphony No. 11 in G minor, I. Adagio \"The Palace Square\", Op. 103, \"The Year 1905\"",
+          "artist": "Dmitri Shostakovich",
+          "start": 0,
+          "end": "16:02"
+        },
+        {
+          "title": "Symphony No. 11 in G minor, II. Allegro \"The 9th of January\", Op. 103, \"The Year 1905\"",
+          "artist": "Dmitri Shostakovich",
+          "start": "16:01",
+          "end": "34:57"
+        },
+        {
+          "title": "Symphony No. 11 in G minor, III. Adagio \"Memory Eternal\", Op. 103, \"The Year 1905\"",
+          "artist": "Dmitri Shostakovich",
+          "start": "34:57",
+          "end": "46:12"
+        },
+        {
+          "title": "Symphony No. 11 in G minor, IV. Allegro non troppo \"Tocsin\", Op. 103, \"The Year 1905\"",
+          "artist": "Dmitri Shostakovich",
+          "start": "46:12",
+          "end": "01:00:45"
+        }
+      ],
       "FyybUtL-ths": {
         "title": "Waltz No. 2 - Pierre Tremblay",
         "artist": "Dmitri Shostakovich"
@@ -140,7 +180,7 @@
       "DVWaIJsIzao": {
         "start": 0,
         "end": "9:52",
-        "title": "The Symphony No. 3 in A minor, Op. 56, MWV N 18, VI. Adagio, \"Scottish\"",
+        "title": "The Symphony No. 3 in A minor, VI. Adagio, Op. 56, MWV N 18, \"Scottish\"",
         "artist": "Felix Mendelssohn"
       },
       "I03Hs6dwj7E": {
@@ -508,12 +548,26 @@
         "title": "Marche Slave in B-flat minor, Op. 31",
         "artist": "Pyotr Ilyich Tchaikovsky"
       },
-      "hNfpMRSCFPE": {
-        "start": 3,
-        "end": "36:52",
-        "title": "Piano Concerto No. 1 in B flat minor, Op. 23 - Anna Fedorova",
-        "artist": "Pyotr Ilyich Tchaikovsky"
-      },
+      "hNfpMRSCFPE": [
+        {
+          "start": 3,
+          "end": "21:47",
+          "title": "Piano Concerto No. 1 in B flat minor, I. Allegro non troppo e molto maestoso – Allegro con spirito, Op. 23 - Anna Fedorova",
+          "artist": "Pyotr Ilyich Tchaikovsky"
+        },
+        {
+          "start": "22:03",
+          "end": "29:54",
+          "title": "Piano Concerto No. 1 in B flat minor, II. Andantino semplice – Prestissimo – Tempo I, Op. 23 - Anna Fedorova",
+          "artist": "Pyotr Ilyich Tchaikovsky"
+        },
+        {
+          "start": "29:57",
+          "end": "36:52",
+          "title": "Piano Concerto No. 1 in B flat minor, III. Allegro con fuoco, Op. 23 - Anna Fedorova",
+          "artist": "Pyotr Ilyich Tchaikovsky"
+        }
+      ],
       "wiqdGswfqT8": {
         "title": "Romance in F Minor, Op. 5 - Bruce Liu",
         "artist": "Pyotr Ilyich Tchaikovsky"
@@ -621,6 +675,10 @@
       "02cNdJp_UEM": {
         "title": "Light's Theme (From \"Death Note\")",
         "artist": "Yoshihisa Hirano"
+      },
+      "l-fxH--8LFI": {
+        "title": "Van Gogh",
+        "artist": "Virginio Aiello"
       }
     }
   },
@@ -841,6 +899,10 @@
         "title": "Komplementar - Portal: Revolution",
         "artist": "ZRezlon",
         "genre": "Instrumental"
+      },
+      "M-l3mNWB7W8": {
+        "title": "Be a Flower",
+        "artist": "Ryokuoushoku Shakai"
       }
     }
   }
