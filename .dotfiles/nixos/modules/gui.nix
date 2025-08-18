@@ -101,10 +101,7 @@
       ExecStart = "${pkgs.tigervnc}/bin/x0vncserver \
         -display :0 \
         -rfbauth %h/.vnc/passwd \
-        -rfbport 5900 \
-        -shared \
-        -forever \
-        -noxdamage";
+        -rfbport 5900";
     };
     after = ["graphical.target"];
     wantedBy = ["default.target"];
