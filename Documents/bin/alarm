@@ -1,13 +1,3 @@
 #!/usr/bin/env bash
 
-files=(
-  "/usr/share/sounds/gnome/default/alerts/glass.ogg"
-  "/usr/share/sounds/freedesktop/stereo/alarm-clock-elapsed.oga"
-)
-
-for file in "${files[@]}"; do
-  if [[ -f "$file" ]]; then
-    cvlc -L "$file"
-    break
-  fi
-done
+paplay "$HOME"/.local/share/sounds/skyrim_quest.wav
