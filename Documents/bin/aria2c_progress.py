@@ -5,7 +5,7 @@ import re
 import sys
 import time
 
-frag_file_pattern = re.compile("part-Frag\d+$")
+frag_file_pattern = re.compile(r"part-Frag\d+$")
 count = False
 
 

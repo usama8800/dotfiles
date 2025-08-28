@@ -24,7 +24,6 @@
   services.displayManager.autoLogin.user = "usama";
 
   # Enable sound with pipewire.
-  hardware.pulseaudio.enable = false;
   hardware.bluetooth.enable = true;
   hardware.bluetooth.powerOnBoot = true;
   security.rtkit.enable = true;
@@ -34,6 +33,7 @@
     alsa.support32Bit = true;
     pulse.enable = true;
   };
+  programs.noisetorch.enable = true;
 
   environment.systemPackages =
     (with pkgs; [
@@ -51,12 +51,21 @@
       kdocker # put any app in the system tray
 
       protonvpn-gui # vpn
-      floorp # browser
       mpv # video player
+      fooyin # audio player
       audacity # audio recorder / editor
+      speedcrunch # calculator
+      vscode # code editor
+      obsidian # markdown editor
+      xournalpp # handwritten note taking
+      dbeaver-bin # database browser
+      variety # wallpapers
+      bruno # rest client
+      deluge # torrent client
+      pureref # notes with imgaes
+      easyeffects # microphone preprocessing
     ])
     ++ (with pkgs-unstable; [
-      x11vnc # vnc server
       tigervnc # vncpasswd
 
       kdePackages.kfind # file finder
@@ -66,28 +75,20 @@
       anydesk # remote server and cliet
       localsend # LAN file sharing
       # rustdesk # remote server and cliet
-      speedcrunch # calculator
       kdePackages.kate # text editor
-      vscode # code editor
-      obsidian # markdown editor
-      xournalpp # handwritten note taking
-      dbeaver-bin # database browser
       onlyoffice-bin # office suite
       libreoffice-qt-fresh # office suite
       hunspell # libre office spell check
-      hunspellDicts.uk_UA # libre offfice spell check
+      hunspellDicts.uk_UA # libre office spell check
+      floorp # browser
       google-chrome # browser
       nextcloud-client # cloud storage
-      variety # wallpapers
       beeper # messaging app
       discord # messaging app
       wechat-uos # wechat
-      postman # rest client
       krita # image editor
       kdePackages.kdenlive # video editor
       obs-studio # screen recorder
-      deluge # torrent client
-      pureref # notes with imgaes
       # inputs.tagstudio.packages.${pkgs.stdenv.hostPlatform.system}.tagstudio
     ]);
   programs.kdeconnect.enable = true; # phone to pc connection
@@ -96,10 +97,16 @@
   };
 
   # Set password with `vncpasswd ~/.vnc/passwd`
-  services.xserver.displayManager.sessionCommands = ''
-    ${pkgs-unstable.x11vnc}/bin/x11vnc -wait 15 -noxdamage -rfbauth "$HOME"/.vnc/passwd -display :0 -forever -o /var/log/x11vnc.log -bg
-  '';
-
+  systemd.user.services.vnc = {
+    serviceConfig = {
+      ExecStart = "${pkgs.tigervnc}/bin/x0vncserver \
+        -display :0 \
+        -rfbauth %h/.vnc/passwd \
+        -rfbport 5900";
+    };
+    after = ["graphical.target"];
+    wantedBy = ["default.target"];
+  };
   systemd.user.services.nextcloud = {
     serviceConfig = {
       ExecStart = "${pkgs-unstable.nextcloud-client}/bin/nextcloud --background";

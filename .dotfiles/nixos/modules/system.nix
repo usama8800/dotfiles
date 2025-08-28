@@ -5,10 +5,9 @@
   pkgs-unstable,
   ...
 }: {
-  # Keep here for rebuild script
-  # system.nixos.label = "REPLACE_ME";
+  system.nixos.label = builtins.getEnv "NIXOS_LABEL";
 
-  # manually: sudo nix flake update; rebuild update
+  # manually: nix flake update; rebuild update
   # fix store: nix-store --verify --repair --check-contents
   system.autoUpgrade = {
     enable = lib.mkDefault true;
@@ -112,7 +111,7 @@
   # To search, run: nix search nixpkgs wget 2> /dev/null
   environment.systemPackages = with pkgs; [
     nix-index # for nix-locate
-    nix-alien # for nix-alien-find-libs for nix-ld
+    nix-alien # for nix-alien-find-libs
 
     # Development tools
     nil # nix language server
@@ -158,7 +157,6 @@
     lazydocker # docker client
     broot # file manager
     ncdu # disk usage analyzer
-    ventoy-full # bootable usb
     fx # json viewer
   ];
   programs.git.enable = true;
@@ -229,7 +227,6 @@
     cups
     dbus
     expat
-    glib
     gtk3
     libdrm
     libxkbcommon

@@ -337,6 +337,7 @@ export function getFixedArchiveFile(archive: string[], files: string[]): string 
   const fileIds = files.map(idFromFilename).map(({ id }) => id);
   const archiveIds = new Set(archive.map(a => a.slice('youtube '.length)));
   let ret = '';
+
   for (const archiveId of archiveIds) {
     if (!archiveId) continue;
     for (const fileId of fileIds) {
@@ -346,7 +347,7 @@ export function getFixedArchiveFile(archive: string[], files: string[]): string 
       }
     }
   }
-  return ret.slice(0, -1);
+  return ret;
 }
 
 export function getFilesNotInMetadata(metadata: string[], files: string[]): string[] {
@@ -373,11 +374,11 @@ export function getCutActions(tracksInfo: TrackInfo[], files: string[], videosPa
   if (tracksInfo.length === 1 && mainFile && !tracksInfo[0].start && !tracksInfo[0].end) return [];
 
   const onlyMainFileAvailable = files.length === 1 && mainFile;
-  const notAllPartsAvailable = files.length !== tracksInfo.length;
+  const allPartsAvailable = files.length === tracksInfo.length;
   const incorrectlyNumberedSingleFile = files.length === 1 && idFromFilename(files[0]).part > 0;
   let invalid = false;
-  if (!onlyMainFileAvailable && (notAllPartsAvailable || incorrectlyNumberedSingleFile)) invalid = true;
-  if (!invalid && files.length === tracksInfo.length) {
+  if (!onlyMainFileAvailable && (!allPartsAvailable || incorrectlyNumberedSingleFile)) invalid = true;
+  if (!invalid && allPartsAvailable) {
     for (let i = 0; i < tracksInfo.length; i++) {
       const trackInfo = tracksInfo[i];
       const part = tracksInfo.length === 1 ? i : i + 1;
@@ -402,6 +403,11 @@ export function getCutActions(tracksInfo: TrackInfo[], files: string[], videosPa
         break;
       }
     }
+  }
+  if (!invalid && onlyMainFileAvailable) {
+    const videoDuration = getVideoDuration(resolve(videosPath, mainFile));
+    const maxTrackTime = Math.max(...tracksInfo.map(t => t.end ?? 0), videoDuration);
+    if (maxTrackTime > videoDuration) invalid = true;
   }
   if (invalid || (!mainFile && tracksInfo.length === 1))
     return files.map(f => ({ inputFile: f }));
@@ -508,7 +514,7 @@ function removeArchiveIdsForDeletedFiles() {
   for (const playlistName in playlists) {
     const playlist = playlists[playlistName];
     if (!existsSync(resolve(playlist.videosPath, ARCHIVE_FILENAME))) continue;
-    const archive = readFileSync(resolve(playlist.videosPath, ARCHIVE_FILENAME), 'utf-8').split(/\r?\n/);
+    const archive = readFileSync(resolve(playlist.videosPath, ARCHIVE_FILENAME), 'utf-8').split(/(\r*\n)+/);
     const files = readdirSync(playlist.videosPath);
     const newArchive = getFixedArchiveFile(archive, files);
     if (newArchive !== undefined) writeFileSync(resolve(playlist.videosPath, ARCHIVE_FILENAME), newArchive);
@@ -641,7 +647,7 @@ export function downloadVideos() {
   for (const playlistName in playlists) {
     console.log(`Downloading playlist '${playlistName}'`);
     const playlist = playlists[playlistName];
-    $({ sync: true, stdio: ['ignore', 'inherit', 'inherit'] })`yt-dlp -f 'bestvideo[height<=1080][ext=mp4]+bestaudio[ext=m4a]/best[ext=mp4]/best' --no-mtime --playlist-items ${playlist.indices} -o ${resolve(playlist.videosPath, playlist.outputFormat)} --download-archive ${resolve(playlist.videosPath, ARCHIVE_FILENAME)} ${playlist.url}`;
+    $({ sync: true, stdio: ['ignore', 'inherit', 'inherit'] })`yt-dlp -f 'bestvideo[height<=1080][ext=mp4]+bestaudio[ext=m4a]/best[ext=mp4]/best/bestvideo+bestaudio' --no-mtime --playlist-items ${playlist.indices} -o ${resolve(playlist.videosPath, playlist.outputFormat)} --download-archive ${resolve(playlist.videosPath, ARCHIVE_FILENAME)} ${playlist.url}`;
   }
 }
 
