@@ -24,7 +24,6 @@
   services.displayManager.autoLogin.user = "usama";
 
   # Enable sound with pipewire.
-  hardware.pulseaudio.enable = false;
   hardware.bluetooth.enable = true;
   hardware.bluetooth.powerOnBoot = true;
   security.rtkit.enable = true;
@@ -34,6 +33,7 @@
     alsa.support32Bit = true;
     pulse.enable = true;
   };
+  programs.noisetorch.enable = true;
 
   environment.systemPackages =
     (with pkgs; [
@@ -63,6 +63,7 @@
       bruno # rest client
       deluge # torrent client
       pureref # notes with imgaes
+      easyeffects # microphone preprocessing
     ])
     ++ (with pkgs-unstable; [
       tigervnc # vncpasswd
