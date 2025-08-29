@@ -64,7 +64,6 @@ if [[ "${BASH_SOURCE[0]}" = "$0" ]]; then
   echo "NixOS Rebuilt as $red$current$reset"
   if [ -n "$label" ] && [ "$label" != "." ] && [ "$label" != "test" ]; then
     git --git-dir=dotfiles.git --work-tree="$HOME" add nixos
-    git --git-dir=dotfiles.git --work-tree="$HOME" commit -m "Rebuilt NixOS $current"
   fi
 
   popd >/dev/null || exit 1
