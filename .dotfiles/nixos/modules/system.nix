@@ -7,6 +7,12 @@
 }: {
   system.nixos.label = builtins.getEnv "NIXOS_LABEL";
 
+  services.displayManager.ly.enable = true;
+  services.displayManager.ly.settings = {
+    numlock = true;
+    sleep_cmd = "/run/current-system/systemd/bin/systemctl suspend";
+  };
+
   # manually: nix flake update; rebuild update
   # fix store: nix-store --verify --repair --check-contents
   system.autoUpgrade = {
