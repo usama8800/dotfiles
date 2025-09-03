@@ -8,13 +8,7 @@
   imports = [./home-manager.nix];
 
   services.xserver.enable = true;
-  services.displayManager.sddm.enable = true;
-  services.displayManager.sddm.wayland.enable = true;
-  services.displayManager.sddm.wayland.compositor = "kwin";
-  services.displayManager.sddm.autoNumlock = true;
   services.desktopManager.plasma6.enable = true;
-  # systemd.services.display-manager.wants = ["systemd-user-sessions.service" "multi-user.target" "network-online.target"];
-  # systemd.services.display-manager.after = ["systemd-user-sessions.service" "multi-user.target" "network-online.target"];
   # Configure keymap in X11
   services.xserver.xkb = {
     layout = "us";
@@ -89,7 +83,6 @@
       krita # image editor
       kdePackages.kdenlive # video editor
       obs-studio # screen recorder
-      # inputs.tagstudio.packages.${pkgs.stdenv.hostPlatform.system}.tagstudio
     ]);
   programs.kdeconnect.enable = true; # phone to pc connection
   environment.sessionVariables = {
@@ -136,8 +129,6 @@
   };
   systemd.services.bins = {
     script = ''
-      mkdir -p /var/lib/sddm/.config;
-      echo -e "[Keyboard]\nNumlock=0" > /var/lib/sddm/.config/kcminputrc;
       rm -f /usr/bin/variety;
       ln -s "${pkgs-unstable.variety}/bin/variety" /usr/bin/variety;
       sed -E -i 's/Exec=.+/Exec=\/bin\/sh -c "sleep 20 \&\& \/usr\/bin\/variety --profile \/home\/usama\/.config\/variety\/"/' /home/usama/.config/autostart/variety.desktop;

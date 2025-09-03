@@ -41,16 +41,20 @@ if [[ "${BASH_SOURCE[0]}" = "$0" ]]; then
   fi
 
   if [ "$label" == "test" ]; then
-    echo "NixOS testing build"
+    echo "NixOS test building ..."
+  elif [ "$label" == "boot" ]; then
+    echo "NixOS boot building ..."
   elif [ -n "$label" ]; then
-    echo "NixOS Rebuilding as '$label' ..."
+    echo "NixOS rebuilding as '$label' ..."
   else
-    echo "NixOS Rebuilding ..."
+    echo "NixOS rebuilding ..."
   fi
 
   build_command="switch"
   if [ "$label" == "test" ]; then
     build_command="test"
+  elif [ "$label" == "boot" ]; then
+    build_command="boot"
   fi
   sudo NIXOS_LABEL="$label" nixos-rebuild "$build_command" --flake "$HOME/.dotfiles/nixos#$(hostname)" 2>&1 | tee /tmp/nixos-switch.log
   success=$?
@@ -62,9 +66,8 @@ if [[ "${BASH_SOURCE[0]}" = "$0" ]]; then
 
   current=$(nixos-rebuild list-generations --keep-going | grep current | awk -F ' ' '{print $5}')
   echo "NixOS Rebuilt as $red$current$reset"
-  if [ -n "$label" ] && [ "$label" != "." ] && [ "$label" != "test" ]; then
+  if [ -n "$label" ] && [ "$label" != "." ] && [ "$label" == "switch" ]; then
     git --git-dir=dotfiles.git --work-tree="$HOME" add nixos
-    git --git-dir=dotfiles.git --work-tree="$HOME" commit -m "Rebuilt NixOS $current"
   fi
 
   popd >/dev/null || exit 1

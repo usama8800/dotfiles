@@ -25,6 +25,7 @@
     }
   ];
   networking.defaultGateway = "192.168.0.8";
+  networking.timeServers = ["192.168.0.123"];
 
   system.autoUpgrade.dates = "14:00";
 
