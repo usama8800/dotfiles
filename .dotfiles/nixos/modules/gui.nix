@@ -92,10 +92,7 @@
   # Set password with `vncpasswd ~/.vnc/passwd`
   systemd.user.services.vnc = {
     serviceConfig = {
-      ExecStart = "${pkgs.tigervnc}/bin/x0vncserver \
-        -display :0 \
-        -rfbauth %h/.vnc/passwd \
-        -rfbport 5900";
+      ExecStart = "${pkgs.tigervnc}/bin/x0vncserver -display :0 -rfbauth %h/.vnc/passwd -rfbport 5900";
     };
     after = ["graphical.target"];
     wantedBy = ["default.target"];
