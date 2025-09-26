@@ -74,12 +74,12 @@
       libreoffice-qt-fresh # office suite
       hunspell # libre office spell check
       hunspellDicts.uk_UA # libre office spell check
-      floorp # browser
+      floorp-bin # browser
       google-chrome # browser
       nextcloud-client # cloud storage
       beeper # messaging app
       discord # messaging app
-      wechat-uos # wechat
+      # wechat-uos # wechat
       krita # image editor
       kdePackages.kdenlive # video editor
       obs-studio # screen recorder
