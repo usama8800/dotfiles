@@ -68,6 +68,7 @@
       usama8800-lenovo = define-host "usama8800-lenovo";
       usama8800-jp1 = define-host "usama8800-jp1";
       usama8800-jp2 = define-host "usama8800-jp2";
+      usama8800-jilani-center = define-host "usama8800-jilani-center";
       usama8800-server = define-host "usama8800-server";
       usama8800-factory = define-host "usama8800-factory";
     };

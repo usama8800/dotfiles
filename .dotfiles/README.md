@@ -20,7 +20,7 @@
   - Toolbar
     - Add "Show in Groups" button without text
 - Beeper
-- Vesktop
+- Discord
 - Nextcloud
 - Browser
   - Settings

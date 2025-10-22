@@ -17,6 +17,14 @@
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
 
+  services.displayManager.ly.enable = false;
+  services.displayManager.sddm = {
+    enable = true;
+    wayland.enable = true;
+    wayland.compositor = "kwin";
+    autoNumlock = true;
+  };
+
   powerManagement.resumeCommands = ''
     date -Iseconds > /mnt/hdd/Workspace/desktop-server/events/wakeup_time
   '';

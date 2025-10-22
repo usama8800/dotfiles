@@ -74,12 +74,12 @@
       libreoffice-qt-fresh # office suite
       hunspell # libre office spell check
       hunspellDicts.uk_UA # libre office spell check
-      floorp # browser
+      floorp-bin # browser
       google-chrome # browser
       nextcloud-client # cloud storage
       beeper # messaging app
       discord # messaging app
-      wechat-uos # wechat
+      # wechat-uos # wechat
       krita # image editor
       kdePackages.kdenlive # video editor
       obs-studio # screen recorder
@@ -92,10 +92,7 @@
   # Set password with `vncpasswd ~/.vnc/passwd`
   systemd.user.services.vnc = {
     serviceConfig = {
-      ExecStart = "${pkgs.tigervnc}/bin/x0vncserver \
-        -display :0 \
-        -rfbauth %h/.vnc/passwd \
-        -rfbport 5900";
+      ExecStart = "${pkgs.tigervnc}/bin/x0vncserver -display :0 -rfbauth %h/.vnc/passwd -rfbport 5900";
     };
     after = ["graphical.target"];
     wantedBy = ["default.target"];

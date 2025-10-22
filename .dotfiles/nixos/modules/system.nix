@@ -7,7 +7,7 @@
 }: {
   system.nixos.label = builtins.getEnv "NIXOS_LABEL";
 
-  services.displayManager.ly.enable = true;
+  services.displayManager.ly.enable = lib.mkDefault true;
   services.displayManager.ly.settings = {
     numlock = true;
     sleep_cmd = "/run/current-system/systemd/bin/systemctl suspend";
@@ -55,6 +55,7 @@
       "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIEBggZsRBOrgwDyVwDlaGlvRw/X/c7U0vsUK7G9I/IJD" # usama8800-lenovo
       "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIE0JGch0tl4eyI947ysKtqsMIOuc7o5aiz9IqHS9ZuG6" # usama8800-jp1
       "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIBfGh4EBgutHF2mZHcIzrb4Y8S5XpB2JrT5D/3uYKAkk" # usama8800-jp2
+      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIDVaAvmE8YWWsKDndqKe8wG0fgkKXtSalU+ZXv8TDPnM" # usama8800-jilani-center
       "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAINEo0SAQiP5h7xNUAIyPCBS8ty204K+glVQj614JujX0" # usama8800-server
       "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAID8EJOl5XWDl/I654MUXHFddtJHqeO/VjNf4a3pIWhU3" # usama8800-factory
       "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIK3OIp9D2qjgOC9Cr2CY0y+9NLODpjY4leEEH9ySlrOh" # usama8800-vm
