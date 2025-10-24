@@ -11,7 +11,7 @@
     ../../modules/gui.nix
     ../../modules/gaming.nix
     ../../modules/gamedev.nix
-    ../../modules/vmware.nix
+    ../../modules/virtualization.nix
   ];
 
   boot.loader.systemd-boot.enable = true;

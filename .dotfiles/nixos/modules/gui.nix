@@ -16,6 +16,12 @@
   };
   services.displayManager.autoLogin.enable = false;
   services.displayManager.autoLogin.user = "usama";
+  services.displayManager.sddm = {
+    enable = true;
+    wayland.enable = true;
+    wayland.compositor = "kwin";
+    autoNumlock = true;
+  };
 
   # Enable sound with pipewire.
   hardware.bluetooth.enable = true;

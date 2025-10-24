@@ -10,6 +10,7 @@
     ./hardware-configuration.nix
     ../../modules/gui.nix
     ../../modules/gaming.nix
+    ../../modules/virtualization.nix
   ];
 
   boot.loader.systemd-boot.enable = true;
