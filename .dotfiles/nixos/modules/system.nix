@@ -7,12 +7,6 @@
 }: {
   system.nixos.label = builtins.getEnv "NIXOS_LABEL";
 
-  services.displayManager.ly.enable = lib.mkDefault true;
-  services.displayManager.ly.settings = {
-    numlock = true;
-    sleep_cmd = "/run/current-system/systemd/bin/systemctl suspend";
-  };
-
   # manually: nix flake update; rebuild update
   # fix store: nix-store --verify --repair --check-contents
   system.autoUpgrade = {
@@ -129,6 +123,8 @@
     shfmt # shell formatter
     just # command runner
     pgadmin4
+    google-cloud-sdk
+    google-cloud-sql-proxy
 
     # for python scripts
     pkgs-unstable.yt-dlp
