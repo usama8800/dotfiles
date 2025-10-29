@@ -13,9 +13,7 @@
     enable = lib.mkDefault true;
     flake = "${config.users.users.usama.home}/.dotfiles/nixos";
     flags = [
-      "--update-input"
-      "nixpkgs"
-      "-L" # print build logs
+      "--print-build-logs"
     ];
     dates = lib.mkDefault "00:00";
     randomizedDelaySec = "15min";
@@ -30,10 +28,14 @@
   # do garbage collection weekly to keep disk usage low
   nix.gc = {
     automatic = true;
+    persistent = true;
     dates = "weekly";
     options = "--delete-older-than 7d";
   };
-  nix.optimise.automatic = true;
+  nix.optimise = {
+    automatic = true;
+    dates = ["weekly"];
+  };
   services.journald.extraConfig = ''
     MaxRetentionSec=3day
   '';
@@ -43,7 +45,6 @@
     isNormalUser = true;
     description = "Usama Ahsan";
     extraGroups = ["networkmanager" "wheel" "docker"];
-    initialPassword = "123";
     openssh.authorizedKeys.keys = [
       "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIAH3VlNgMTY5pjrKWUDGu39WMcpCfiK0fwjWdwOkXDFT" # usama8800-desktop
       "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIEBggZsRBOrgwDyVwDlaGlvRw/X/c7U0vsUK7G9I/IJD" # usama8800-lenovo
@@ -178,6 +179,7 @@
       untracked = "ls-files --other --exclude-standard -x */*";
       untracked-dotfiles = "ls-files --other --exclude-standard -x dotfiles.git";
       add-modified = "add --update";
+      save = "diff --cached";
     };
     gui.pruneduringfetch = true;
     "smartgit \"submodule\"" = {

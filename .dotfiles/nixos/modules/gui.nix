@@ -9,12 +9,19 @@
 
   services.xserver.enable = true;
   services.desktopManager.plasma6.enable = true;
+  services.displayManager.ly.enable = false;
+  services.displayManager.sddm = {
+    enable = true;
+    autoNumlock = true;
+    wayland.enable = lib.mkDefault true;
+  };
+
   # Configure keymap in X11
   services.xserver.xkb = {
     layout = "us";
     variant = "";
   };
-  services.displayManager.autoLogin.enable = false;
+  services.displayManager.autoLogin.enable = true;
   services.displayManager.autoLogin.user = "usama";
   services.displayManager.sddm = {
     enable = true;
@@ -66,15 +73,13 @@
       easyeffects # microphone preprocessing
     ])
     ++ (with pkgs-unstable; [
-      tigervnc # vncpasswd
-
       kdePackages.kfind # file finder
       kdePackages.partitionmanager # partition manager
       kdePackages.filelight # disk usage analyzer
       remmina # rdp / vnc client
       anydesk # remote server and cliet
+      rustdesk # remote server and cliet
       localsend # LAN file sharing
-      # rustdesk # remote server and cliet
       kdePackages.kate # text editor
       onlyoffice-bin # office suite
       libreoffice-qt-fresh # office suite
@@ -95,14 +100,6 @@
     PLAYWRIGHT_SKIP_VALIDATE_HOST_REQUIREMENTS = "true";
   };
 
-  # Set password with `vncpasswd ~/.vnc/passwd`
-  systemd.user.services.vnc = {
-    serviceConfig = {
-      ExecStart = "${pkgs.tigervnc}/bin/x0vncserver -display :0 -rfbauth %h/.vnc/passwd -rfbport 5900";
-    };
-    after = ["graphical.target"];
-    wantedBy = ["default.target"];
-  };
   systemd.user.services.nextcloud = {
     serviceConfig = {
       ExecStart = "${pkgs-unstable.nextcloud-client}/bin/nextcloud --background";

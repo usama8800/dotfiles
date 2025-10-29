@@ -48,9 +48,9 @@
             }: {
               nixpkgs.overlays = [
                 self.inputs.nix-alien.overlays.default
-                (self: super: {
-                  mpv = super.mpv.override {
-                    scripts = [self.mpvScripts.mpris];
+                (final: prev: {
+                  mpv = prev.mpv.override {
+                    scripts = [final.mpvScripts.mpris];
                   };
                 })
               ];
@@ -58,7 +58,7 @@
             {
               nix.registry = {
                 nixpkgs.flake = nixpkgs;
-                nixunstable.flake = nixpkgs-unstable;
+                nixpkgs-unstable.flake = nixpkgs-unstable;
               };
             }
           ];

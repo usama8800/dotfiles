@@ -186,6 +186,15 @@
           General."Startup Session" = "last";
           Konsole.AutoSyncronize = true;
         };
+        # VNC without share request
+        "xdg-desktop-portal/portals.conf" = {
+          General.allow-remote-desktop = true;
+          General.allow-screen-share = true;
+        };
+        "xdg-desktop-portal/x11-portals.conf" = {
+          General.backend = "x11";
+          General.allow-remote-desktop = true;
+        };
       };
       dataFile = {
         "kate/anonymous.katesession" = {
