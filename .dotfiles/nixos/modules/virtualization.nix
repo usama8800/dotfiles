@@ -1,7 +1,10 @@
-{...}: {
+{pkgs, ...}: {
   programs.virt-manager.enable = true;
   users.groups.libvirtd.members = ["usama"];
-  virtualisation.libvirtd.enable = true;
+  virtualisation.libvirtd = {
+    enable = true;
+    qemu.vhostUserPackages = with pkgs; [virtiofsd];
+  };
   virtualisation.spiceUSBRedirection.enable = true;
   home-manager.users.usama.dconf.settings = {
     "org/virt-manager/virt-manager/connections" = {

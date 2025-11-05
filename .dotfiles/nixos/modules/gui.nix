@@ -21,14 +21,6 @@
     layout = "us";
     variant = "";
   };
-  services.displayManager.autoLogin.enable = true;
-  services.displayManager.autoLogin.user = "usama";
-  services.displayManager.sddm = {
-    enable = true;
-    wayland.enable = true;
-    wayland.compositor = "kwin";
-    autoNumlock = true;
-  };
 
   # Enable sound with pipewire.
   hardware.bluetooth.enable = true;
@@ -81,7 +73,7 @@
       rustdesk # remote server and cliet
       localsend # LAN file sharing
       kdePackages.kate # text editor
-      onlyoffice-bin # office suite
+      onlyoffice-desktopeditors # office suite
       libreoffice-qt-fresh # office suite
       hunspell # libre office spell check
       hunspellDicts.uk_UA # libre office spell check

@@ -8,7 +8,7 @@
   programs.gamemode.enable = true;
   environment.systemPackages =
     (with pkgs-unstable; [
-      protonup
+      protonup-ng
       protontricks
       lutris
       bottles
