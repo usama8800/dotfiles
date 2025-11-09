@@ -11,6 +11,10 @@
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
 
+  services.logind.extraConfig = ''
+    HandlePowerKey=ignore
+  '';
+
   services.openssh.ports = [2222];
   services.postgresql.ensureDatabases = ["nextcloud"];
   services.jenkins = {
