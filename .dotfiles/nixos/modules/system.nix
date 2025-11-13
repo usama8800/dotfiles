@@ -136,12 +136,13 @@
     unzip
     rclone
     wakeonlan
+    ntfs3g # mkntfs -q /dev/sdXN after creating partition
+    parted # partition manager
     jq # json processor
     psmisc # ps utils ( killall, fuser )
     aria2 # downloader
     util-linux # for cfdisk ( tui partition manager )
     zellij # terminal multiplexer
-    parted # partition manager
     fzf # fuzzy finder
     fd # find files
     ripgrep # better grep
@@ -162,6 +163,7 @@
     broot # file manager
     ncdu # disk usage analyzer
     fx # json viewer
+    caligula # usb burner
   ];
   programs.git.enable = true;
   programs.git.config = {
