@@ -190,6 +190,7 @@
       initializenew = false;
     };
   };
+
   virtualisation.docker = {
     enable = true;
     autoPrune.enable = true;
@@ -209,10 +210,12 @@
       host   all      all    172.0.0.0/8    scram-sha-256
     '';
   };
-  services.pgadmin = {
+  services.redis.servers."" = {
     enable = true;
-    initialEmail = "usama8800@gmail.com";
-    initialPasswordFile = "/home/usama/.dotfiles/nixos/data/local.pgadmin";
+    appendOnly = lib.mkDefault true;
+    settings = {
+      maxmemory-policy = "noeviction";
+    };
   };
 
   programs.nix-ld.enable = true;

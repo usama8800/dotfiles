@@ -21,7 +21,7 @@
     date -Iseconds > /mnt/hdd/Workspace/desktop-server/events/wakeup_time
   '';
   systemd.user.services.desktop-server = {
-    path = [pkgs.xclip];
+    path = [pkgs.xclip pkgs.wl-clipboard pkgs.alsa-utils];
     serviceConfig = {
       ExecStart = "${pkgs.nodejs_22}/bin/node /mnt/hdd/Workspace/desktop-server/out/server.js";
       WorkingDirectory = "/mnt/hdd/Workspace/desktop-server/";

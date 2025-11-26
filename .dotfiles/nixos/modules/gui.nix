@@ -45,6 +45,8 @@
       aha
       fwupd
       xclip # pipe to clipboard
+      wl-clipboard # pipe to clipboard
+      alsa-utils # amixer to control volume
       libnotify # notify-send
       libsForQt5.kconfig # kde config cli
       kdocker # put any app in the system tray
@@ -91,6 +93,7 @@
   environment.sessionVariables = {
     PLAYWRIGHT_SKIP_VALIDATE_HOST_REQUIREMENTS = "true";
   };
+  services.redis.servers."".appendOnly = false;
 
   systemd.user.services.nextcloud = {
     serviceConfig = {
