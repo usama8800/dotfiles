@@ -48,6 +48,8 @@ alias dux='du -xh . | sort -rh | cat'
 alias termdown='termdown -f clb8x10 '
 alias stopwatch='termdown -a '
 alias timer='termdown -a '
+alias anime='ani-cli --quality 1080 --dub --skip '
+alias tv='nix run github:justchokingaround/lobster#lobster -- -q 1080 '
 
 alias myip='curl -s "ip.me"'
 alias speedtest="curl -s https://raw.githubusercontent.com/sivel/speedtest-cli/master/speedtest.py | python3 -"

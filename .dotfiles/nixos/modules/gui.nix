@@ -51,6 +51,7 @@
       libsForQt5.kconfig # kde config cli
       kdocker # put any app in the system tray
       ani-cli # watch anime
+      ani-skip # provides intro skipping to ani-cli
 
       protonvpn-gui # vpn
       mpv # video player
