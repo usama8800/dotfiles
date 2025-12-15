@@ -1,0 +1,3 @@
+#/bin/sh
+
+pgrep steam | xargs kill -9

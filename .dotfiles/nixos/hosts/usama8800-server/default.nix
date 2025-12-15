@@ -26,7 +26,7 @@
     desktop = {
       host = "desktop";
       user = "usama";
-      hostname = "192.168.100.81";
+      hostname = "192.168.100.51";
     };
   };
 

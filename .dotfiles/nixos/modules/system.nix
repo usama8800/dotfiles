@@ -213,8 +213,10 @@
   services.redis.servers."" = {
     enable = true;
     appendOnly = lib.mkDefault true;
+    bind = null;
     settings = {
       maxmemory-policy = "noeviction";
+      protected-mode = "no";
     };
   };
 

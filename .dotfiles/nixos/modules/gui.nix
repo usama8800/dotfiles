@@ -50,6 +50,7 @@
       libnotify # notify-send
       libsForQt5.kconfig # kde config cli
       kdocker # put any app in the system tray
+      ani-cli # watch anime
 
       protonvpn-gui # vpn
       mpv # video player

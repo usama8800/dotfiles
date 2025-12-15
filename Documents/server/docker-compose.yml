@@ -75,6 +75,7 @@ services:
     container_name: homer
     volumes:
       - ./homer/:/www/assets
+    restart: unless-stopped
   qbittorrent:
     image: lscr.io/linuxserver/qbittorrent:latest
     container_name: qbittorrent
@@ -88,7 +89,7 @@ services:
       - /mnt/hdd:/data
     restart: unless-stopped
   jellyfin:
-    image: jellyfin/jellyfin:latest
+    image: jellyfin/jellyfin:2025090805
     container_name: jellyfin
     restart: unless-stopped
     volumes:

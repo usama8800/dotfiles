@@ -1,0 +1,23 @@
+#!/usr/bin/env bash
+
+set -xeuo pipefail
+
+if [[ $EUID -ne 0 ]]; then
+  echo "This script must be run as root"
+  exit 1
+fi
+
+rm -rf \
+  /var/lib/systemd/coredump/ \
+  /var/lib/sddm/.cache/drkonqi/crashes \
+  /var/log/journal/ \
+  "$HOME"/.cache/pip
+find "$HOME"/.cache/Cypress -mindepth 1 -maxdepth 1 -regex '.*/[0-9].*' | sort -r | tail -n +2 | xargs -d '\n' rm -rf
+find "$HOME"/.cache/ms-playwright -mindepth 1 -maxdepth 1 -name 'chromium-*' | sort -r | tail -n +2 | xargs -d '\n' rm -rf
+find "$HOME"/.cache/ms-playwright -mindepth 1 -maxdepth 1 -name 'firefox-*' | sort -r | tail -n +2 | xargs -d '\n' rm -rf
+find "$HOME"/.cache/ms-playwright -mindepth 1 -maxdepth 1 -name 'ffmpeg-*' | sort -r | tail -n +2 | xargs -d '\n' rm -rf
+nix-collect-garbage
+nix-collect-garbage --delete-older-than 7d
+nix-store --gc
+nix-store --optimise
+docker system prune --volumes --force
