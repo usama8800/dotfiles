@@ -1,3 +1,0 @@
-#/bin/sh
-
-sudo systemctl --user restart pipewire pipewire-pulse wireplumber bluetooth.target

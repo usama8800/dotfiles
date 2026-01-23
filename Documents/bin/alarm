@@ -1,3 +1,4 @@
 #!/usr/bin/env bash
 
 paplay "$HOME"/.local/share/sounds/skyrim_quest.wav
+

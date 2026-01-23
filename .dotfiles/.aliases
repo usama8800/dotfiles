@@ -50,6 +50,7 @@ alias stopwatch='termdown -a '
 alias timer='termdown -a '
 alias anime='ani-cli --quality 1080 --dub --skip '
 alias tv='nix run github:justchokingaround/lobster#lobster -- -q 1080 '
+alias tagstudio='nix run github:TagStudioDev/TagStudio#tagstudio'
 
 alias myip='curl -s "ip.me"'
 alias speedtest="curl -s https://raw.githubusercontent.com/sivel/speedtest-cli/master/speedtest.py | python3 -"
@@ -114,3 +115,12 @@ venv() {
     source .venv/bin/activate
   fi
 }
+nixpkg() {
+  if [ "$#" -eq 0 ]; then
+    echo "Usage: nixtry package1 [package2 ...]"
+    return 1
+  fi
+
+  nix shell --impure "${@/#/nixpkgs#}"
+}
+
