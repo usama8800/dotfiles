@@ -164,6 +164,7 @@
     ncdu # disk usage analyzer
     fx # json viewer
     caligula # usb burner
+    restman # rest api client
   ];
   programs.git.enable = true;
   programs.git.config = {
