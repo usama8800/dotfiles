@@ -23,7 +23,7 @@
 
   # Enable networking
   networking.networkmanager.enable = true;
-  networking.firewall.enable = false;
+  networking.firewall.enable = lib.mkDefault false;
 
   # do garbage collection weekly to keep disk usage low
   nix.gc = {

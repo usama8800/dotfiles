@@ -46,24 +46,6 @@ services:
     restart: unless-stopped
     volumes:
       - ./redis:/data
-  # mysql:
-  #   image: mysql:latest
-  #   container_name: mysql
-  #   environment:
-  #     - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
-  #   volumes:
-  #     - ./mysql:/var/lib/mysql
-  #   restart: always
-  # homeassistant:
-  #   image: lscr.io/linuxserver/homeassistant:latest
-  #   container_name: homeassistant
-  #   environment:
-  #     - PUID=1000
-  #     - PGID=1000
-  #     - TZ=Asia/Karachi
-  #   volumes:
-  #     - ./homeassistant:/config
-  #   restart: unless-stopped
   piserver:
     build: ../PiServer/
     container_name: piserver
@@ -131,20 +113,6 @@ services:
       - ./jackett:/config/Jackett
       - /mnt/hdd/Downloads:/downloads
     restart: unless-stopped
-  # ombi:
-  #   image: lscr.io/linuxserver/ombi:latest
-  #   container_name: ombi
-  #   environment:
-  #     - PUID=1000
-  #     - PGID=1000
-  #     - TZ=Asia/Karachi
-  #   volumes:
-  #     - ./ombi:/config
-  #   ports:
-  #     - 3579:3579
-  #   restart: unless-stopped
-  #   - 3579:3579
-  #   restart: unless-stopped
   nextcloud:
     image: linuxserver/nextcloud:29.0.6
     container_name: nextcloud

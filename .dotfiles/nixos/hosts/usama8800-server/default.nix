@@ -8,12 +8,17 @@
 
   imports = [./hardware-configuration.nix];
 
-  boot.loader.systemd-boot.enable = true;
-  boot.loader.efi.canTouchEfiVariables = true;
+  boot.loader.grub.enable = true;
+  boot.loader.grub.device = "/dev/sda";
 
-  services.logind.extraConfig = ''
-    HandlePowerKey=ignore
-  '';
+  # services.logind.extraConfig = ''
+  #   HandlePowerKey=ignore
+  # '';
+
+  networking.firewall = {
+    enable = true;
+    allowedTCPPorts = [2222 80 443];
+  };
 
   services.openssh.ports = [2222];
   services.postgresql.ensureDatabases = ["nextcloud"];
@@ -66,5 +71,5 @@
     script = "node ./out/index.js";
   };
 
-  system.stateVersion = "24.05";
+  system.stateVersion = "25.11";
 }
