@@ -23,6 +23,9 @@
 
   # Enable networking
   networking.networkmanager.enable = true;
+  networking.networkmanager.plugins = with pkgs; [
+    networkmanager-openvpn
+  ];
   networking.firewall.enable = lib.mkDefault false;
 
   # do garbage collection weekly to keep disk usage low
@@ -48,11 +51,7 @@
     openssh.authorizedKeys.keys = [
       "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIAH3VlNgMTY5pjrKWUDGu39WMcpCfiK0fwjWdwOkXDFT" # usama8800-desktop
       "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIEBggZsRBOrgwDyVwDlaGlvRw/X/c7U0vsUK7G9I/IJD" # usama8800-lenovo
-      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIE0JGch0tl4eyI947ysKtqsMIOuc7o5aiz9IqHS9ZuG6" # usama8800-jp1
-      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIBfGh4EBgutHF2mZHcIzrb4Y8S5XpB2JrT5D/3uYKAkk" # usama8800-jp2
-      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIDVaAvmE8YWWsKDndqKe8wG0fgkKXtSalU+ZXv8TDPnM" # usama8800-jilani-center
-      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAINEo0SAQiP5h7xNUAIyPCBS8ty204K+glVQj614JujX0" # usama8800-server
-      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAID8EJOl5XWDl/I654MUXHFddtJHqeO/VjNf4a3pIWhU3" # usama8800-factory
+      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAINE0asQEXuNIkJ3ok/3oPsMBSuABrvBBkAOK6UmqfOFT" # usama8800-server
       "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIK3OIp9D2qjgOC9Cr2CY0y+9NLODpjY4leEEH9ySlrOh" # usama8800-vm
       "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIBUis01MRy8atujt2/rbxoXIXaCzKDcUbGcm3nPNXj+K" # phone
     ];
@@ -122,6 +121,7 @@
     nodejs_22
     python3
     shfmt # shell formatter
+    shellcheck # shell lint
     just # command runner
     pgadmin4
     google-cloud-sdk
@@ -166,6 +166,7 @@
     caligula # usb burner
     restman # rest api client
   ];
+  programs.nix-index-database.comma.enable = true;
   programs.git.enable = true;
   programs.git.config = {
     user.name = "Usama Ahsan";
@@ -254,6 +255,9 @@
     xorg.libXfixes
     xorg.libXrandr
     xorg.libxcb
+
+    gdk-pixbuf
+    libgbm
   ];
 
   home-manager.useGlobalPkgs = true;
@@ -264,6 +268,7 @@
     home.homeDirectory = "/home/usama";
 
     programs.ssh.enable = true;
+    programs.ssh.enableDefaultConfig = false;
     programs.ssh.matchBlocks = {
       server = {
         host = "server";

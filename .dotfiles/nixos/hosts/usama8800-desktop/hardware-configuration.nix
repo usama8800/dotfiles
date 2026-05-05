@@ -17,19 +17,14 @@
     device = "/dev/disk/by-label/nixos";
     fsType = "ext4";
   };
-  fileSystems."/boot" = {
-    device = "/dev/disk/by-label/BOOT";
-    fsType = "vfat";
-    options = ["fmask=0077" "dmask=0077"];
-  };
   fileSystems."/mnt/hdd/" = {
     device = "/dev/disk/by-label/HDD";
     mountPoint = "/mnt/hdd";
   };
-  fileSystems."/mnt/sdd/" = {
-    device = "/dev/disk/by-label/SDD";
-    mountPoint = "/mnt/sdd";
-  };
+  # fileSystems."/mnt/sdd/" = {
+  #   device = "/dev/nvme0n1p3";
+  #   mountPoint = "/mnt/windows";
+  # };
 
   swapDevices = [{device = "/dev/disk/by-label/swap";}];
 

@@ -47,11 +47,9 @@
       xclip # pipe to clipboard
       wl-clipboard # pipe to clipboard
       alsa-utils # amixer to control volume
-      libnotify # notify-send
+      libnotify # notify-send https://specifications.freedesktop.org/icon-naming/latest/#names
       libsForQt5.kconfig # kde config cli
       kdocker # put any app in the system tray
-      ani-cli # watch anime
-      ani-skip # provides intro skipping to ani-cli
 
       protonvpn-gui # vpn
       mpv # video player
@@ -66,9 +64,13 @@
       bruno # rest client
       deluge # torrent client
       pureref # notes with imgaes
+      anki # flash cards for learning
       easyeffects # microphone preprocessing
     ])
     ++ (with pkgs-unstable; [
+      ani-cli # watch anime
+      ani-skip # provides intro skipping to ani-cli
+
       kdePackages.kfind # file finder
       kdePackages.partitionmanager # partition manager
       kdePackages.filelight # disk usage analyzer

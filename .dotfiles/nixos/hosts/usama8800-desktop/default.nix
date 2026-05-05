@@ -14,8 +14,11 @@
     ../../modules/virtualization.nix
   ];
 
-  boot.loader.systemd-boot.enable = true;
-  boot.loader.efi.canTouchEfiVariables = true;
+  boot.loader.grub.enable = true;
+  boot.loader.grub.device = "/dev/nvme1n1";
+  boot.loader.grub.useOSProber = true;
+
+  nix.settings.build-dir = "/mnt/hdd/nix/builds";
 
   powerManagement.resumeCommands = ''
     date -Iseconds > /mnt/hdd/Workspace/desktop-server/events/wakeup_time
@@ -30,6 +33,17 @@
     };
     wantedBy = ["default.target"];
     after = ["graphical.target"];
+  };
+
+  services.prowlarr.enable = true;
+  networking.hosts."127.0.0.1" = ["prowlarr"];
+  services.caddy = {
+    enable = true;
+    virtualHosts."http://prowlarr" = {
+      extraConfig = ''
+        reverse_proxy localhost:9696
+      '';
+    };
   };
 
   system.stateVersion = "24.05";

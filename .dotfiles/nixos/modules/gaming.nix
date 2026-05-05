@@ -10,13 +10,13 @@
     (with pkgs-unstable; [
       protonup-ng
       protontricks
-      lutris
-      bottles
       mangohud
       heroic # epic games and gog launcher
-      wineWowPackages.stable
+      wineWow64Packages.stable
     ])
     ++ (with pkgs; [
+      lutris
+      bottles
       prismlauncher
     ]);
   environment.sessionVariables = {

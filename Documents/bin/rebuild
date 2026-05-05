@@ -28,16 +28,18 @@ if [[ "${BASH_SOURCE[0]}" = "$0" ]]; then
     exit 0
   fi
 
+  # Set label
+  if [ "$#" -eq 0 ]; then
+    read -rp "Label: " label
+  else
+    label="$1"
+  fi
+
   # format files
   alejandra --quiet nixos
-
-  # show diff
-  git --git-dir=dotfiles.git --work-tree="$HOME" diff nixos | bat --paging always
-
-  if [ "$#" -gt 0 ]; then
-    label="$1"
-  else
-    read -rp "Label: " label
+  if [[ "$label" != "." ]]; then
+    # show diff
+    git --git-dir=dotfiles.git --work-tree="$HOME" diff nixos | bat --paging always
   fi
 
   if [ "$label" == "test" ]; then
@@ -56,11 +58,14 @@ if [[ "${BASH_SOURCE[0]}" = "$0" ]]; then
   elif [ "$label" == "boot" ]; then
     build_command="boot"
   fi
-  sudo NIXOS_LABEL="$label" nixos-rebuild "$build_command" --flake "$HOME/.dotfiles/nixos#$(hostname)" 2>&1 | tee /tmp/nixos-switch.log
+  sudo NIXOS_LABEL="$label" nixos-rebuild "$build_command" -K --flake "$HOME/.dotfiles/nixos#$(hostname)" 2>&1 | tee /tmp/nixos-switch.log
   success=$?
   if [ "$success" -ne 0 ]; then
     echo -e "\n\n"
     grep --only-matching -P 'error: .+' /tmp/nixos-switch.log | grep --color "error:"
+    if [ -x "$(command -v notify-send)" ]; then
+      notify-send -e "NixOS Rebuild Failed" --icon=dialog-error
+    fi
     exit 1
   fi
 
@@ -72,6 +77,6 @@ if [[ "${BASH_SOURCE[0]}" = "$0" ]]; then
 
   popd >/dev/null || exit 1
   if [ -x "$(command -v notify-send)" ]; then
-    notify-send -e "NixOS Rebuilt OK!" --icon=software-update-available
+    notify-send -e "NixOS Rebuild Complete" --icon=face-smile
   fi
 fi

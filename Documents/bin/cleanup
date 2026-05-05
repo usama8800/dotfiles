@@ -11,7 +11,7 @@ find "$HOME"/.cache/Cypress -mindepth 1 -maxdepth 1 -regex '.*/[0-9].*' | sort -
 find "$HOME"/.cache/ms-playwright -mindepth 1 -maxdepth 1 -name 'chromium-*' | sort -r | tail -n +2 | xargs -d '\n' rm -rf
 find "$HOME"/.cache/ms-playwright -mindepth 1 -maxdepth 1 -name 'firefox-*' | sort -r | tail -n +2 | xargs -d '\n' rm -rf
 find "$HOME"/.cache/ms-playwright -mindepth 1 -maxdepth 1 -name 'ffmpeg-*' | sort -r | tail -n +2 | xargs -d '\n' rm -rf
-nix-collect-garbage
+nix-collect-garbage # deletes ophaned garbage
 nix-collect-garbage --delete-older-than 7d
 nix-store --gc
 nix-store --optimise
