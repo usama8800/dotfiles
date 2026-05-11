@@ -153,6 +153,8 @@
     eza # better ls
     termdown # timer and stopwatch
     dysk # mounted drives info
+    poppler-utils # pdfattach pdfdetach pdffonts pdfimages pdfinfo pdfseparate pdfsig pdftocairo pdftohtml pdftoppm pdftops pdftotext pdfunite
+    img2pdf # convert images to pdf
 
     # TUIs
     vim # editor

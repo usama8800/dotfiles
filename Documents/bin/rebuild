@@ -29,15 +29,16 @@ if [[ "${BASH_SOURCE[0]}" = "$0" ]]; then
   fi
 
   # Set label
-  if [ "$#" -eq 0 ]; then
-    read -rp "Label: " label
-  else
+  if [ "$#" -ne 0 ]; then
     label="$1"
+  else
+    label=""
   fi
 
   # format files
   alejandra --quiet nixos
-  if [[ "$label" != "." ]]; then
+
+  if [[ "$label" != "" ]]; then
     # show diff
     git --git-dir=dotfiles.git --work-tree="$HOME" diff nixos | bat --paging always
   fi
