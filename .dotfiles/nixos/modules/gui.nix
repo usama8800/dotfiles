@@ -91,9 +91,10 @@
       # wechat-uos # wechat
       krita # image editor
       kdePackages.kdenlive # video editor
-      obs-studio # screen recorder
     ]);
   programs.kdeconnect.enable = true; # phone to pc connection
+  programs.obs-studio.enable = true; # screen recorder
+  programs.obs-studio.enableVirtualCamera = true;
   environment.sessionVariables = {
     PLAYWRIGHT_SKIP_VALIDATE_HOST_REQUIREMENTS = "true";
   };

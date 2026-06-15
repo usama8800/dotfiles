@@ -10,14 +10,16 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
-    "@usama8800/dotenvplus": "^2.2.0",
+    "@types/sinon": "^21.0.1",
+    "@usama8800/dotenvplus": "^3.4.0",
     "commander": "^12.1.0",
     "date-fns": "^4.1.0",
     "execa": "^9.5.2",
     "fs-extra": "^11.2.0",
     "lodash": "^4.17.21",
-    "zod": "^3.24.1",
-    "zx": "^8.2.4"
+    "sinon": "^22.0.0",
+    "zod": "^4.4.3",
+    "zx": "^8.8.5"
   },
   "devDependencies": {
     "@types/chai": "5.0.1",

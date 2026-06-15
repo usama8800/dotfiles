@@ -1,10 +1,13 @@
 {
   "Best Classics": {
-    "url": "https://www.youtube.com/playlist?list=PLZY56D5QXJZ9IISu_gzegHwZURZYFQc8z",
+    "urls": [
+      "https://www.youtube.com/playlist?list=PLZY56D5QXJZ9IISu_gzegHwZURZYFQc8z",
+      "https://www.youtube.com/playlist?list=PLPDdfn5ZGZkY"
+    ],
     "genre": "Classical",
     "trackInfo": {
       "s_9Uw9bCM30": {
-        "title": "Romeo and Juliet No. 13, Op. 64 \"Dance of the Knights\"",
+        "title": "\"Dance of the Knights\", Romeo and Juliet No. 13, Op. 64",
         "artist": "Sergei Prokofiev",
         "start": 8,
         "end": "5:04"
@@ -33,38 +36,38 @@
         {
           "start": 17,
           "end": "12:37",
-          "title": "Symphony No. 9 in E minor, I. Adagio - Allegro molto, Op. 95, B. 178, \"From the New World\"",
+          "title": "Symphony No. 9 in E minor, \"From the New World\" I, Op. 95, B. 178",
           "artist": "Antonin Dvorak"
         },
         {
           "start": "12:55",
           "end": "25:11",
-          "title": "Symphony No. 9 in E minor, II. Largo, Op. 95, B. 178, \"From the New World\"",
+          "title": "Symphony No. 9 in E minor, \"From the New World\" II, Op. 95, B. 178",
           "artist": "Antonin Dvorak"
         },
         {
           "start": "25:16",
           "end": "32:42",
-          "title": "Symphony No. 9 in E minor, III. Scherzo. Molto vivace, Op. 95, B. 178, \"From the New World\"",
+          "title": ", Symphony No. 9 in E minor, \"From the New World\" III, Op. 95, B. 178",
           "artist": "Antonin Dvorak"
         },
         {
           "start": "32:42",
           "end": "43:28",
-          "title": "Symphony No. 9 in E minor, IV. Allegro con fuoco, Op. 95, B. 178, \"From the New World\"",
+          "title": "Symphony No. 9 in E minor, \"From the New World\" IV, Op. 95, B. 178",
           "artist": "Antonin Dvorak"
         }
       ],
       "wwaSSQnceu8": {
         "start": 0,
         "end": "2:49",
-        "title": "Four Seasons Concerto No. 2 in G minor, III. Presto, Op. 8, RV 315, \"Summer\" (L'estate) - Cynthia Freivogel",
+        "title": "Four Seasons Concerto No. 2 in G minor, \"Summer\" (L'estate) III, Op. 8, RV 315 - Cynthia Freivogel",
         "artist": "Antonio Vivaldi"
       },
       "UWg5ugyMjIc": {
         "start": 0,
         "end": "3:20",
-        "title": "Four Seasons Concerto No. 4 in F minor, III. Allegro, Op. 8, RV 297, \"Winter\" (L'inverno) - Cynthia Freivogel",
+        "title": "Four Seasons Concerto No. 4 in F minor, \"Winter\" (L'inverno) III, Op. 8, RV 297 - Cynthia Freivogel",
         "artist": "Antonio Vivaldi"
       },
       "EXgNlueMu6k": {
@@ -114,7 +117,7 @@
         "artist": "Charles-Camille Saint-Saens"
       },
       "3qrKjywjo7Q": {
-        "title": "The Carnival of the Animals, XIII. Le Cygne (The Swan), R. 125 - Yo-Yo Ma, Kathryn Stott",
+        "title": "The Carnival of the Animals, The Swan (Le Cygne) XIII, R. 125 - Yo-Yo Ma, Kathryn Stott",
         "artist": "Charles-Camille Saint-Saens"
       },
       "_5h4Y66HnG0": {
@@ -133,25 +136,25 @@
       },
       "Lu09CWT41NE": [
         {
-          "title": "Symphony No. 11 in G minor, I. Adagio \"The Palace Square\", Op. 103, \"The Year 1905\"",
+          "title": "Symphony No. 11 in G minor, \"The Year 1905\" I \"The Palace Square\", Op. 103",
           "artist": "Dmitri Shostakovich",
           "start": 0,
           "end": "16:02"
         },
         {
-          "title": "Symphony No. 11 in G minor, II. Allegro \"The 9th of January\", Op. 103, \"The Year 1905\"",
+          "title": "Symphony No. 11 in G minor, \"The Year 1905\" II \"The 9th of January\", Op. 103",
           "artist": "Dmitri Shostakovich",
           "start": "16:01",
           "end": "34:57"
         },
         {
-          "title": "Symphony No. 11 in G minor, III. Adagio \"Memory Eternal\", Op. 103, \"The Year 1905\"",
+          "title": "Symphony No. 11 in G minor, \"The Year 1905\" III \"Memory Eternal\", Op. 103",
           "artist": "Dmitri Shostakovich",
           "start": "34:57",
           "end": "46:12"
         },
         {
-          "title": "Symphony No. 11 in G minor, IV. Allegro non troppo \"Tocsin\", Op. 103, \"The Year 1905\"",
+          "title": "Symphony No. 11 in G minor, \"The Year 1905\" IV \"Tocsin\", Op. 103",
           "artist": "Dmitri Shostakovich",
           "start": "46:12",
           "end": "01:00:45"
@@ -180,7 +183,7 @@
       "DVWaIJsIzao": {
         "start": 0,
         "end": "9:52",
-        "title": "The Symphony No. 3 in A minor, VI. Adagio, Op. 56, MWV N 18, \"Scottish\"",
+        "title": "The Symphony No. 3 in A minor, \"Scottish\" VI, Op. 56, MWV N 18",
         "artist": "Felix Mendelssohn"
       },
       "I03Hs6dwj7E": {
@@ -198,7 +201,7 @@
         "artist": "Francois Couperin"
       },
       "poO9LCkBJ7M": {
-        "title": "12 Bagatelles, Op. 13 No. 9 in E minor, \"L'Abeille (The Bee)\"",
+        "title": "Bagatelles No. 9 in E minor, \"L'Abeille (The Bee)\", Op. 13",
         "artist": "Francois Schubert"
       },
       "LdH1hSWGFGU": {
@@ -218,7 +221,7 @@
         "artist": "Franz Liszt"
       },
       "L42sbnQxEmw": {
-        "title": "Three Concert Etudes S. 144 No. 3 in D flat major, \"Un Sospiro\"",
+        "title": "Three Concert Etudes No. 3 in D flat major, \"Un Sospiro\", S. 144",
         "artist": "Franz Liszt"
       },
       "y7YBvRaxLi0": {
@@ -232,12 +235,20 @@
         "artist": "Franz Schubert"
       },
       "nioKJNp8ADE": {
-        "title": "Piano Trio No. 2 in E-flat major, Op. 100, D. 929, II. Andante con moto - Ambroise Aubrun, Maelle Vilbert, Julien Hanck",
+        "title": "Piano Trio No. 2 in E-flat major, II, Op. 100, D. 929 - Ambroise Aubrun, Maelle Vilbert, Julien Hanck",
         "artist": "Franz Schubert"
       },
       "SlTTgJau33Q": {
         "title": "Standchen, D. 889 - Khatia Buniatishvili",
         "artist": "Franz Schubert"
+      },
+      "oOOFxDbq3RE": {
+        "title": "Etude in C sharp minor, Op. 10 No. 4 - Bruce Liu",
+        "artist": "Frederic Chopin"
+      },
+      "5ENOV5JEDXc": {
+        "title": "Etude in F minor, Op. 10 No. 9",
+        "artist": "Frederic Chopin"
       },
       "7VWHBHeNrg4": {
         "start": 0,
@@ -245,28 +256,20 @@
         "title": "Etude in C minor, Op. 10, No. 12, \"Revolutionary Etude\", \"Etude on the Bombardment of Warsaw\" - Evgeny Kissin",
         "artist": "Frederic Chopin"
       },
-      "pHlqEvAwdVc": {
-        "title": "Etude in A minor, Op. 25 No. 11, \"Winter Wind\" - Hayato Sumino",
+      "RsmYuBihEuQ": {
+        "title": "Etude in F major, Op. 25 No. 3, \"The Horseman\", \"The Knight\"",
+        "artist": "Frederic Chopin"
+      },
+      "G10qXpF3cqI": {
+        "title": "Etude in G flat major, Op. 25 No. 5 - Kate Liu",
         "artist": "Frederic Chopin"
       },
       "V1hw_xVYubU": {
         "title": "Etude in B minor, Op. 25 No. 10 - Kyohei Sorita",
         "artist": "Frederic Chopin"
       },
-      "oOOFxDbq3RE": {
-        "title": "Etude in C sharp minor, Op. 10 No. 4 - Bruce Liu",
-        "artist": "Frederic Chopin"
-      },
-      "RsmYuBihEuQ": {
-        "title": "Etude in F major, Op. 25 No. 3, \"The Horseman\", \"The Knight\"",
-        "artist": "Frederic Chopin"
-      },
-      "5ENOV5JEDXc": {
-        "title": "Etude in F minor, Op. 10 No. 9",
-        "artist": "Frederic Chopin"
-      },
-      "G10qXpF3cqI": {
-        "title": "Etude in G flat major, Op. 25 No. 5 - Kate Liu",
+      "pHlqEvAwdVc": {
+        "title": "Etude in A minor, Op. 25 No. 11, \"Winter Wind\" - Hayato Sumino",
         "artist": "Frederic Chopin"
       },
       "LG-E4PVGQSI": {
@@ -580,10 +583,32 @@
         "title": "Swan Lake Op. 20, Act II No. 10, Scene",
         "artist": "Pyotr Ilyich Tchaikovsky"
       },
-      "VMTBLuMzvs0": {
-        "title": "Symphony No. 4 in F minor, Op. 36",
-        "artist": "Pyotr Ilyich Tchaikovsky"
-      },
+      "VMTBLuMzvs0": [
+        {
+          "start": 8,
+          "end": "18:11",
+          "title": "Symphony No. 4 in F minor, I, Op. 36",
+          "artist": "Pyotr Ilyich Tchaikovsky"
+        },
+        {
+          "start": "18:37",
+          "end": "28:29",
+          "title": "Symphony No. 4 in F minor, II, Op. 36",
+          "artist": "Pyotr Ilyich Tchaikovsky"
+        },
+        {
+          "start": "29:00",
+          "end": "34:31",
+          "title": "Symphony No. 4 in F minor, III, Op. 36",
+          "artist": "Pyotr Ilyich Tchaikovsky"
+        },
+        {
+          "start": "34:31",
+          "end": "42:55",
+          "title": "Symphony No. 4 in F minor, IV, Op. 36",
+          "artist": "Pyotr Ilyich Tchaikovsky"
+        }
+      ],
       "_LNitz6DNgg": {
         "title": "The Nutcracker Op. 71, March",
         "artist": "Pyotr Ilyich Tchaikovsky"
@@ -679,11 +704,19 @@
       "l-fxH--8LFI": {
         "title": "Van Gogh",
         "artist": "Virginio Aiello"
+      },
+      "8UTq1eZrDkI": {
+        "title": "Introduction and Rondo Capriccioso Op.28 - Ray Chen",
+        "artist": "Charles-Camille Saint-Saens",
+        "start": 8,
+        "end": "9:28"
       }
     }
   },
   "Atrioc": {
-    "url": "https://www.youtube.com/playlist?list=PLZY56D5QXJZ-facUOhMGlMn5tQGR86omz",
+    "urls": [
+      "https://www.youtube.com/playlist?list=PLZY56D5QXJZ-facUOhMGlMn5tQGR86omz"
+    ],
     "genre": "Pop",
     "trackInfo": {
       "De3TaHwgV60": {
@@ -769,11 +802,17 @@
       "rbsNDjMYmiU": {
         "title": "Thousand Reels Stare",
         "artist": "Confuzzled, Jo the Froggie, FluentSynth"
+      },
+      "z0FanyTWkho": {
+        "title": "NOTHINGEVERHAPPENS",
+        "artist": "MyDog Murphy, Badger, Beautiful Panda, JPecs"
       }
     }
   },
   "Random Music": {
-    "url": "https://www.youtube.com/playlist?list=PLZY56D5QXJZ_WyaiL6BlA7dV2UiwZOzzn",
+    "urls": [
+      "https://www.youtube.com/playlist?list=PLZY56D5QXJZ_WyaiL6BlA7dV2UiwZOzzn"
+    ],
     "genre": "Pop",
     "trackInfo": {
       "KHLNSxe5Y8A": {
@@ -903,6 +942,34 @@
       "M-l3mNWB7W8": {
         "title": "Be a Flower",
         "artist": "Ryokuoushoku Shakai"
+      },
+      "qeMFqkcPYcg": {
+        "title": "Sweet Dreams (Are Made Of This)",
+        "artist": "Eurythmics, Annie Lennox, Dave Stewart"
+      },
+      "GLsCR2RMBak": {
+        "title": "Dig It Up",
+        "artist": "Holes"
+      },
+      "HYmn5BQIxdQ": {
+        "title": "Hopes and Dreams \"Orchestrated\" - Undertale",
+        "artist": "Toby Fox"
+      },
+      "CqwrwwOzVcQ": {
+        "title": "STORM",
+        "artist": "OTYKEN"
+      },
+      "QuDMWkdlaUU": {
+        "title": "Rasah Nyangkem 3",
+        "artist": "Ochi Alvira Ft. Syahiba Saufa"
+      },
+      "jM8dCGIm6yc": {
+        "title": "Wolf Totem",
+        "artist": "The HU"
+      },
+      "vsPCsb31mUk": {
+        "title": "Roll Me In - Katamari Damacy",
+        "artist": "The OneUps"
       }
     }
   }

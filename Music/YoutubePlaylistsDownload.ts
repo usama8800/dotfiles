@@ -1,140 +1,149 @@
 #!/usr/bin/env -S npx tsx
 
-import { env as loadEnv } from '@usama8800/dotenvplus';
-import { program } from 'commander';
-import { ensureDirSync, existsSync, moveSync, readdirSync, readFileSync, readJsonSync, removeSync, writeFileSync } from 'fs-extra';
-import { countBy } from 'lodash';
-import { parse as parsePath, resolve } from 'path';
-import { z } from 'zod';
-import { $ as $$ } from 'zx';
+import { loadEnv } from "@usama8800/dotenvplus";
+import { program } from "commander";
+import {
+  ensureDirSync,
+  existsSync,
+  moveSync,
+  readdirSync,
+  readFileSync,
+  readJsonSync,
+  removeSync,
+  writeFileSync,
+} from "fs-extra";
+import { countBy } from "lodash";
+import { parse as parsePath, resolve } from "path";
+import { z } from "zod";
+import { $ as $$ } from "zx";
 
 enum Genre {
-  'Blues' = 'Blues',
-  'Classic Rock' = 'Classic Rock',
-  'Country' = 'Country',
-  'Dance' = 'Dance',
-  'Disco' = 'Disco',
-  'Funk' = 'Funk',
-  'Grunge' = 'Grunge',
-  'Hip-Hop' = 'Hip-Hop',
-  'Jazz' = 'Jazz',
-  'Metal' = 'Metal',
-  'New Age' = 'New Age',
-  'Oldies' = 'Oldies',
-  'Other' = 'Other',
-  'Pop' = 'Pop',
-  'R&B' = 'R&B',
-  'Rap' = 'Rap',
-  'Reggae' = 'Reggae',
-  'Rock' = 'Rock',
-  'Techno' = 'Techno',
-  'Industrial' = 'Industrial',
-  'Alternative' = 'Alternative',
-  'Ska' = 'Ska',
-  'Death Metal' = 'Death Metal',
-  'Pranks' = 'Pranks',
-  'Soundtrack' = 'Soundtrack',
-  'Euro-Techno' = 'Euro-Techno',
-  'Ambient' = 'Ambient',
-  'Trip-Hop' = 'Trip-Hop',
-  'Vocal' = 'Vocal',
-  'Jazz+Funk' = 'Jazz+Funk',
-  'Fusion' = 'Fusion',
-  'Trance' = 'Trance',
-  'Classical' = 'Classical',
-  'Instrumental' = 'Instrumental',
-  'Acid' = 'Acid',
-  'House' = 'House',
-  'Game' = 'Game',
-  'Sound Clip' = 'Sound Clip',
-  'Gospel' = 'Gospel',
-  'Noise' = 'Noise',
-  'AlternRock' = 'AlternRock',
-  'Bass' = 'Bass',
-  'Soul' = 'Soul',
-  'Punk' = 'Punk',
-  'Space' = 'Space',
-  'Meditative' = 'Meditative',
-  'Instrumental Pop' = 'Instrumental Pop',
-  'Instrumental Rock' = 'Instrumental Rock',
-  'Ethnic' = 'Ethnic',
-  'Gothic' = 'Gothic',
-  'Darkwave' = 'Darkwave',
-  'Techno-Industrial' = 'Techno-Industrial',
-  'Electronic' = 'Electronic',
-  'Pop-Folk' = 'Pop-Folk',
-  'Eurodance' = 'Eurodance',
-  'Dream' = 'Dream',
-  'Southern Rock' = 'Southern Rock',
-  'Comedy' = 'Comedy',
-  'Cult' = 'Cult',
-  'Gangsta' = 'Gangsta',
-  'Top 40' = 'Top 40',
-  'Christian Rap' = 'Christian Rap',
-  'Pop/Funk' = 'Pop/Funk',
-  'Jungle' = 'Jungle',
-  'Native American' = 'Native American',
-  'Cabaret' = 'Cabaret',
-  'New Wave' = 'New Wave',
-  'Psychadelic' = 'Psychadelic',
-  'Rave' = 'Rave',
-  'Showtunes' = 'Showtunes',
-  'Trailer' = 'Trailer',
-  'Lo-Fi' = 'Lo-Fi',
-  'Tribal' = 'Tribal',
-  'Acid Punk' = 'Acid Punk',
-  'Acid Jazz' = 'Acid Jazz',
-  'Polka' = 'Polka',
-  'Retro' = 'Retro',
-  'Musical' = 'Musical',
-  'Rock & Roll' = 'Rock & Roll',
-  'Hard Rock' = 'Hard Rock',
-  'Folk' = 'Folk',
-  'Folk/Rock' = 'Folk/Rock',
-  'National Folk' = 'National Folk',
-  'Swing' = 'Swing',
-  'Fast Fusion' = 'Fast Fusion',
-  'Bebob' = 'Bebob',
-  'Latin' = 'Latin',
-  'Revival' = 'Revival',
-  'Celtic' = 'Celtic',
-  'Bluegrass' = 'Bluegrass',
-  'Avantgarde' = 'Avantgarde',
-  'Gothic Rock' = 'Gothic Rock',
-  'Progressive Rock' = 'Progressive Rock',
-  'Psychedelic Rock' = 'Psychedelic Rock',
-  'Symphonic Rock' = 'Symphonic Rock',
-  'Slow Rock' = 'Slow Rock',
-  'Big Band' = 'Big Band',
-  'Chorus' = 'Chorus',
-  'Easy Listening' = 'Easy Listening',
-  'Acoustic' = 'Acoustic',
-  'Humour' = 'Humour',
-  'Speech' = 'Speech',
-  'Chanson' = 'Chanson',
-  'Opera' = 'Opera',
-  'Chamber Music' = 'Chamber Music',
-  'Sonata' = 'Sonata',
-  'Symphony' = 'Symphony',
-  'Booty Bass' = 'Booty Bass',
-  'Primus' = 'Primus',
-  'Porn Groove' = 'Porn Groove',
-  'Satire' = 'Satire',
-  'Slow Jam' = 'Slow Jam',
-  'Club' = 'Club',
-  'Tango' = 'Tango',
-  'Samba' = 'Samba',
-  'Folklore' = 'Folklore',
-  'Ballad' = 'Ballad',
-  'Power Ballad' = 'Power Ballad',
-  'Rhythmic Soul' = 'Rhythmic Soul',
-  'Freestyle' = 'Freestyle',
-  'Duet' = 'Duet',
-  'Punk Rock' = 'Punk Rock',
-  'Drum Solo' = 'Drum Solo',
-  'A Capella' = 'A Capella',
-  'Euro-House' = 'Euro-House',
-  'Dance Hall' = 'Dance Hall'
+  "Blues" = "Blues",
+  "Classic Rock" = "Classic Rock",
+  "Country" = "Country",
+  "Dance" = "Dance",
+  "Disco" = "Disco",
+  "Funk" = "Funk",
+  "Grunge" = "Grunge",
+  "Hip-Hop" = "Hip-Hop",
+  "Jazz" = "Jazz",
+  "Metal" = "Metal",
+  "New Age" = "New Age",
+  "Oldies" = "Oldies",
+  "Other" = "Other",
+  "Pop" = "Pop",
+  "R&B" = "R&B",
+  "Rap" = "Rap",
+  "Reggae" = "Reggae",
+  "Rock" = "Rock",
+  "Techno" = "Techno",
+  "Industrial" = "Industrial",
+  "Alternative" = "Alternative",
+  "Ska" = "Ska",
+  "Death Metal" = "Death Metal",
+  "Pranks" = "Pranks",
+  "Soundtrack" = "Soundtrack",
+  "Euro-Techno" = "Euro-Techno",
+  "Ambient" = "Ambient",
+  "Trip-Hop" = "Trip-Hop",
+  "Vocal" = "Vocal",
+  "Jazz+Funk" = "Jazz+Funk",
+  "Fusion" = "Fusion",
+  "Trance" = "Trance",
+  "Classical" = "Classical",
+  "Instrumental" = "Instrumental",
+  "Acid" = "Acid",
+  "House" = "House",
+  "Game" = "Game",
+  "Sound Clip" = "Sound Clip",
+  "Gospel" = "Gospel",
+  "Noise" = "Noise",
+  "AlternRock" = "AlternRock",
+  "Bass" = "Bass",
+  "Soul" = "Soul",
+  "Punk" = "Punk",
+  "Space" = "Space",
+  "Meditative" = "Meditative",
+  "Instrumental Pop" = "Instrumental Pop",
+  "Instrumental Rock" = "Instrumental Rock",
+  "Ethnic" = "Ethnic",
+  "Gothic" = "Gothic",
+  "Darkwave" = "Darkwave",
+  "Techno-Industrial" = "Techno-Industrial",
+  "Electronic" = "Electronic",
+  "Pop-Folk" = "Pop-Folk",
+  "Eurodance" = "Eurodance",
+  "Dream" = "Dream",
+  "Southern Rock" = "Southern Rock",
+  "Comedy" = "Comedy",
+  "Cult" = "Cult",
+  "Gangsta" = "Gangsta",
+  "Top 40" = "Top 40",
+  "Christian Rap" = "Christian Rap",
+  "Pop/Funk" = "Pop/Funk",
+  "Jungle" = "Jungle",
+  "Native American" = "Native American",
+  "Cabaret" = "Cabaret",
+  "New Wave" = "New Wave",
+  "Psychadelic" = "Psychadelic",
+  "Rave" = "Rave",
+  "Showtunes" = "Showtunes",
+  "Trailer" = "Trailer",
+  "Lo-Fi" = "Lo-Fi",
+  "Tribal" = "Tribal",
+  "Acid Punk" = "Acid Punk",
+  "Acid Jazz" = "Acid Jazz",
+  "Polka" = "Polka",
+  "Retro" = "Retro",
+  "Musical" = "Musical",
+  "Rock & Roll" = "Rock & Roll",
+  "Hard Rock" = "Hard Rock",
+  "Folk" = "Folk",
+  "Folk/Rock" = "Folk/Rock",
+  "National Folk" = "National Folk",
+  "Swing" = "Swing",
+  "Fast Fusion" = "Fast Fusion",
+  "Bebob" = "Bebob",
+  "Latin" = "Latin",
+  "Revival" = "Revival",
+  "Celtic" = "Celtic",
+  "Bluegrass" = "Bluegrass",
+  "Avantgarde" = "Avantgarde",
+  "Gothic Rock" = "Gothic Rock",
+  "Progressive Rock" = "Progressive Rock",
+  "Psychedelic Rock" = "Psychedelic Rock",
+  "Symphonic Rock" = "Symphonic Rock",
+  "Slow Rock" = "Slow Rock",
+  "Big Band" = "Big Band",
+  "Chorus" = "Chorus",
+  "Easy Listening" = "Easy Listening",
+  "Acoustic" = "Acoustic",
+  "Humour" = "Humour",
+  "Speech" = "Speech",
+  "Chanson" = "Chanson",
+  "Opera" = "Opera",
+  "Chamber Music" = "Chamber Music",
+  "Sonata" = "Sonata",
+  "Symphony" = "Symphony",
+  "Booty Bass" = "Booty Bass",
+  "Primus" = "Primus",
+  "Porn Groove" = "Porn Groove",
+  "Satire" = "Satire",
+  "Slow Jam" = "Slow Jam",
+  "Club" = "Club",
+  "Tango" = "Tango",
+  "Samba" = "Samba",
+  "Folklore" = "Folklore",
+  "Ballad" = "Ballad",
+  "Power Ballad" = "Power Ballad",
+  "Rhythmic Soul" = "Rhythmic Soul",
+  "Freestyle" = "Freestyle",
+  "Duet" = "Duet",
+  "Punk Rock" = "Punk Rock",
+  "Drum Solo" = "Drum Solo",
+  "A Capella" = "A Capella",
+  "Euro-House" = "Euro-House",
+  "Dance Hall" = "Dance Hall",
 }
 type TrackInfo = {
   title: string;
@@ -146,9 +155,9 @@ type TrackInfo = {
 type Playlist = {
   videosPath: string;
   audiosPath: string;
-  url: string;
+  urls: string[];
   outputFormat: string;
-  indices: string;
+  indices: string[];
   genre?: Genre;
   trackInfo?: Record<string, TrackInfo[]>;
   disabled: boolean;
@@ -229,62 +238,110 @@ const $ = $throw({
   nothrow: true,
 });
 
-const { VIDEOS_PATH, AUDIOS_PATH } = loadEnv<{
-  VIDEOS_PATH: string;
-  AUDIOS_PATH: string;
-}>({
-  required: ['VIDEOS_PATH', 'AUDIOS_PATH'],
-});
-const REMOVED_PATH = resolve(VIDEOS_PATH, 'Removed');
-const ARCHIVE_FILENAME = '.archive';
-const METADATA_FILENAME = '.metadata';
+const myMove = moveSync;
+const myRemove = removeSync;
 
-const secondsSchema = z.union([z.string().transform((s, ctx) => {
-  const num = +s;
-  if (!isNaN(num)) return num;
-  const parts = s.split(":").map((p) => +p);
-  if (parts.some(isNaN) || parts.length > 3 || parts.length < 2) {
-    ctx.addIssue({
-      code: z.ZodIssueCode.custom,
-      message: "Invalid time format",
-    });
-    return z.NEVER;
-  }
-  if (parts.length === 3) return parts[0] * 60 * 60 + parts[1] * 60 + parts[2];
-  return parts[0] * 60 + parts[1];
-}), z.number()]);
+// let allowedMoves = 2;
+// const myMove = (...x) => {
+//   console.log("Moving", ...x);
+//   if (x[0].endsWith("temp.mp4")) {
+//     moveSync(x[0], x[1], x[2]);
+//     return;
+//   }
+//   allowedMoves--;
+//   if (allowedMoves >= 0) return;
+//   console.trace();
+//   process.exit(1);
+// };
+// let allowedRemoves = 0;
+// const myRemove = (x: string) => {
+//   console.log("Removing", x);
+//   if (x.endsWith("temp.mp4") || x.endsWith(".mp3")) {
+//     removeSync(x);
+//     return;
+//   }
+//   allowedRemoves--;
+//   if (allowedRemoves >= 0) return;
+//   console.trace();
+//   process.exit(1);
+// };
+
+const { VIDEOS_PATH, AUDIOS_PATH } = loadEnv({
+  schema: z.object({
+    VIDEOS_PATH: z.string(),
+    AUDIOS_PATH: z.string(),
+  }),
+});
+const REMOVED_PATH = resolve(VIDEOS_PATH, "Removed");
+const ARCHIVE_FILENAME = ".archive";
+const METADATA_FILENAME = ".metadata";
+
+const secondsSchema = z.union([
+  z.string().transform((s, ctx) => {
+    const num = +s;
+    if (!isNaN(num)) return num;
+    const parts = s.split(":").map((p) => +p);
+    if (parts.some(isNaN) || parts.length > 3 || parts.length < 2) {
+      ctx.addIssue({
+        code: "custom",
+        message: "Invalid time format",
+      });
+      return z.NEVER;
+    }
+    if (parts.length === 3)
+      return parts[0] * 60 * 60 + parts[1] * 60 + parts[2];
+    return parts[0] * 60 + parts[1];
+  }),
+  z.number(),
+]);
 const trackInfoSchema = z.strictObject({
   title: z.string(),
   artist: z.string(),
-  genre: z.nativeEnum(Genre).optional(),
+  genre: z.enum(Genre).optional(),
   start: secondsSchema.default(0),
   end: secondsSchema.optional(),
 });
-const schema = z.strictObject({
-  videosPath: z.string().default(''),
-  audiosPath: z.string().default(''),
-  disabled: z.boolean().default(false),
-  url: z.string().url(),
-  outputFormat: z.string().default('%(title)s - %(id)s.%(ext)s'),
-  indices: z.string().regex(/((-?\d+|-?\d*[\-:]-?\d*|-?\d*:-?\d*:-?\d*),?)+/).default(':'),
-  genre: z.nativeEnum(Genre).optional(),
-  trackInfo: z.record(z.string(), z.union([trackInfoSchema, trackInfoSchema.array()])).optional().transform((t) => {
-    for (const id in t) {
-      if (Array.isArray(t[id])) continue;
-      t[id] = [t[id]];
-    }
-    return t as Record<string, TrackInfo[]>;
-  }),
-}).refine((p) => {
-  // Check at least one genre is set (in playlist as a whole or per item)
-  if (p.genre) return true;
-  if (!p.trackInfo) return false;
-  return Object.values(p.trackInfo).every((t) => t.every((ti) => ti.genre));
-});
+const schema = z
+  .strictObject({
+    videosPath: z.string().default(""),
+    audiosPath: z.string().default(""),
+    disabled: z.boolean().default(false),
+    urls: z.url().array(),
+    outputFormat: z.string().default("%(title)s - %(id)s.%(ext)s"),
+    indices: z
+      .string()
+      .regex(/((-?\d+|-?\d*[\-:]-?\d*|-?\d*:-?\d*:-?\d*),?)+/)
+      .array()
+      .default([]),
+    genre: z.enum(Genre).optional(),
+    trackInfo: z
+      .record(z.string(), z.union([trackInfoSchema, trackInfoSchema.array()]))
+      .optional()
+      .transform((t) => {
+        for (const id in t) {
+          if (Array.isArray(t[id])) continue;
+          t[id] = [t[id]];
+        }
+        return t as Record<string, TrackInfo[]>;
+      }),
+  })
+  .transform((p) => {
+    if (p.indices.length === 0) p.indices = p.urls.map(() => ":");
+    return p;
+  })
+  .refine((p) => {
+    // Check at least one genre is set (in playlist as a whole or per item)
+    if (p.genre) return true;
+    if (!p.trackInfo) return false;
+    return Object.values(p.trackInfo).every((t) => t.every((ti) => ti.genre));
+  }, "Genre is missing for at least one track")
+  .refine((p) => {
+    return p.urls.length === p.indices.length;
+  }, "Urls and indices lengths are not the same");
 
 export function idFromFilename(filename: string) {
   let whole = filename.split("- ").at(-1)!.split(".")[0].trim();
-  if (whole.length === 11) whole += '-0';
+  if (whole.length === 11) whole += "-0";
   return {
     id: whole.slice(0, 11),
     part: +whole.slice(12),
@@ -296,7 +353,8 @@ export function getDuplicateIdFiles(files: string[]): string[] {
   const ret: string[] = [];
   const idVideos: Record<string, [number[], string[]]> = {};
   for (const file of files) {
-    if (file.startsWith('.') || file === 'temp.mp4') continue;
+    if (file.startsWith(".") || file === "temp.mp4" || file.endsWith(".part"))
+      continue;
     const { id, part } = idFromFilename(file);
     if (!idVideos[id]) idVideos[id] = [[], []];
     idVideos[id][0].push(part);
@@ -305,8 +363,13 @@ export function getDuplicateIdFiles(files: string[]): string[] {
   for (const id in idVideos) {
     const [parts, files] = idVideos[id];
     if (files.length === 1) continue;
-    if (parts.includes(0)) {
+    const zeroParts = parts.filter((p) => p === 0);
+    if (zeroParts.length > 1) {
       ret.push(...files);
+      continue;
+    }
+    if (parts.includes(0)) {
+      ret.push(files[parts.indexOf(0)]);
       continue;
     }
     const partCounts = countBy(parts);
@@ -318,25 +381,40 @@ export function getDuplicateIdFiles(files: string[]): string[] {
   return ret;
 }
 
-export function getIncompletePartFiles(files: string[], parts: Record<string, number>): string[] {
+export function getIncompletePartFiles(
+  files: string[],
+  parts: Record<string, number>,
+): string[] {
   for (const file of files) {
-    if (file.startsWith('.') || file === 'temp.mp4') continue;
+    if (file.startsWith(".") || file === "temp.mp4" || file.endsWith(".part"))
+      continue;
     parts[idFromFilename(file).id] -= 1;
   }
   const ret: string[] = [];
   for (const file of files) {
-    if (file.startsWith('.') || file === 'temp.mp4') continue;
-    const { id } = idFromFilename(file);
-    if (parts[id] !== 0 && !isNaN(parts[id])) ret.push(file)
+    if (file.startsWith(".") || file === "temp.mp4" || file.endsWith(".part"))
+      continue;
+    const { id, part } = idFromFilename(file);
+    if (
+      !(parts[id] === 0 || parts[id] === -1) &&
+      !isNaN(parts[id]) &&
+      part !== 0
+    )
+      /* if (parts[id] !== 0 && !isNaN(parts[id]) && part !== 0) */ ret.push(
+        file,
+      );
   }
   return ret;
 }
 
-export function getFixedArchiveFile(archive: string[], files: string[]): string | undefined {
+export function getFixedArchiveFile(
+  archive: string[],
+  files: string[],
+): string | undefined {
   if (archive.length === 0) return;
   const fileIds = files.map(idFromFilename).map(({ id }) => id);
-  const archiveIds = new Set(archive.map(a => a.slice('youtube '.length)));
-  let ret = '';
+  const archiveIds = new Set(archive.map((a) => a.slice("youtube ".length)));
+  let ret = "";
 
   for (const archiveId of archiveIds) {
     if (!archiveId) continue;
@@ -350,11 +428,14 @@ export function getFixedArchiveFile(archive: string[], files: string[]): string 
   return ret;
 }
 
-export function getFilesNotInMetadata(metadata: string[], files: string[]): string[] {
+export function getFilesNotInMetadata(
+  metadata: string[],
+  files: string[],
+): string[] {
   if (metadata.length === 0) return [];
   const ret: string[] = [];
   for (const file of files) {
-    if (file.startsWith('.')) continue;
+    if (file.startsWith(".")) continue;
     if (metadata.includes(idFromFilename(file).id)) continue;
     ret.push(file);
   }
@@ -367,26 +448,49 @@ type CutAction = {
   start?: number;
   end?: number;
 };
-export function getCutActions(tracksInfo: TrackInfo[], files: string[], videosPath: string): CutAction[] {
+export function getCutActions(
+  tracksInfo: TrackInfo[],
+  files: string[],
+  videosPath: string,
+): CutAction[] {
   if (files.length === 0) return [];
   const id = idFromFilename(files[0]).id;
-  const mainFile = files.find(f => idFromFilename(f).whole === `${id}-0`);
-  if (tracksInfo.length === 1 && mainFile && !tracksInfo[0].start && !tracksInfo[0].end) return [];
+  const mainFile = files.find((f) => idFromFilename(f).whole === `${id}-0`);
+  if (
+    tracksInfo.length === 1 &&
+    mainFile &&
+    !tracksInfo[0].start &&
+    !tracksInfo[0].end
+  )
+    return [];
 
   const onlyMainFileAvailable = files.length === 1 && mainFile;
-  const allPartsAvailable = files.length === tracksInfo.length;
-  const incorrectlyNumberedSingleFile = files.length === 1 && idFromFilename(files[0]).part > 0;
+  const allPartsAvailable =
+    files.length === tracksInfo.length ||
+    files.length === tracksInfo.length + (mainFile ? 1 : 0);
+  const incorrectlyNumberedSingleFile =
+    files.length === 1 && idFromFilename(files[0]).part > 0;
   let invalid = false;
-  if (!onlyMainFileAvailable && (!allPartsAvailable || incorrectlyNumberedSingleFile)) invalid = true;
+  if (
+    !onlyMainFileAvailable &&
+    (!allPartsAvailable || incorrectlyNumberedSingleFile)
+  )
+    invalid = true;
   if (!invalid && allPartsAvailable) {
     for (let i = 0; i < tracksInfo.length; i++) {
       const trackInfo = tracksInfo[i];
       const part = tracksInfo.length === 1 ? i : i + 1;
-      const trackFile = files.find(f => idFromFilename(f).whole === `${id}-${part}`);
+      const trackFile = files.find(
+        (f) => idFromFilename(f).whole === `${id}-${part}`,
+      );
       if (!trackFile) {
         invalid = true;
         break;
       }
+      if (!onlyMainFileAvailable && !trackInfo.end)
+        throw new Error(
+          `${trackInfo.title} - ${trackInfo.artist} has no end time`,
+        );
       const videoDuration = getVideoDuration(resolve(videosPath, trackFile));
       const trackDuration = getTrackDuration(trackInfo, videoDuration);
       const diff = videoDuration - trackDuration;
@@ -406,23 +510,38 @@ export function getCutActions(tracksInfo: TrackInfo[], files: string[], videosPa
   }
   if (!invalid && onlyMainFileAvailable) {
     const videoDuration = getVideoDuration(resolve(videosPath, mainFile));
-    const maxTrackTime = Math.max(...tracksInfo.map(t => t.end ?? 0), videoDuration);
+    const maxTrackTime = Math.max(
+      ...tracksInfo.map((t) => t.end ?? 0),
+      videoDuration,
+    );
     if (maxTrackTime > videoDuration) invalid = true;
   }
   if (invalid || (!mainFile && tracksInfo.length === 1))
-    return files.map(f => ({ inputFile: f }));
+    return files.map((f) => ({ inputFile: f }));
   if (!mainFile) return [];
 
   if (tracksInfo.length === 1)
-    return [{
-      inputFile: mainFile!,
-      outputFile: mainFile,
-      start: tracksInfo[0].start,
-      end: tracksInfo[0].end,
-    }];
+    return [
+      {
+        inputFile: mainFile!,
+        outputFile: mainFile,
+        start: tracksInfo[0].start,
+        end: tracksInfo[0].end,
+      },
+    ];
   const ret: CutAction[] = [];
   for (let i = 0; i < tracksInfo.length; i++) {
     const trackInfo = tracksInfo[i];
+    const trackFile = files.find(
+      (f) => idFromFilename(f).whole === `${id}-${i + 1}`,
+    );
+    if (trackFile) {
+      const videoDuration = getVideoDuration(resolve(videosPath, trackFile));
+      if (
+        Math.abs(videoDuration - ((trackInfo.end ?? 0) - trackInfo.start)) < 1
+      )
+        continue;
+    }
     ret.push({
       inputFile: mainFile,
       outputFile: parsePath(mainFile).name + `-${i + 1}.mp4`,
@@ -434,8 +553,12 @@ export function getCutActions(tracksInfo: TrackInfo[], files: string[], videosPa
 }
 
 function getVideoDuration(filepath: string): number {
-  if (filepath.startsWith('/test/')) return +filepath.match(/test\/(\d+)/)![1];
-  const $ffprobe = $({ sync: true, stdio: ['ignore', 'pipe', 'ignore'] })`ffprobe -v error -show_streams -select_streams v:0 -of json ${filepath}`;
+  if (filepath.startsWith("/test/")) return +filepath.match(/test\/(\d+)/)![1];
+
+  const $ffprobe = $({
+    sync: true,
+    stdio: ["ignore", "pipe", "ignore"],
+  })`ffprobe -v error -show_streams -select_streams v:0 -of json ${filepath}`;
   const output = JSON.parse($ffprobe.stdout);
   return +output.streams[0].duration;
 }
@@ -447,19 +570,22 @@ function getTrackDuration(track: TrackInfo, videoDuration: number): number {
 
 const apRegex = new RegExp('^.*?Atom \"(.+?)\" contains: (.*)$');
 function getAtomicParsleyData(filepath: string) {
-  let title = '';
-  let artist = '';
-  let genre = '' as '' | Genre;
-  const $ap = $({ sync: true, stdio: ['ignore', 'pipe', 'ignore'] })`AtomicParsley ${filepath} -t`;
+  let title = "";
+  let artist = "";
+  let genre = "" as "" | Genre;
+  const $ap = $({
+    sync: true,
+    stdio: ["ignore", "pipe", "ignore"],
+  })`AtomicParsley ${filepath} -t`;
   if ($ap.exitCode === 0) {
     const lines = $ap.stdout.split(/\r?\n/);
     for (const line of lines) {
       const match = line.match(apRegex);
       if (!match) continue;
       // console.log(match);
-      if (match[1].endsWith('nam')) title = match[2].trim();
-      else if (match[1].toLowerCase().endsWith('art')) artist = match[2].trim();
-      else if (match[1] === 'gnre') genre = match[2].trim() as Genre;
+      if (match[1].endsWith("nam")) title = match[2].trim();
+      else if (match[1].toLowerCase().endsWith("art")) artist = match[2].trim();
+      else if (match[1] === "gnre") genre = match[2].trim() as Genre;
     }
   }
   return { title, artist, genre };
@@ -470,14 +596,14 @@ function removeTempFiles() {
     const playlist = playlists[playlistName];
     const videoFiles = readdirSync(playlist.videosPath);
     for (const file of videoFiles) {
-      if (file === 'temp.mp4') {
-        removeSync(resolve(playlist.videosPath, file));
+      if (file === "temp.mp4") {
+        myRemove(resolve(playlist.videosPath, file));
       }
     }
     const audioFiles = readdirSync(playlist.audiosPath);
     for (const file of audioFiles) {
-      if (file === 'temp.mp3') {
-        removeSync(resolve(playlist.videosPath, file));
+      if (file === "temp.mp3") {
+        myRemove(resolve(playlist.videosPath, file));
       }
     }
   }
@@ -489,7 +615,11 @@ function removeDuplicateIdFiles() {
     const files = readdirSync(playlist.videosPath);
     const duplicates = getDuplicateIdFiles(files);
     for (const file of duplicates) {
-      moveSync(resolve(playlist.videosPath, file), resolve(REMOVED_PATH, playlistName, file), { overwrite: true });
+      myMove(
+        resolve(playlist.videosPath, file),
+        resolve(REMOVED_PATH, playlistName, file),
+        { overwrite: true },
+      );
     }
   }
 }
@@ -505,7 +635,7 @@ function removeIncompletePartFiles() {
     }
     const incomplete = getIncompletePartFiles(files, parts);
     for (const file of incomplete) {
-      removeSync(resolve(playlist.videosPath, file));
+      myRemove(resolve(playlist.videosPath, file));
     }
   }
 }
@@ -514,10 +644,15 @@ function removeArchiveIdsForDeletedFiles() {
   for (const playlistName in playlists) {
     const playlist = playlists[playlistName];
     if (!existsSync(resolve(playlist.videosPath, ARCHIVE_FILENAME))) continue;
-    const archive = readFileSync(resolve(playlist.videosPath, ARCHIVE_FILENAME), 'utf-8').split(/(\r*\n)+/);
+    const archive = readFileSync(
+      resolve(playlist.videosPath, ARCHIVE_FILENAME),
+      "utf-8",
+    ).split(/(\r*\n)+/);
     const files = readdirSync(playlist.videosPath);
+    console.log(playlistName);
     const newArchive = getFixedArchiveFile(archive, files);
-    if (newArchive !== undefined) writeFileSync(resolve(playlist.videosPath, ARCHIVE_FILENAME), newArchive);
+    if (newArchive !== undefined)
+      writeFileSync(resolve(playlist.videosPath, ARCHIVE_FILENAME), newArchive);
   }
 }
 
@@ -525,12 +660,19 @@ function removeFilesNotInMetadata() {
   for (const playlistName in playlists) {
     const playlist = playlists[playlistName];
     if (!existsSync(resolve(playlist.videosPath, METADATA_FILENAME))) continue;
-    const metadata = readFileSync(resolve(playlist.videosPath, METADATA_FILENAME), 'utf-8').split(/\r?\n/);
+    const metadata = readFileSync(
+      resolve(playlist.videosPath, METADATA_FILENAME),
+      "utf-8",
+    ).split(/\r?\n/);
     const files = readdirSync(playlist.videosPath);
 
     const toDelete = getFilesNotInMetadata(metadata, files);
     for (const file of toDelete) {
-      moveSync(resolve(playlist.videosPath, file), resolve(REMOVED_PATH, playlistName, file), { overwrite: true });
+      myMove(
+        resolve(playlist.videosPath, file),
+        resolve(REMOVED_PATH, playlistName, file),
+        { overwrite: true },
+      );
     }
   }
 }
@@ -538,48 +680,76 @@ function removeFilesNotInMetadata() {
 function removeAudiosNotInVideos() {
   for (const playlistName in playlists) {
     const playlist = playlists[playlistName];
-    const videoFiles = readdirSync(playlist.videosPath).map(f => parsePath(f).name);
+    const videoFiles = readdirSync(playlist.videosPath).map(
+      (f) => parsePath(f).name,
+    );
     const audioFiles = readdirSync(playlist.audiosPath);
     for (const audioFile of audioFiles) {
       if (videoFiles.includes(parsePath(audioFile).name)) continue;
-      removeSync(resolve(playlist.audiosPath, audioFile));
+      myRemove(resolve(playlist.audiosPath, audioFile));
     }
   }
 }
 
 export function cutVideos() {
-  console.log('Cutting videos');
+  console.log("Cutting videos");
   for (const playlistName in playlists) {
     const playlist = playlists[playlistName];
     if (!playlist.trackInfo) continue;
     const files = readdirSync(playlist.videosPath);
     for (const id in playlist.trackInfo) {
       const tracksInfo = playlist.trackInfo[id];
-      const trackFiles = files.filter(f => idFromFilename(f).id === id);
-      const cutActions = getCutActions(tracksInfo, trackFiles, playlist.videosPath);
+      const trackFiles = files.filter((f) => idFromFilename(f).id === id);
+      const cutActions = getCutActions(
+        tracksInfo,
+        trackFiles,
+        playlist.videosPath,
+      );
       let cutted = false;
       for (const { inputFile, outputFile, start, end } of cutActions) {
         if (!outputFile) {
-          removeSync(resolve(playlist.videosPath, inputFile));
+          myRemove(resolve(playlist.videosPath, inputFile));
           continue;
         }
         cutted = true;
-        console.log(`Cutting ${inputFile} to ${outputFile} from ${start} to ${end}`);
-        const args = ['-y', '-i', resolve(playlist.videosPath, inputFile)];
-        if (start) args.push('-ss', start.toString());
-        if (end) args.push('-to', end.toString());
-        args.push('-c:v', 'libx264', '-c:a', 'aac', resolve(playlist.videosPath, 'temp.mp4'));
-        const $ffmpeg = $({ sync: true, stdio: ['ignore', 'inherit', 'inherit'] })`ffmpeg ${args}`;
+        console.log(
+          `Cutting ${inputFile} to ${outputFile} from ${start} to ${end}`,
+        );
+        const args = ["-y", "-i", resolve(playlist.videosPath, inputFile)];
+        if (start) args.push("-ss", start.toString());
+        if (end) args.push("-to", end.toString());
+        args.push(
+          "-c:v",
+          "libx264",
+          "-c:a",
+          "aac",
+          resolve(playlist.videosPath, "temp.mp4"),
+        );
+        const $ffmpeg = $({
+          sync: true,
+          stdio: ["ignore", "inherit", "inherit"],
+        })`ffmpeg ${args}`;
         if ($ffmpeg.exitCode !== 0) {
           console.log(`Failed to cut`);
-          removeSync(resolve(playlist.videosPath, 'temp.mp4'));
+          myRemove(resolve(playlist.videosPath, "temp.mp4"));
           continue;
         }
-        removeSync(resolve(playlist.audiosPath, parsePath(outputFile).name + '.mp3'));
-        moveSync(resolve(playlist.videosPath, 'temp.mp4'), resolve(playlist.videosPath, outputFile), { overwrite: true });
+        myRemove(
+          resolve(playlist.audiosPath, parsePath(outputFile).name + ".mp3"),
+        );
+        myMove(
+          resolve(playlist.videosPath, "temp.mp4"),
+          resolve(playlist.videosPath, outputFile),
+          { overwrite: true },
+        );
       }
       if (tracksInfo.length > 1 && cutted)
-        removeSync(resolve(playlist.videosPath, trackFiles.find(f => idFromFilename(f).part === 0)!));
+        myRemove(
+          resolve(
+            playlist.videosPath,
+            trackFiles.find((f) => idFromFilename(f).part === 0)!,
+          ),
+        );
     }
   }
 }
@@ -593,7 +763,7 @@ export function tagVideos() {
     }
     const files = readdirSync(playlist.videosPath);
     for (const file of files) {
-      if (file.startsWith('.') || parsePath(file).ext !== '.mp4') continue;
+      if (file.startsWith(".") || parsePath(file).ext !== ".mp4") continue;
       const { id, part } = idFromFilename(file);
       const tracksInfo = playlist.trackInfo[id];
       if (!tracksInfo) {
@@ -602,66 +772,92 @@ export function tagVideos() {
       }
       const trackInfo = tracksInfo[part === 0 ? 0 : part - 1];
       if (!trackInfo) {
-        console.log(`No track info for part ${part} of id ${id} in '${playlistName}'`);
+        console.log(
+          `No track info for part ${part} of id ${id} in '${playlistName}'`,
+        );
         continue;
       }
       const oldInfo = getAtomicParsleyData(resolve(playlist.videosPath, file));
-      const args = [resolve(playlist.videosPath, file), '--overWrite'];
-      if (oldInfo.title !== trackInfo.title) args.push('--title', trackInfo.title);
-      if (oldInfo.artist !== trackInfo.artist) args.push('--artist', trackInfo.artist);
+      const args = [resolve(playlist.videosPath, file), "--overWrite"];
+      if (oldInfo.title !== trackInfo.title)
+        args.push("--title", trackInfo.title);
+      if (oldInfo.artist !== trackInfo.artist)
+        args.push("--artist", trackInfo.artist);
       const genre = trackInfo.genre ?? playlist.genre!;
-      if (oldInfo.genre !== genre) args.push('--genre', genre);
+      if (oldInfo.genre !== genre) args.push("--genre", genre);
       if (args.length === 2) continue;
       console.log(`Tagging ${file}`);
-      const $ap = $({ sync: true, stdio: ['ignore', 'inherit', 'inherit'] })`AtomicParsley ${args}`;
+      const $ap = $({
+        sync: true,
+        stdio: ["ignore", "inherit", "inherit"],
+      })`AtomicParsley ${args}`;
       if ($ap.exitCode !== 0) {
         console.log(`Failed to tag ${file}`);
         continue;
       }
-      removeSync(resolve(playlist.audiosPath, parsePath(file).name + '.mp3'));
+      myRemove(resolve(playlist.audiosPath, parsePath(file).name + ".mp3"));
     }
   }
 }
 
 export function convertToMp3s() {
-  console.log("Converting videos to mp3s")
+  console.log("Converting videos to mp3s");
   for (const playlistName in playlists) {
     const playlist = playlists[playlistName];
     const files = readdirSync(playlist.videosPath);
     for (const file of files) {
-      if (file.startsWith('.') || parsePath(file).ext !== '.mp4') continue;
-      const outputFilepath = resolve(playlist.audiosPath, parsePath(file).name + '.mp3');
+      if (file.startsWith(".") || parsePath(file).ext !== ".mp4") continue;
+      const outputFilepath = resolve(
+        playlist.audiosPath,
+        parsePath(file).name + ".mp3",
+      );
       if (existsSync(outputFilepath)) continue;
       console.log(`Converting ${file} to mp3`);
-      const $ffmpeg = $({ sync: true, stdio: ['ignore', 'ignore', 'ignore'] })`ffmpeg -y -i ${resolve(playlist.videosPath, file)} -codec:a libmp3lame -qscale:a 0 temp.mp3`;
+      const $ffmpeg = $({
+        sync: true,
+        stdio: ["ignore", "ignore", "ignore"],
+      })`ffmpeg -y -i ${resolve(playlist.videosPath, file)} -codec:a libmp3lame -qscale:a 0 temp.mp3`;
       if ($ffmpeg.exitCode !== 0) {
         console.log(`Failed to convert ${file}`);
         continue;
       }
-      moveSync('temp.mp3', outputFilepath, { overwrite: true });
+      myMove("temp.mp3", outputFilepath, { overwrite: true });
     }
   }
 }
 
-export function downloadVideos() {
-  for (const playlistName in playlists) {
+export async function downloadVideos(_playlists = playlists, $$$ = $) {
+  for (const playlistName in _playlists) {
     console.log(`Downloading playlist '${playlistName}'`);
-    const playlist = playlists[playlistName];
-    $({ sync: true, stdio: ['ignore', 'inherit', 'inherit'] })`yt-dlp -f 'bestvideo[height<=1080][ext=mp4]+bestaudio[ext=m4a]/best[ext=mp4]/best/bestvideo+bestaudio' --no-mtime --playlist-items ${playlist.indices} -o ${resolve(playlist.videosPath, playlist.outputFormat)} --download-archive ${resolve(playlist.videosPath, ARCHIVE_FILENAME)} ${playlist.url}`;
+    const playlist = _playlists[playlistName];
+    for (let i = 0; i < playlist.urls.length; i++) {
+      $$$({
+        stdio: ["ignore", "inherit", "inherit"],
+      })`yt-dlp -f 'bestvideo[height<=1080][ext=mp4]+bestaudio[ext=m4a]/best[ext=mp4]/best/bestvideo+bestaudio' --no-mtime --playlist-items ${playlist.indices[i]} -o ${resolve(playlist.videosPath, playlist.outputFormat)} --download-archive ${resolve(playlist.videosPath, ARCHIVE_FILENAME)} ${playlist.urls[i]}`;
+    }
   }
 }
 
-export function downloadMetadata() {
-  for (const playlistName in playlists) {
+export function downloadMetadata(_playlists = playlists, $$$ = $) {
+  outer: for (const playlistName in _playlists) {
     console.log(`Downloading metadata for '${playlistName}'`);
-    const playlist = playlists[playlistName];
-    const $ytdlp = $({ sync: true, stdio: ['ignore', 'pipe', 'pipe'] })`yt-dlp --playlist-items ${playlist.indices} -J --flat-playlist ${playlist.url}`;
-    if ($ytdlp.exitCode !== 0) {
-      console.error($ytdlp.stderr);
-      continue;
+    const playlist = _playlists[playlistName];
+    let metadatas: { entries: Entry[] }[] = [];
+    for (let i = 0; i < playlist.urls.length; i++) {
+      const $ytdlp = $$$({
+        sync: true,
+        stdio: ["ignore", "pipe", "pipe"],
+      })`yt-dlp --playlist-items ${playlist.indices[i]} -J --flat-playlist ${playlist.urls[i]}`;
+      if ($ytdlp.exitCode !== 0) {
+        console.error($ytdlp.stderr);
+        continue outer;
+      }
+      metadatas.push(JSON.parse($ytdlp.stdout));
     }
-    const metadata = JSON.parse($ytdlp.stdout);
-    writeFileSync(resolve(playlist.videosPath, METADATA_FILENAME), metadata.entries.map((e) => e.id).join('\n'));
+    writeFileSync(
+      resolve(playlist.videosPath, METADATA_FILENAME),
+      metadatas.map((m) => m.entries.map((e) => e.id).join("\n")).join("\n"),
+    );
   }
 }
 
@@ -674,14 +870,13 @@ export function clean() {
   removeAudiosNotInVideos();
 }
 
-export function main() {
-  // console.log(existsSync(resolve('Videos', 'Best Classics', `Prokofiev - Romeo and Juliet, No. 13 Dance of the Knights (Mariinsky Orchestra, Valery Gergiev) - s_9Uw9bCM30.mp4`)));
+export async function main() {
   removeTempFiles();
   removeDuplicateIdFiles();
   removeIncompletePartFiles();
   removeArchiveIdsForDeletedFiles();
 
-  downloadVideos();
+  await downloadVideos();
   downloadMetadata();
 
   removeDuplicateIdFiles();
@@ -705,7 +900,7 @@ if (require.main === module) {
     const parsed = schema.parse(playlists[playlistName]);
     parsed.videosPath = parsed.videosPath || resolve(VIDEOS_PATH, playlistName);
     parsed.audiosPath = parsed.audiosPath || resolve(AUDIOS_PATH, playlistName);
-    if (parsed.disabled) delete playlists[playlistName]
+    if (parsed.disabled) delete playlists[playlistName];
     else playlists[playlistName] = parsed;
 
     ensureDirSync(parsed.videosPath);
@@ -715,29 +910,25 @@ if (require.main === module) {
 
   program
     .nameFromFilename(__filename)
-    .description('Download playlists listed in playlists.json')
-  program.command('run', { hidden: true, isDefault: true })
-    .action(main);
-  program.command('download')
-    .description('Download videos')
-    .alias('d')
+    .description("Download playlists listed in playlists.json");
+  program.command("run", { hidden: true, isDefault: true }).action(main);
+  program
+    .command("download")
+    .description("Download videos")
+    .alias("d")
     .action(downloadVideos);
-  program.command('metadata')
-    .description('Update metadata')
-    .alias('m')
+  program
+    .command("metadata")
+    .description("Update metadata")
+    .alias("m")
     .action(downloadMetadata);
-  program.command('cut')
-    .description('Cut videos')
-    .action(cutVideos);
-  program.command('convert')
-    .description('Convert videos to mp3s')
-    .alias('conv')
+  program.command("cut").description("Cut videos").action(cutVideos);
+  program
+    .command("convert")
+    .description("Convert videos to mp3s")
+    .alias("conv")
     .action(convertToMp3s);
-  program.command('tag')
-    .description('Tag videos')
-    .action(tagVideos);
-  program.command('clean')
-    .description('Delete unwanted files')
-    .action(clean);
+  program.command("tag").description("Tag videos").action(tagVideos);
+  program.command("clean").description("Delete unwanted files").action(clean);
   program.parse();
 }
