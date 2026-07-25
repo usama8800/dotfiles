@@ -36,7 +36,7 @@
 
   environment.systemPackages =
     (with pkgs; [
-      xorg.libxcvt
+      libxcvt
       clinfo
       virtualglLib
       vulkan-tools
@@ -48,10 +48,9 @@
       wl-clipboard # pipe to clipboard
       alsa-utils # amixer to control volume
       libnotify # notify-send https://specifications.freedesktop.org/icon-naming/latest/#names
-      libsForQt5.kconfig # kde config cli
       kdocker # put any app in the system tray
 
-      protonvpn-gui # vpn
+      proton-vpn # vpn
       mpv # video player
       fooyin # audio player
       audacity # audio recorder / editor
@@ -63,7 +62,7 @@
       variety # wallpapers
       bruno # rest client
       deluge # torrent client
-      pureref # notes with imgaes
+      # pureref # notes with imgaes
       anki # flash cards for learning
       easyeffects # microphone preprocessing
     ])
@@ -76,7 +75,7 @@
       kdePackages.filelight # disk usage analyzer
       remmina # rdp / vnc client
       anydesk # remote server and cliet
-      rustdesk # remote server and cliet
+      # rustdesk # remote server and cliet
       localsend # LAN file sharing
       kdePackages.kate # text editor
       onlyoffice-desktopeditors # office suite

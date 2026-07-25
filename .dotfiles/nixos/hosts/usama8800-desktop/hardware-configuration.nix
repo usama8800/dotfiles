@@ -20,6 +20,7 @@
   fileSystems."/mnt/hdd/" = {
     device = "/dev/disk/by-label/HDD";
     mountPoint = "/mnt/hdd";
+    fsType = "ext4";
   };
   # fileSystems."/mnt/sdd/" = {
   #   device = "/dev/nvme0n1p3";

@@ -16,6 +16,8 @@
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
 
+  time.timeZone = "Asia/Kuala_Lumpur";
+
   system.autoUpgrade.dates = "14:00";
 
   home-manager.users.usama.programs.plasma.configFile = {

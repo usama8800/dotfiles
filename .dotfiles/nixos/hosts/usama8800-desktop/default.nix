@@ -18,6 +18,8 @@
   boot.loader.grub.device = "/dev/nvme1n1";
   boot.loader.grub.useOSProber = true;
 
+  time.timeZone = "Asia/Kuala_Lumpur";
+
   nix.settings.build-dir = "/mnt/hdd/nix/builds";
 
   powerManagement.resumeCommands = ''

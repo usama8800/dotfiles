@@ -68,7 +68,6 @@
     }
   ];
 
-  time.timeZone = lib.mkDefault "Asia/Karachi";
   i18n.defaultLocale = "en_GB.UTF-8";
   i18n.extraLocaleSettings = {
     LC_ADDRESS = "en_GB.UTF-8";
@@ -146,7 +145,7 @@
     fzf # fuzzy finder
     fd # find files
     ripgrep # better grep
-    neofetch # styled system info
+    freshfetch # styled system info
     bat # better cat
     atuin # shell history
     zoxide # better cd
@@ -250,13 +249,13 @@
     nspr
     nss
     pango
-    xorg.libX11
-    xorg.libXcomposite
-    xorg.libXdamage
-    xorg.libXext
-    xorg.libXfixes
-    xorg.libXrandr
-    xorg.libxcb
+    libX11
+    libXcomposite
+    libXdamage
+    libXext
+    libXfixes
+    libXrandr
+    libxcb
 
     gdk-pixbuf
     libgbm
@@ -271,7 +270,7 @@
 
     programs.ssh.enable = true;
     programs.ssh.enableDefaultConfig = false;
-    programs.ssh.matchBlocks = {
+    programs.ssh.settings = {
       server = {
         host = "server";
         user = "usama";
@@ -292,7 +291,7 @@
       laptop = {
         host = "laptop";
         user = "usama";
-        hostname = lib.mkDefault "192.168.1.100";
+        hostname = lib.mkDefault "192.168.100.100";
       };
     };
 

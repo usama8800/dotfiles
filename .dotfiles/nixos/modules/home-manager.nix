@@ -135,7 +135,7 @@
           };
         };
         # Plasma Search
-        kuriikwsfilterrc.General = {
+        kuriikwsfilterrc.General = lib.mkDefault {
           DefaultWebShortcut = "startpage";
           EnableWebShortcuts = true;
           KeywordDelimiter = "\s";
