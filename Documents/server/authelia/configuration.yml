@@ -8,7 +8,6 @@ server:
 log:
   level: debug
   file_path: /config/logs/authelia.log
-default_redirection_url: https://usama8800.net
 authentication_backend:
   password_reset:
     disable: true
@@ -25,17 +24,20 @@ access_control:
   default_policy: deny
   rules:
     - domain:
-      - usama8800.net
-      - "*.usama8800.net"
+        - jilaniplastic.com
+        - "*.jilaniplastic.com"
       policy: one_factor
 session:
   name: authelia_session
   expiration: 1h
   inactivity: 5m
-  remember_me_duration: 1M
-  domain: usama8800.net
+  remember_me: 1M
+  cookies:
+    - domain: jilaniplastic.com
+      authelia_url: https://authelia.jilaniplastic.com
+      default_redirection_url: https://usama.jilaniplastic.com
   redis:
-    host: redis
+    host: host.docker.internal
     port: 6379
 regulation:
   max_retries: 3

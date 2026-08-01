@@ -18,14 +18,18 @@
   networking.firewall = {
     enable = true;
     allowedTCPPorts = [2222 80 443];
+    extraCommands = ''
+      iptables -A INPUT -s 172.16.0.0/12 -j ACCEPT
+    '';
   };
 
   services.openssh.ports = [2222];
   services.postgresql.ensureDatabases = ["nextcloud"];
   services.jenkins = {
-    enable = true;
+    enable = false;
     port = 8080;
     prefix = "/jenkins";
+    listenAddress = "0.0.0.0";
   };
   home-manager.users.usama.programs.ssh.matchBlocks = {
     desktop = {
@@ -50,6 +54,24 @@
       User = "usama";
       WorkingDirectory = "/home/usama/Documents/erp/backups/";
       ExecStart = "/home/usama/Documents/erp/backups/cron.sh";
+    };
+  };
+
+  systemd.timers."archive-backup" = {
+    wantedBy = ["timers.target"];
+    timerConfig = {
+      OnCalendar = "*-*-* 12:00:00";
+      Persistent = true;
+      Unit = "archive-backup.service";
+    };
+  };
+  systemd.services."archive-backup" = {
+    path = [pkgs.bash pkgs.rclone];
+    serviceConfig = {
+      Type = "oneshot";
+      User = "usama";
+      WorkingDirectory = "/";
+      ExecStart = "/home/usama/Documents/archive-backup.sh";
     };
   };
 

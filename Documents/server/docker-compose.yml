@@ -8,7 +8,7 @@ services:
       - PUID=1000
       - PGID=1000
       - TZ=Asia/Karachi
-      - URL=usama8800.net
+      - URL=jilaniplastic.com
       - VALIDATION=dns
       - SUBDOMAINS=wildcard #optional
       - CERTPROVIDER= #optional
@@ -16,7 +16,7 @@ services:
       - PROPAGATION= #optional
       - DUCKDNSTOKEN= #optional
       - EMAIL= #optional
-      - ONLY_SUBDOMAINS=false #optional
+      - ONLY_SUBDOMAINS=true #optional
       - EXTRA_DOMAINS= #optional
       - STAGING=false #optional
     volumes:
@@ -34,23 +34,33 @@ services:
     volumes:
       - ./authelia:/config
     restart: unless-stopped
-    depends_on:
-      - redis
     command:
       - "authelia"
       - "--config=/config/configuration.yml"
       - "--config=/config/local.configuration.yml"
-  redis:
-    image: redis:alpine
-    container_name: redis
-    restart: unless-stopped
-    volumes:
-      - ./redis:/data
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
   piserver:
     build: ../PiServer/
     container_name: piserver
     volumes:
       - ../PiServer/data:/data
+    restart: unless-stopped
+  budget:
+    build: ../budget/
+    container_name: budget
+    environment:
+      - PORT=80
+      - HOST=0.0.0.0
+      - NODE_ENV=production
+    volumes:
+      - /home/usama/NextCloud/data/usama/files/Drive/Documents/Budget:/src/data
+    restart: unless-stopped
+  dozzle:
+    image: amir20/dozzle:latest
+    container_name: dozzle
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
     restart: unless-stopped
   homer:
     image: b4bz/homer:latest
@@ -68,50 +78,7 @@ services:
       - WEBUI_PORT=8080
     volumes:
       - ./qbittorrent/:/config
-      - /mnt/hdd:/data
-    restart: unless-stopped
-  jellyfin:
-    image: jellyfin/jellyfin:2025090805
-    container_name: jellyfin
-    restart: unless-stopped
-    volumes:
-      - ./jellyfin/config:/config
-      - ./jellyfin/cache:/cache
-      - /mnt/hdd/Media:/media
-  radarr:
-    image: lscr.io/linuxserver/radarr:latest
-    container_name: radarr
-    environment:
-      - PUID=1000
-      - PGID=1000
-      - TZ=Asia/Karachi
-    volumes:
-      - ./radarr:/config
-      - /mnt/hdd:/data
-    restart: unless-stopped
-  sonarr:
-    image: lscr.io/linuxserver/sonarr:latest
-    container_name: sonarr
-    environment:
-      - PUID=1000
-      - PGID=1000
-      - TZ=Asia/Karachi
-    volumes:
-      - ./sonarr:/config
-      - /mnt/hdd:/data
-    restart: unless-stopped
-  jackett:
-    image: lscr.io/linuxserver/jackett:latest
-    container_name: jackett
-    environment:
-      - PUID=1000
-      - PGID=1000
-      - TZ=Asia/Karachi
-      - AUTO_UPDATE=true #optional
-      # - RUN_OPTS=<run options here> #optional
-    volumes:
-      - ./jackett:/config/Jackett
-      - /mnt/hdd/Downloads:/downloads
+      - ../../Downloads:/mnt
     restart: unless-stopped
   nextcloud:
     image: linuxserver/nextcloud:29.0.6
@@ -121,6 +88,6 @@ services:
       - PGID=1000
       - TZ=Etc/UTC
     volumes:
-      - /mnt/hdd/NextCloud/config:/config
-      - /mnt/hdd/NextCloud/data:/data
+      - ../../NextCloud/config:/config
+      - ../../NextCloud/data:/data
     restart: unless-stopped
