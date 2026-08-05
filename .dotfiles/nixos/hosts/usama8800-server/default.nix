@@ -26,10 +26,11 @@
   services.openssh.ports = [2222];
   services.postgresql.ensureDatabases = ["nextcloud"];
   services.jenkins = {
-    enable = false;
+    enable = true;
     port = 8080;
     prefix = "/jenkins";
     listenAddress = "0.0.0.0";
+    packages = [pkgs.git pkgs.openssh];
   };
   home-manager.users.usama.programs.ssh.matchBlocks = {
     desktop = {

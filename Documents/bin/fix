@@ -23,6 +23,7 @@ USAGE="Usage:  ${CMD:=${0##*/}} [(-v|--verbose)] [--name=TEXT] [(-o|--output) FI
 #/   steam
 #/   audio
 #/   nix
+#/   psql-collate: refresh postgres collation version for all databases (except template0) and reindex
 #/   -h, --help: Display this help message
 help() {
   echo "$USAGE"
@@ -48,6 +49,30 @@ while [ "$1" != "$EOL" ]; do
     ;;
   audio)
     systemctl --user restart pipewire pipewire-pulse wireplumber bluetooth.target
+    ;;
+  psql-collate)
+    PSQL_USER="${PSQL_COLLATE_USER:-postgres}"
+    # template0 uses the unversioned "C" locale by design, so refreshing it
+    # always errors with "invalid collation version change" - skip it.
+    info "Refreshing collation version for all databases (except template0)..."
+    sudo -u "$PSQL_USER" psql -X -q -t -A -c "SELECT datname FROM pg_database WHERE datname != 'template0';" |
+      while IFS= read -r db; do
+        [ -z "$db" ] && continue
+        info "  - $db"
+        if ! sudo -u "$PSQL_USER" psql -X -q -c "ALTER DATABASE \"$db\" REFRESH COLLATION VERSION;"; then
+          warning "    failed to refresh $db, skipping"
+        fi
+      done
+
+    info "Reindexing all connectable databases..."
+    sudo -u "$PSQL_USER" psql -X -q -t -A -c "SELECT datname FROM pg_database WHERE datallowconn;" |
+      while IFS= read -r db; do
+        [ -z "$db" ] && continue
+        info "  - $db"
+        if ! sudo -u "$PSQL_USER" reindexdb -d "$db"; then
+          warning "    failed to reindex $db, skipping"
+        fi
+      done
     ;;
   -h | --help)
     printf "%s\n" "$USAGE"
