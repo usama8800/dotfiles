@@ -166,6 +166,7 @@
     fx # json viewer
     caligula # usb burner
     restman # rest api client
+    claude-code # claude client
   ];
   programs.nix-index-database.comma.enable = true;
   programs.git.enable = true;
@@ -275,7 +276,7 @@
         host = "server";
         user = "usama";
         port = 2222;
-        hostname = lib.mkDefault "usama8800.net";
+        hostname = lib.mkDefault "server.jilaniplastic.com";
       };
       factory = {
         host = "factory";

@@ -11,16 +11,18 @@
     ../../modules/gui.nix
     ../../modules/gaming.nix
     ../../modules/gamedev.nix
-    ../../modules/virtualization.nix
+    # ../../modules/virtualization.nix
   ];
 
   boot.loader.grub.enable = true;
-  boot.loader.grub.device = "/dev/nvme1n1";
+  boot.loader.grub.device = "/dev/nvme0n1";
   boot.loader.grub.useOSProber = true;
 
   time.timeZone = "Asia/Kuala_Lumpur";
 
   nix.settings.build-dir = "/mnt/hdd/nix/builds";
+
+  services.tailscale.enable = true;
 
   powerManagement.resumeCommands = ''
     date -Iseconds > /mnt/hdd/Workspace/desktop-server/events/wakeup_time

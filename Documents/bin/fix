@@ -75,7 +75,7 @@ while [ "$1" != "$EOL" ]; do
       done
     ;;
   -h | --help)
-    printf "%s\n" "$USAGE"
+    help
     exit 0
     ;;
 

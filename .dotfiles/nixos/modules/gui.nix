@@ -79,7 +79,7 @@
       localsend # LAN file sharing
       kdePackages.kate # text editor
       onlyoffice-desktopeditors # office suite
-      libreoffice-qt-fresh # office suite
+      libreoffice-qt-stable # office suite
       hunspell # libre office spell check
       hunspellDicts.uk_UA # libre office spell check
       floorp-bin # browser
