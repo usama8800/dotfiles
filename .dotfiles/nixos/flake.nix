@@ -49,6 +49,7 @@
             ({
               self,
               system,
+              pkgs-unstable,
               ...
             }: {
               nixpkgs.overlays = [
@@ -58,6 +59,17 @@
                     scripts = [final.mpvScripts.mpris];
                   };
                 })
+                # Packages listed here resolve to their nixpkgs-unstable build
+                # everywhere `pkgs.<name>` is used, e.g. when the stable
+                # channel's derivation is broken or too far behind upstream.
+                # Remove a name once the stable channel catches up.
+                (final: prev: let
+                  unstablePackages = [
+                    "vscode"
+                    "pureref"
+                  ];
+                in
+                  prev.lib.genAttrs unstablePackages (name: pkgs-unstable.${name}))
               ];
             })
             {

@@ -13,15 +13,18 @@
   boot.kernelModules = ["kvm-amd"];
   boot.extraModulePackages = [];
 
+  # NixOS root: XPG SPECTRIX S40G NVMe SSD (nvme-XPG_SPECTRIX_S40G_2K282915BDTT)
   fileSystems."/" = {
     device = "/dev/disk/by-label/nixos";
     fsType = "ext4";
   };
+  # Data HDD: Toshiba HDWD110 (ata-TOSHIBA_HDWD110_59H5UVJNS)
   fileSystems."/mnt/hdd/" = {
     device = "/dev/disk/by-label/HDD";
     mountPoint = "/mnt/hdd";
     fsType = "ext4";
   };
+  # Windows: WDC WDS100T2B0C NVMe SSD (nvme-WDC_WDS100T2B0C-00PXH0_2131CN477907)
   # fileSystems."/mnt/sdd/" = {
   #   device = "/dev/nvme0n1p3";
   #   mountPoint = "/mnt/windows";

@@ -15,7 +15,7 @@
   ];
 
   boot.loader.grub.enable = true;
-  boot.loader.grub.device = "/dev/nvme0n1";
+  boot.loader.grub.device = "/dev/disk/by-id/nvme-XPG_SPECTRIX_S40G_2K282915BDTT";
   boot.loader.grub.useOSProber = true;
 
   time.timeZone = "Asia/Kuala_Lumpur";

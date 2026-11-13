@@ -62,9 +62,8 @@
       variety # wallpapers
       bruno # rest client
       deluge # torrent client
-      # pureref # notes with imgaes
+      pureref # notes with imgaes
       anki # flash cards for learning
-      easyeffects # microphone preprocessing
     ])
     ++ (with pkgs-unstable; [
       ani-cli # watch anime
@@ -75,7 +74,7 @@
       kdePackages.filelight # disk usage analyzer
       remmina # rdp / vnc client
       anydesk # remote server and cliet
-      # rustdesk # remote server and cliet
+      rustdesk # remote server and cliet
       localsend # LAN file sharing
       kdePackages.kate # text editor
       onlyoffice-desktopeditors # office suite
