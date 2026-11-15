@@ -122,7 +122,6 @@
     shfmt # shell formatter
     shellcheck # shell lint
     just # command runner
-    pgadmin4
     google-cloud-sdk
     google-cloud-sql-proxy
 
