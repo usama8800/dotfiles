@@ -94,5 +94,22 @@
     script = "node ./out/index.js";
   };
 
+  systemd.timers."nextcloud-filescan" = {
+    wantedBy = ["timers.target"];
+    timerConfig = {
+      OnCalendar = "hourly";
+      Persistent = true;
+      Unit = "nextcloud-filescan.service";
+    };
+  };
+  systemd.services."nextcloud-filescan" = {
+    path = [pkgs.docker];
+    serviceConfig = {
+      Type = "oneshot";
+      User = "usama";
+      ExecStart = "${pkgs.docker}/bin/docker exec nextcloud occ files:scan --all";
+    };
+  };
+
   system.stateVersion = "25.11";
 }
