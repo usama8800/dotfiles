@@ -23,6 +23,15 @@
     '';
   };
 
+  users.users.adhura = {
+    isNormalUser = true;
+    description = "Adhura";
+    extraGroups = [];
+    openssh.authorizedKeys.keys = [
+      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIDH+E6+GSDrC3/NJhsnaHjs11FblCZA2Dmlb+wUZBW2u mac"
+    ];
+  };
+
   services.openssh.ports = [2222];
   services.postgresql.ensureDatabases = ["nextcloud"];
   services.jenkins = {
